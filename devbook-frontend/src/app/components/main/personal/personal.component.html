@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devbook</title>
+</head>
+
+<body>
+    <div class="border-margin-parent">
+        <table class="table-properties">
+            <tbody>
+                <tr>
+                    <td colspan="2" class="portrait-properties">
+                        <img class="portrait rounded-circle"
+                            src="assets\Images\avatar-e53318dc0b968d53ad40a940c1b5adba.jpg" alt="Portrait">
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        <ngx-material-rating [dense]="true" [readonly]="true" [max]="5" [color]="'accent'" [value]="4">
+                        </ngx-material-rating>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 50%;">
+                        <p class="cell-properties likes">
+                            123
+                        </p>
+                    </td>
+                    <td style="width: 50%;">
+                        <mat-icon style="color: #3F51B5;">thumb_up</mat-icon>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <img src="assets\Images\double-quotation-marks-open.png" alt="open quotation mark"
+                            class="open-quotation">
+                        <p class="caption">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Deserunt quo
+                            recusandae reiciendis sapiente voluptatibus iusto amet sed facilis sequi. Suscipit cum
+                            assumenda sint repellendus non, ut odit exercitationem a fuga.</p>
+                        <img src="assets\Images\double-quotation-marks-close.png" alt="close quotation mark"
+                            class="close-quotation">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="border-margin-child">
+        <table class="table-properties">
+            <tbody>
+                <tr>
+                    <td colspan="2">
+                        <p class="name">Wong Chee Min</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <p class="title">Visa Technology Traineeship Program, Trainee</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 40%;">
+                        <p class="category">Current</p>
+                    </td>
+                    <td>
+                        <p class="cell-properties">Visa Worldwide PTE LTD</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="category">Previous</p>
+                    </td>
+                    <td>
+                        <p class="cell-properties">SAMSUNG ASIA PTE LTD</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="category">Education</p>
+                    </td>
+                    <td>
+                        <p class="cell-properties">Bachelor of Science (Honours) in Accounting and Finance</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="border-margin-child">
+        <table class="table-properties">
+            <tbody>
+                <tr>
+                    <td colspan="2">
+                        <p class="portfolio">Websites</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="website">
+                        <a href="https://github.com/cccheeminnn">github</a>,
+                        <a href="https://github.com/cccheeminnn">linkedin</a>,
+                        <a href="https://github.com/cccheeminnn">blah</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="border-margin-child">
+        <table class="table-properties">
+            <tbody>
+                <tr>
+                    <td colspan="2">
+                        <p class="portfolio">Skills & Proficiency</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 45%;">
+                        <p class="skill">Java</p>
+                    </td>
+                    <td style="text-align: left;">
+                        <ngx-material-rating [dense]="true" [readonly]="true" [color]="'warn'" [max]="5" [value]="2">
+                        </ngx-material-rating>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="skill">Angular</p>
+                    </td>
+                    <td style="text-align: left;">
+                        <ngx-material-rating [dense]="true" [readonly]="true" [color]="'warn'" [max]="5" [value]="2">
+                        </ngx-material-rating>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="skill">MySQL</p>
+                    </td>
+                    <td style="text-align: left;">
+                        <ngx-material-rating [dense]="true" [readonly]="true" [color]="'warn'" [max]="5" [value]="2">
+                        </ngx-material-rating>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="border-margin-child">
+        <form>
+            <table class="table-properties">
+                <tbody>
+                    <!-- <tr>
+                        <td>
+                            <p style="color: grey; font-size: smaller;">Login to comment</p>
+                        </td>
+                    </tr> -->
+                    <tr>
+                        <td>
+                            <textarea placeholder="Add a comment"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button mat-icon-button type="button" style="float: right; color: #3F51B5;">
+                                <mat-icon>rate_review</mat-icon>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+    <div class="border-margin-child">
+        <div>
+            <img src="assets\Images\avatar-c5718df9b47d0f075c383075827d300a.jpg" class="rounded-circle"
+                style="height: 4vh; float: left; margin-right: 3px;">
+            <div
+                style="overflow: hidden; border: 1px solid #cfd8dc; border-radius: 5px; padding-left: 5px; padding-right: 5px; margin-bottom: 5px; font-size: x-small; font-weight: bold; background-color: #cfd8dc;">
+                Patrick Jane
+                <p style="font-size: small; font-weight: normal;">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                <p>
+            </div>
+        </div>
+        <div>
+            <img src="assets\Images\avatar-c5718df9b47d0f075c383075827d300a.jpg" class="rounded-circle"
+                style="height: 4vh; float: left; margin-right: 3px;">
+            <div
+                style="overflow: hidden; border: 1px solid #cfd8dc; border-radius: 5px; padding-left: 5px; padding-right: 5px; margin-bottom: 5px; font-size: x-small; font-weight: bold; background-color: #cfd8dc;">
+                Patrick Jane
+                <p style="font-size: small; font-weight: normal;">
+                    Expedita incidunt quas ipsum culpa possimus, aliquid et fugiat velit?</p>
+                <p>
+            </div>
+        </div>
+        <div>
+            <img src="assets\Images\avatar-c5718df9b47d0f075c383075827d300a.jpg" class="rounded-circle"
+                style="height: 4vh; float: left; margin-right: 3px;">
+            <div
+                style="overflow: hidden; border: 1px solid #cfd8dc; border-radius: 5px; padding-left: 5px; padding-right: 5px; margin-bottom: 5px; font-size: x-small; font-weight: bold; background-color: #cfd8dc;">
+                Patrick Jane
+                <p style="font-size: small; font-weight: normal;">
+                    Placeat autem velit eos quaerat, fuga dolorem excepturi quia tempore perspiciatis dolores?</p>
+                <p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

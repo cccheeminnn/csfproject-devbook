@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="div-main row justify-content-center ">
+
+        <mat-card>
+            <mat-card-header>
+                <div mat-card-avatar [routerLink]="['/user/123']" class="avatar-img"
+                    style="background-image: 
+                            url('https://i0.wp.com/post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/03/GettyImages-1092658864_hero-1024x575.jpg?w=1155&h=1528');">
+                </div>
+                <mat-card-title>Shiba Inu</mat-card-title>
+                <mat-card-subtitle>Visa Technology Traineeship Program, Trainee</mat-card-subtitle>
+            </mat-card-header>
+            <!-- images goes here -->
+            <ngb-carousel>
+                <ng-template ngbSlide>
+                    <div class="carousel-img picsum-img-wrapper">
+                        <img class="img-in-carousel" mat-card-image
+                            src="https://i0.wp.com/post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/03/GettyImages-1092658864_hero-1024x575.jpg?w=1155&h=1528">
+                    </div>
+                </ng-template>
+                <ng-template ngbSlide>
+                    <div class="carousel-img picsum-img-wrapper">
+                        <img class="img-in-carousel" mat-card-image
+                            src="https://cdn.pocket-lint.com/r/s/1200x630/assets/images/142207-phones-feature-what-is-apple-face-id-and-how-does-it-work-image1-5d72kjh6lq.jpg">
+                    </div>
+                </ng-template>
+            </ngb-carousel>
+            <mat-card-content>
+                <p class="card-caption">
+                    <!-- 250 character count limit -->
+                    Face.
+                </p>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-button [routerLink]="['/user/123']">
+                    <mat-icon>perm_contact_calendar</mat-icon>
+                </button>
+            </mat-card-actions>
+        </mat-card>
+
+        <mat-card>
+            <mat-card-header>
+                <div mat-card-avatar [routerLink]="['/user/123']" class="avatar-img"
+                    style="background-image: 
+                            url('https://helpx.adobe.com/content/dam/help/en/photoshop/how-to/face-aware-liquify/jcr%3Acontent/main-pars/image_201603096/face-aware-liquify_1408x792.jpg.img.jpg');">
+                </div>
+                <mat-card-title>Shiba Inu</mat-card-title>
+                <mat-card-subtitle>Visa Technology Traineeship Program, Trainee</mat-card-subtitle>
+            </mat-card-header>
+            <!-- images goes here -->
+            <ngb-carousel>
+                <ng-template ngbSlide>
+                    <div class="carousel-img picsum-img-wrapper">
+                        <img class="img-in-carousel" mat-card-image
+                            src="https://media.vogue.fr/photos/5d14f32736e61b4e0a9b24e3/2:3/w_2560%2Cc_limit/1096805-800w.jpg">
+                    </div>
+                </ng-template>
+                <ng-template ngbSlide>
+                    <div class="carousel-img picsum-img-wrapper">
+                        <img class="img-in-carousel" mat-card-image
+                            src="assets\Images\avatar-e53318dc0b968d53ad40a940c1b5adba.jpg">
+                    </div>
+                </ng-template>
+                <ng-template ngbSlide>
+                    <div class="carousel-img picsum-img-wrapper">
+                        <img class="img-in-carousel" mat-card-image
+                            src="https://helpx.adobe.com/content/dam/help/en/photoshop/how-to/face-aware-liquify/jcr%3Acontent/main-pars/image_201603096/face-aware-liquify_1408x792.jpg.img.jpg">
+                    </div>
+                </ng-template>
+            </ngb-carousel>
+            <mat-card-content>
+                <p class="card-caption">
+                    <!-- 250 character count limit -->
+                    The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
+                    A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally.
+                </p>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-button [routerLink]="['/user/123']">
+                    <mat-icon>perm_contact_calendar</mat-icon>
+                </button>
+            </mat-card-actions>
+        </mat-card>
+
+    </div>
+</body>
+
+</html>

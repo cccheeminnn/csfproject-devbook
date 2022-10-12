@@ -1,0 +1,225 @@
+<mat-dialog-content *ngIf="cardPreview" class="mat-typography">
+    <div class="div-main row justify-content-center">
+        <mat-card>
+            <mat-card-header>
+                <div mat-card-avatar class="avatar-img">
+                    <img style="width: inherit; height: inherit; object-fit: cover;"
+                    [src]="profilePhoto">
+                </div>
+                <!-- Name -->
+                <mat-card-title>{{ formGrp.value['name'] || 'Name' }}</mat-card-title>
+                <!-- Current Job -->
+                <mat-card-subtitle>{{ formGrp.value['currentJob'] || 'Current Occupation' }}</mat-card-subtitle>
+            </mat-card-header>
+            <!-- Carousel images goes here -->
+            <ngb-carousel>
+                <ng-template ngbSlide *ngIf="image01Src">
+                    <div class="carousel-img picsum-img-wrapper">
+                        <img class="img-in-carousel" mat-card-image
+                            [src]="image01Src ">
+                    </div>
+                    <div class="carousel-caption">
+                        <!-- 100 character count limit -->
+                        {{ formGrp.value['file01Description'] }}
+                    </div>
+                </ng-template>
+                <ng-template ngbSlide *ngIf="image02Src">
+                    <div class="carousel-img picsum-img-wrapper">
+                        <img class="img-in-carousel" mat-card-image
+                            [src]="image02Src ">
+                    </div>
+                    <div class="carousel-caption">
+                        <!-- 100 character count limit -->
+                        {{ formGrp.value['file02Description'] }}
+                    </div>
+                </ng-template>
+                <ng-template ngbSlide *ngIf="image03Src">
+                    <div class="carousel-img picsum-img-wrapper">
+                        <img class="img-in-carousel" mat-card-image
+                            [src]="image03Src ">
+                    </div>
+                    <div class="carousel-caption">
+                        <!-- 100 character count limit -->
+                        {{ formGrp.value['file03Description'] }}
+                    </div>
+                </ng-template>
+            </ngb-carousel>
+            <!-- User bio -->
+            <mat-card-content>
+                <p class="card-caption">
+                    {{ formGrp.value['bio'] || 'Bio' }}
+                </p>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-button type="button">
+                    <mat-icon>perm_contact_calendar</mat-icon>
+                </button>
+                <button mat-button type="button">
+                    <mat-icon>email</mat-icon>
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+    <div style="text-align: right;">
+        <button mat-icon-button type="button" (click)="nextPreview()"><mat-icon>arrow_forward</mat-icon></button>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-content *ngIf="!cardPreview">
+    <div class="border-margin-parent" style="min-width: 100%; width: auto;">
+        <table class="table-properties">
+            <tbody>
+                <tr>
+                    <td colspan="2" class="portrait-properties">
+                        <img class="portrait rounded-circle"
+                            [src]="profilePhoto" alt="Portrait">
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        <ngx-material-rating [dense]="true" [readonly]="true" [max]="5" [color]="'accent'" [value]="4">
+                        </ngx-material-rating>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 50%;">
+                        <p class="cell-properties likes">
+                            123
+                        </p>
+                    </td>
+                    <td style="width: 50%;">
+                        <mat-icon style="color: #3F51B5;">thumb_up</mat-icon>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <img src="assets\Images\double-quotation-marks-open.png" alt="open quotation mark"
+                            class="open-quotation">
+                        <p class="caption">{{ formGrp.value['bio'] || 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste magnam nesciunt recusandae, optio tenetur aut distinctio eius voluptates explicabo laboriosam quisquam placeat excepturi! Quas doloribus accusantium vel quaerat magnam vitae!' }}</p>
+                        <img src="assets\Images\double-quotation-marks-close.png" alt="close quotation mark"
+                            class="close-quotation">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="border-margin-child">
+        <table class="table-properties">
+            <tbody>
+                <tr>
+                    <td colspan="2">
+                        <p class="name">{{ formGrp.value['name'] || 'Name' }}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <p class="title">{{ formGrp.value['currentJob'] || 'Current Occupation' }}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 40%;">
+                        <p class="category">Current</p>
+                    </td>
+                    <td>
+                        <p class="cell-properties">{{ formGrp.value['currentCompany'] || 'Current Company' }}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="category">Previous</p>
+                    </td>
+                    <td>
+                        <p class="cell-properties">{{ formGrp.value['previousCompany'] || 'Previous Company' }}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="category">Education</p>
+                    </td>
+                    <td>
+                        <p class="cell-properties">{{ formGrp.value['education'] || 'Highest Certification Attained' }}</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="border-margin-child">
+        <table class="table-properties">
+            <tbody>
+                <tr>
+                    <td colspan="2">
+                        <p class="portfolio">Websites</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="website">
+                        <div style="display: inline;" *ngFor="let w of formGrp.controls['websites'].controls; let i = index;">
+                            <a [href]="w.value['url']">{{ w.value['name'] }}</a>
+                            <span *ngIf="i+1 < formGrp.controls['websites'].length">, </span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="border-margin-child">
+        <table class="table-properties">
+            <tbody>
+                <tr>
+                    <td colspan="2">
+                        <p class="portfolio">Skills & Proficiency</p>
+                    </td>
+                </tr>
+                <tr *ngFor="let s of formGrp.controls['skills'].controls;">
+                    <td style="width: 45%;">
+                        <p class="skill">{{ s.value['name'] }}</p>
+                    </td>
+                    <td style="text-align: left;">
+                        <ngx-material-rating [dense]="true" [readonly]="true" [color]="'warn'" [max]="5" [value]="s.value['rating']">
+                        </ngx-material-rating>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="border-margin-child">
+        <form>
+            <table class="table-properties">
+                <tbody>
+                    <!-- <tr>
+                        <td>
+                            <p style="color: grey; font-size: smaller;">Login to comment</p>
+                        </td>
+                    </tr> -->
+                    <tr>
+                        <td>
+                            <textarea placeholder="Add a comment"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button mat-icon-button type="button" style="float: right; color: #3F51B5;">
+                                <mat-icon>rate_review</mat-icon>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+    <div class="border-margin-child">
+        <div>
+            <img src="https://bigbook.sgp1.digitaloceanspaces.com/Templates/profile-placeholder.jpg" class="rounded-circle"
+                style="height: 4vh; float: left; margin-right: 3px;">
+            <div
+                style="overflow: hidden; border: 1px solid #cfd8dc; border-radius: 5px; padding-left: 5px; padding-right: 5px; margin-bottom: 5px; font-size: x-small; font-weight: bold; background-color: #cfd8dc;">
+                Patrick Jane
+                <p style="font-size: small; font-weight: normal;">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste magnam nesciunt recusandae, optio tenetur aut distinctio eius voluptates explicabo laboriosam quisquam placeat excepturi! Quas doloribus accusantium vel quaerat magnam vitae!
+                <p>
+            </div>
+        </div>
+    </div>
+    <div>
+        <button mat-icon-button type="button" (click)="previousPreview()"><mat-icon>arrow_back</mat-icon></button>
+    </div>
+</mat-dialog-content>

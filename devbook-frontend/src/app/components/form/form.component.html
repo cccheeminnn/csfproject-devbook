@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="border-margin-parent">
+        <div style="text-align: right;">
+            <button mat-button (click)="accordion.openAll()">Expand All</button>
+            <button mat-button (click)="accordion.closeAll()">Collapse All</button>
+        </div>
+
+        <form [formGroup]="formGrp" (submit)="onSubmit()" enctype="multipart/form-data">
+
+            <mat-accordion style="justify-content: space-between; align-items: center;" multi>
+                <!-- First Panel, Account Login Details -->
+                <mat-expansion-panel>
+                    <!-- First Panel Headers -->
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Account
+                        </mat-panel-title>
+                        <mat-panel-description style="justify-content: space-between; align-items: center;">
+                            Login Information
+                            <mat-icon>account_circle</mat-icon>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <!-- First Panel Form Fields -->
+                    <mat-divider></mat-divider>
+                    <div style="text-align: center;">
+                        <mat-form-field style="display: block;" appearance="fill">
+                            <mat-label>Name</mat-label>
+                            <input matInput required formControlName="name">
+                        </mat-form-field>
+                        <mat-form-field style="display: block;" appearance="fill">
+                            <mat-label>Email</mat-label>
+                            <input matInput type="email" placeholder="fred@example.com" required
+                                formControlName="email">
+                        </mat-form-field>
+                        <mat-form-field style="display: block;" appearance="fill">
+                            <mat-label>Password</mat-label>
+                            <input matInput [type]="hide ? 'password' : 'text'" required formControlName="password">
+                            <button mat-icon-button matSuffix (click)="hide = !hide">
+                                <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+                            </button>
+                        </mat-form-field>
+                        <!-- Profile Picture -->
+                        <mat-error *ngIf="errorProfilePhoto">Image file only!</mat-error>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="inputGroupFile04">Profile Photo</label>
+                            <input #inputFile04 type="file" accept="image/*" class="form-control" id="inputProfilePhoto" (change)="readFileType($event)">
+                        </div>
+                        <mat-form-field style="display: block;" appearance="fill">
+                            <mat-label>Biography</mat-label>
+                            <textarea matInput type="text" #bio maxlength="250" required formControlName="bio"
+                                placeholder="Tell us about yourself!"></textarea>
+                            <mat-hint>Max 250 characters</mat-hint>
+                            <mat-hint align="end">{{ bio.value.length }} / 250</mat-hint>
+                        </mat-form-field>
+                    </div>
+                </mat-expansion-panel>
+
+                <!-- Second Panel, Current Occupation Details -->
+                <mat-expansion-panel>
+                    <!-- Second Panel Headers -->
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Occupation
+                        </mat-panel-title>
+                        <mat-panel-description style="justify-content: space-between; align-items: center;">
+                            Position & Education
+                            <mat-icon>work</mat-icon>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <!-- Second Panel Form Fields -->
+                    <mat-divider></mat-divider>
+                    <div style="text-align: center; align-items: center;">
+                        <mat-form-field style="width: 49%; margin-right: 3px;" appearance="fill">
+                            <mat-label>Current Role</mat-label>
+                            <input matInput formControlName="currentJob">
+                        </mat-form-field>
+                        <mat-form-field style="width: 49%; margin-left: 3px;" appearance="fill">
+                            <mat-label>Current Company</mat-label>
+                            <input matInput formControlName="currentCompany">
+                        </mat-form-field>
+                        <mat-form-field style="display: block;" appearance="fill">
+                            <mat-label>Previous Company</mat-label>
+                            <input matInput type="email" formControlName="previousCompany">
+                        </mat-form-field>
+                        <mat-form-field style="display: block;" appearance="fill">
+                            <mat-label>Highest/Relevant Certification</mat-label>
+                            <input matInput required formControlName="education">
+                        </mat-form-field>
+                    </div>
+                </mat-expansion-panel>
+
+                <!-- Third Panel, Skills & Proficiency -->
+                <mat-expansion-panel>
+                    <!-- Third Panel Headers -->
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Know-how
+                        </mat-panel-title>
+                        <mat-panel-description style="justify-content: space-between; align-items: center;">
+                            Skills & Proficiency
+                            <mat-icon>school</mat-icon>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <!-- Third Panel Form Fields -->
+                    <mat-divider></mat-divider>
+                    <div style="text-align: right;">
+                        <button mat-button type="button" style="color: GREY" (click)="pushSkillsArray()">+</button>
+                    </div>
+                    <div *ngFor="let skill of skillsArray.controls; let i = index;" [formGroup]="skill"
+                        style="text-align: center; align-items: center;">
+                        <mat-form-field style="margin-left: 4px; margin-bottom: 8px;" appearance="fill">
+                            <mat-label>Skill {{ i+1 }}</mat-label>
+                            <input matInput #skillName maxlength="10" formControlName="name"
+                                placeholder="Language, frameworks, libraries">
+                            <mat-hint>Max 10 characters</mat-hint>
+                            <mat-hint align="end">{{ skillName.value.length }} / 10</mat-hint>
+                        </mat-form-field>
+                        <mat-form-field style="margin-left: 4px; margin-bottom: 8px; width: 4rem;" appearance="fill">
+                            <mat-select formControlName="rating">
+                                <mat-option [value]="1">1 - Poor</mat-option>
+                                <mat-option [value]="2">2 - Below Average</mat-option>
+                                <mat-option [value]="3">3 - Average</mat-option>
+                                <mat-option [value]="4">4 - Above Average</mat-option>
+                                <mat-option [value]="5">5 - Pro</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <button mat-icon-button (click)="deleteSkill(i)">
+                            <mat-icon style="color: grey;">delete</mat-icon>
+                        </button>
+                    </div>
+                </mat-expansion-panel>
+
+                <!-- Fourth Panel, Websites -->
+                <mat-expansion-panel>
+                    <!-- Fourth Panel Headers -->
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Portfolio
+                        </mat-panel-title>
+                        <mat-panel-description style="justify-content: space-between; align-items: center;">
+                            Socials & Websites
+                            <mat-icon>language</mat-icon>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <!-- Fourth Panel Form Fields -->
+                    <mat-divider></mat-divider>
+                    <div style="text-align: right;">
+                        <button mat-button type="button" style="color: GREY" (click)="pushWebsitesArray()">+</button>
+                    </div>
+                    <div *ngFor="let website of websitesArray.controls; let i = index;" [formGroup]="website"
+                        style="text-align: center; align-items: center;">
+                        <mat-form-field style="margin-left: 4px; margin-bottom: 8px; width: 7rem;" appearance="fill">
+                            <mat-label>Web {{ i+1 }}</mat-label>
+                            <input matInput #webName maxlength="15" formControlName="name"
+                                placeholder="Socials, github, apps..">
+                            <mat-hint>Max</mat-hint>
+                            <mat-hint align="end">{{ webName.value.length }} / 15</mat-hint>
+                        </mat-form-field>
+                        <mat-form-field style="margin-left: 4px; margin-bottom: 8px; " appearance="fill">
+                            <mat-label>Link</mat-label>
+                            <input matInput formControlName="url">
+                            <mat-hint align="end">Github, LinkedIn, Facebook etc</mat-hint>
+                        </mat-form-field>
+                        <button mat-icon-button (click)="deleteWebsite(i)">
+                            <mat-icon style="color: grey;">delete</mat-icon>
+                        </button>
+                    </div>
+                </mat-expansion-panel>
+
+                <!-- Fifth Panel, Screenshots -->
+                <mat-expansion-panel>
+                    <!-- Fifth Panel Headers -->
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Showcase
+                        </mat-panel-title>
+                        <mat-panel-description style="justify-content: space-between; align-items: center;">
+                            Screenshots
+                            <mat-icon>camera</mat-icon>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <!-- Fifth Panel Form Fields -->
+                    <mat-divider></mat-divider>
+                    <div style="text-align: center;">
+                        <div style="margin: 5px;">
+                            Upload up to 3 images of anything! Yourself or your creations!
+                        </div>
+                        <!-- Image 1 -->
+                        <mat-error *ngIf="errorFile01">Image file only!</mat-error>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="inputGroupFile01">Upload 01</label>
+                            <input #inputFile01 type="file" accept="image/*" class="form-control" id="inputGroupFile01" (change)="readFileType($event)">
+                        </div>
+                        <mat-form-field *ngIf="inputFile01.value.length > 0 && !errorFile01" style="display: block; margin-bottom: 5px;" appearance="fill">
+                            <mat-label>Description 1</mat-label>
+                            <textarea matInput type="text" #description formControlName="file01Description" maxlength="100" placeholder="Describe the image!"></textarea>
+                            <mat-hint>Max 100 characters</mat-hint>
+                            <mat-hint align="end">{{ description.value.length }} / 100</mat-hint>
+                        </mat-form-field>
+
+                        <!-- Image 2 -->
+                        <mat-error *ngIf="errorFile02">Image file only!</mat-error>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="inputGroupFile02">Upload 02</label>
+                            <input #inputFile02 type="file" accept="image/*" class="form-control" id="inputGroupFile02" (change)="readFileType($event)">
+                        </div>
+                        <mat-form-field *ngIf="inputFile02.value.length > 0 && !errorFile02" style="display: block; margin-bottom: 5px;" appearance="fill">
+                            <mat-label>Description 2</mat-label>
+                            <textarea matInput type="text" #description formControlName="file02Description" maxlength="100" placeholder="Describe the image!"></textarea>
+                            <mat-hint>Max 100 characters</mat-hint>
+                            <mat-hint align="end">{{ description.value.length }} / 100</mat-hint>
+                        </mat-form-field>
+
+                        <!-- Image 3 -->
+                        <mat-error *ngIf="errorFile03">Image file only!</mat-error>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="inputGroupFile03">Upload 03</label>
+                            <input #inputFile03 type="file" accept="image/*" class="form-control" id="inputGroupFile03" (change)="readFileType($event)">
+                        </div>
+                        <mat-form-field *ngIf="inputFile03.value.length > 0 && !errorFile03" style="display: block;" appearance="fill">
+                            <mat-label>Description 3</mat-label>
+                            <textarea matInput type="text" #description formControlName="file03Description" maxlength="100" placeholder="Describe the image!"></textarea>
+                            <mat-hint>Max 100 characters</mat-hint>
+                            <mat-hint align="end">{{ description.value.length }} / 100</mat-hint>
+                        </mat-form-field>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <div style="float: right; display: flex; margin-top: 5px;">
+                <button mat-button type="submit">
+                    <!-- [disabled]="errorFile01 || errorFile02 || errorFile03 || errorProfilePhoto || formGrp.invalid"> -->
+                    Submit</button>
+            </div>
+        </form>
+        <div style="float: right; display: flex; margin-top: 5px">
+            <button mat-button type="button" (click)="openPreview()">Preview</button>
+        </div>
+    </div>
+</body>
+
+</html>
