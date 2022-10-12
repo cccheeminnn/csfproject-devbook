@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Type, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatAccordion } from '@angular/material/expansion';
@@ -14,7 +14,7 @@ import { BackendService } from 'src/app/services/backend.service';
 })
 export class FormComponent implements OnInit {
 
-  // for Expand/Collaspe all 
+  // for Expand/Collaspe all
   @ViewChild(MatAccordion)
   accordion: MatAccordion = new MatAccordion;
 
@@ -39,7 +39,7 @@ export class FormComponent implements OnInit {
       name: this.fb.control<string>('', [ Validators.required ]),
       email: this.fb.control<string>('', [ Validators.required, Validators.email ]),
       password: this.fb.control<string>('', [ Validators.required, Validators.minLength(8) ]),
-      profilePhoto: this.fb.control(null),
+      profilePhoto: [null], // inserted during input (change) event
       bio: this.fb.control<string>('', [ Validators.required, Validators.minLength(10) ]),
       currentJob: this.fb.control<string>(''),
       currentCompany: this.fb.control<string>(''),
@@ -47,11 +47,11 @@ export class FormComponent implements OnInit {
       education: this.fb.control<string>('', [ Validators.required ]),
       skills: this.skillsArray,
       websites: this.websitesArray,
-      file01: [null], // inserted via FormData upon submit
+      file01: [null], // inserted during input (change) event
       file01Description: this.fb.control<string>(''),
-      file02: this.fb.control(''), // inserted via FormData upon submit
+      file02: [null], // inserted during input (change) event
       file02Description: this.fb.control<string>(''),
-      file03: this.fb.control(''), // inserted via FormData upon submit
+      file03: [null], // inserted during input (change) event
       file03Description: this.fb.control<string>('')
     })
   }
@@ -83,47 +83,32 @@ export class FormComponent implements OnInit {
     const previewRef = this.dialog.open(PreviewComponent);
 
     previewRef.afterClosed().subscribe(result => {
-      console.log('>>>> preview closed: ', result);
+      // console.log('>>>> preview closed: ', result);
     })
   }
 
   onSubmit() {
-    if (this.previewSvc.file01 != null) {
-      const blob = this.dataURItoBlob(<string>(<unknown>this.previewSvc.file01))
-      const formData = new FormData();
-      formData.set('showcaseImg01', blob, 'image01.jpg'); // set overwrites existing key
-      this.formGrp.controls['file02'].setValue(formData);
+    // since some of the file uploads are optional
+    // check value for these form controls and if they are null (default)
+    // throw in a blank File so backend MultipartFile does not give us error
+    const blankFile: File = new File([], '');
+    // recall whenever user input wrong file or never select any file we reset control value
+    if (this.formGrp.controls['file01'].value === null) {
+      this.formGrp.controls['file01'].setValue(blankFile);
     }
-    if (this.previewSvc.file02 != null) {
-      const blob = this.dataURItoBlob(<string>(<unknown>this.previewSvc.file02))
-      const formData = new FormData();
-      formData.set('showcaseImg02', blob, 'image02.jpg'); // set overwrites existing key
-      this.formGrp.controls['file02'].setValue(formData);
-    } else {
-      const file: File = new File([],'');
-      this.formGrp.controls['file02'].setValue(file)
+    if (this.formGrp.controls['file02'].value === null) {
+      this.formGrp.controls['file02'].setValue(blankFile);
     }
-    if (this.previewSvc.file03 != null) {
-      const blob = this.dataURItoBlob(<string>(<unknown>this.previewSvc.file03))
-      const formData = new FormData();
-      formData.set('showcaseImg03', blob, 'image03.jpg'); // set overwrites existing key
-      this.formGrp.controls['file03'].setValue(formData);
+    if (this.formGrp.controls['file03'].value === null) {
+      this.formGrp.controls['file03'].setValue(blankFile);
     }
-    if (this.previewSvc.profilePhoto != null) {
-      const blob = this.dataURItoBlob(<string>(<unknown>this.previewSvc.profilePhoto))
-      const formData = new FormData();
-      formData.set('profileImg', blob, 'profileImage.jpg'); // set overwrites existing key
-      this.formGrp.controls['profilePhoto'].setValue(formData);
-    }
-
-    const form: Registration = this.formGrp.value as Registration;
-    console.log('>>>> form ', form);
-
+    // create a new formData
     let formData = new FormData();
+    // iterate through all keys in our FormGroup
     Object.keys(this.formGrp.controls).forEach(formControlName => {
-      console.log('>>>> ', formControlName)
-      console.log('>>>> ', this.formGrp.get(formControlName)?.value)
-      if(formControlName.match('skills')) {
+      // skills and websites are array, have to JSON.stringify to extract out actual value
+      if(formControlName.match('skills') || formControlName.match('websites')) {
+        // append key value pair to formData
         formData.append(formControlName, JSON.stringify(this.formGrp.get(formControlName)?.value).replace("\\",""))
       } else {
         formData.append(formControlName, this.formGrp.get(formControlName)?.value)
@@ -140,67 +125,98 @@ export class FormComponent implements OnInit {
   errorFile02:boolean = false; // showcase picture 2
   errorFile03:boolean = false; // showcase picture 3
   errorProfilePhoto:boolean = false; // profile picture
-  readFileType(fileEvent: HTMLInputEvent) {
-    const file: File = fileEvent.target.files![0];
+  readFileType(fileEvent: HTMLInputEvent)
+  {
+    // blank file to reset svc var
+    const blankFile: File = new File([], '');
+
+    // receives the file selected
+    const inputFile: File = fileEvent.target.files![0];
+
+    // checks which input html tag (change) originated from
     let elementId = fileEvent.target.id;
 
     var reader = new FileReader();
-    console.info('>>>fileType ', typeof file)
-    if (typeof file != 'undefined'){
-      reader.readAsDataURL(file!)
-      if (!file.type.startsWith('image')) {
-        if (elementId === 'inputGroupFile01') {
-          this.errorFile01 = true;
-        } else if (elementId === 'inputGroupFile02') {
-          this.errorFile02 = true;
-        } else if (elementId === 'inputGroupFile03') {
-          this.errorFile03 = true;
-        } else if (elementId === 'inputProfilePhoto') {
-          this.errorProfilePhoto = true;
+    try {
+      // console.log('>>>> selected fileType: ', inputFile);
+      // user uploaded the correct file type image/jpeg or image/png
+      if (inputFile.type.startsWith('image')){
+        reader.readAsDataURL(inputFile);
+        // onload is fired when file is read successfully
+        reader.onload = (event:any) => {
+          if (elementId === 'inputFile01') {
+            // switch the error msg to false
+            this.errorFile01 = false;
+            // event.target.result will give us the base64 encoded image
+            // which we will use to display the image
+            this.previewSvc.file01 = event.target.result;
+            // we will then set the actual file to the respective control
+            // when it hits the backend we retrieve it by MultipartFile
+            this.formGrp.controls['file01'].setValue(inputFile);
+          } else if (elementId === 'inputFile02') {
+            this.errorFile02 = false;
+            this.previewSvc.file02 = event.target.result;
+            this.formGrp.controls['file02'].setValue(inputFile);
+          } else if (elementId === 'inputFile03') {
+            this.errorFile03 = false;
+            this.previewSvc.file03 = event.target.result;
+            this.formGrp.controls['file03'].setValue(inputFile);
+          } else if (elementId === 'inputProfilePhoto') {
+            this.errorProfilePhoto = false;
+            this.previewSvc.profilePhoto = event.target.result;
+            this.formGrp.controls['profilePhoto'].setValue(inputFile);
+          }
         }
       } else {
-        if (elementId === 'inputGroupFile01') {
-          this.errorFile01 = false;
-          reader.onload = (event:any) => {
-            this.previewSvc.file01 = event.target.result;
-            this.formGrp.controls['file01'].setValue(file)
-            // this.formGrp.get('file01')?.updateValueAndValidity();
-          }
-        } else if (elementId === 'inputGroupFile02') {
-          this.errorFile02 = false;
-          reader.onload = (event:any) => {
-            this.previewSvc.file02 = event.target.result;
-          }
-        } else if (elementId === 'inputGroupFile03') {
-          this.errorFile03 = false;
-          reader.onload = (event:any) => {
-            this.previewSvc.file03 = event.target.result;
-          }
+        // user uploaded the wrong file type, not image/*
+        if (elementId === 'inputFile01') {
+          // set error msg to true
+          this.errorFile01 = true;
+          // reason why we reset is because user might had already the selected correct file
+          // then either select the wrong file after or close the dialog box so no file selected
+          // reset svc so preview resets
+          this.previewSvc.file01 = blankFile;
+          // reset formGrp controls
+          this.formGrp.controls['file01'].reset();
+        } else if (elementId === 'inputFile02') {
+          this.errorFile02 = true;
+          this.previewSvc.file02 = blankFile;
+          this.formGrp.controls['file02'].reset();
+        } else if (elementId === 'inputFile03') {
+          this.errorFile03 = true;
+          this.previewSvc.file03 = blankFile;
+          this.formGrp.controls['file03'].reset();
         } else if (elementId === 'inputProfilePhoto') {
-          this.errorProfilePhoto = false;
-          reader.onload = (event:any) => {
-            this.previewSvc.profilePhoto = event.target.result;
+          this.errorProfilePhoto = true;
+          this.previewSvc.profilePhoto = blankFile;
+          this.formGrp.controls['profilePhoto'].reset();
           }
-        }
+
       }
-    } else {
-      if (elementId === 'inputGroupFile01') {
+    } catch (error) {
+      // occurs if user did not select any file and close dialog box
+      if (elementId === 'inputFile01') {
+        // switch the error msg to false
         this.errorFile01 = false;
-        this.previewSvc.file01 = new File([],'',undefined);
-      } else if (elementId === 'inputGroupFile02') {
+        // reset svc so preview resets
+        this.previewSvc.file01 = blankFile;
+        // reset formGrp controls
+        this.formGrp.controls['file01'].reset();
+      } else if (elementId === 'inputFile02') {
         this.errorFile02 = false;
-        this.previewSvc.file02 = new File([],'',undefined);
-      } else if (elementId === 'inputGroupFile03') {
+        this.previewSvc.file02 = blankFile;
+        this.formGrp.controls['file02'].reset();
+      } else if (elementId === 'inputFile03') {
         this.errorFile03 = false;
-        this.previewSvc.file03 = new File([],'',undefined);
-      } else if (elementId === 'inputGroupFile03') {
-        this.errorFile03 = false;
-        this.previewSvc.file03 = new File([],'',undefined);
+        this.previewSvc.file03 = blankFile;
+        this.formGrp.controls['file03'].reset();
       } else if (elementId === 'inputProfilePhoto') {
         this.errorProfilePhoto = false;
-        this.previewSvc.profilePhoto = new File([],'',undefined);
+        this.previewSvc.profilePhoto = blankFile;
+        this.formGrp.controls['profilePhoto'].reset();
       }
     }
+
   }
 
   dataURItoBlob(dataURI: string) {

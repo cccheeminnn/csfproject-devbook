@@ -27,16 +27,9 @@ public class DevbookRestController {
     }
 
     @PostMapping(path = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> postRegister(@ModelAttribute Register register
-        )
+    public ResponseEntity<String> postRegister(@ModelAttribute Register register)
     {
-        System.out.println(">>>> " + register.getSkills());
-        try {
-            System.out.println(">>>>file02 " + register.getFile02().getSize());
-
-        } catch (Exception e) {
-            System.out.println("file02 not uploaded");
-        }
+        System.out.println(register.getWebsites());
         return null;
         // boolean insert = userSvc.insertNewUser(DevbookUser.createFromPayload(payload));
         // if (insert) {

@@ -13,18 +13,16 @@ public class Register {
     private String previousCompany;
     private String education;
     private String skills;
+    private String websites;
     private String file01Description;
     private String file02Description;
     private String file03Description;
 
     private MultipartFile file01;
     private MultipartFile file02;
-    // private MultipartFile file03;
-    // private MultipartFile profilePhoto;
+    private MultipartFile file03;
+    private MultipartFile profilePhoto;
 
-    // public void setProfilePhoto(MultipartFile profilePhoto) {
-    //     this.profilePhoto = profilePhoto;
-    // }
     public String getName() {
         return name;
     }
@@ -79,6 +77,12 @@ public class Register {
     public void setSkills(String skills) {
         this.skills = skills;
     }
+    public String getWebsites() {
+        return websites;
+    }
+    public void setWebsites(String websites) {
+        this.websites = websites;
+    }
     public String getFile01Description() {
         return file01Description;
     }
@@ -108,17 +112,19 @@ public class Register {
         return file02;
     }
     public void setFile02(MultipartFile file02) {
-        System.out.println(">>>> file02 " + file02);
         this.file02 = file02;
     }
-    // public MultipartFile getFile03() {
-    //     return file03;
-    // }
-    // public void setFile03(MultipartFile file03) {
-    //     this.file03 = file03;
-    // }
-    // public MultipartFile getProfilePhoto() {
-    //     return profilePhoto;
-    // }
+    public MultipartFile getFile03() {
+        return file03;
+    }
+    public void setFile03(MultipartFile file03) {
+        this.file03 = file03;
+    }
+    public MultipartFile getProfilePhoto() {
+        return profilePhoto;
+    }
+    public void setProfilePhoto(MultipartFile profilePhoto) {
+        this.profilePhoto = profilePhoto;
+    }
 
 }

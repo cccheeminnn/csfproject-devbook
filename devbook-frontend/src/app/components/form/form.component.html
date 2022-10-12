@@ -53,7 +53,7 @@
                         <mat-error *ngIf="errorProfilePhoto">Image file only!</mat-error>
                         <div class="input-group mb-3">
                             <label class="input-group-text" for="inputGroupFile04">Profile Photo</label>
-                            <input #inputFile04 type="file" accept="image/*" class="form-control" id="inputProfilePhoto" (change)="readFileType($event)">
+                            <input #inputProfilePhoto type="file" accept="image/*" class="form-control" id="inputProfilePhoto" (change)="readFileType($event)">
                         </div>
                         <mat-form-field style="display: block;" appearance="fill">
                             <mat-label>Biography</mat-label>
@@ -198,8 +198,8 @@
                         <!-- Image 1 -->
                         <mat-error *ngIf="errorFile01">Image file only!</mat-error>
                         <div class="input-group mb-3">
-                            <label class="input-group-text" for="inputGroupFile01">Upload 01</label>
-                            <input #inputFile01 type="file" accept="image/*" class="form-control" id="inputGroupFile01" (change)="readFileType($event)">
+                            <label class="input-group-text" for="inputFile01">Upload 01</label>
+                            <input #inputFile01 type="file" accept="image/*" class="form-control" id="inputFile01" (change)="readFileType($event)">
                         </div>
                         <mat-form-field *ngIf="inputFile01.value.length > 0 && !errorFile01" style="display: block; margin-bottom: 5px;" appearance="fill">
                             <mat-label>Description 1</mat-label>
@@ -211,8 +211,8 @@
                         <!-- Image 2 -->
                         <mat-error *ngIf="errorFile02">Image file only!</mat-error>
                         <div class="input-group mb-3">
-                            <label class="input-group-text" for="inputGroupFile02">Upload 02</label>
-                            <input #inputFile02 type="file" accept="image/*" class="form-control" id="inputGroupFile02" (change)="readFileType($event)">
+                            <label class="input-group-text" for="inputFile02">Upload 02</label>
+                            <input #inputFile02 type="file" accept="image/*" class="form-control" id="inputFile02" (change)="readFileType($event)">
                         </div>
                         <mat-form-field *ngIf="inputFile02.value.length > 0 && !errorFile02" style="display: block; margin-bottom: 5px;" appearance="fill">
                             <mat-label>Description 2</mat-label>
@@ -224,8 +224,8 @@
                         <!-- Image 3 -->
                         <mat-error *ngIf="errorFile03">Image file only!</mat-error>
                         <div class="input-group mb-3">
-                            <label class="input-group-text" for="inputGroupFile03">Upload 03</label>
-                            <input #inputFile03 type="file" accept="image/*" class="form-control" id="inputGroupFile03" (change)="readFileType($event)">
+                            <label class="input-group-text" for="inputFile03">Upload 03</label>
+                            <input #inputFile03 type="file" accept="image/*" class="form-control" id="inputFile03" (change)="readFileType($event)">
                         </div>
                         <mat-form-field *ngIf="inputFile03.value.length > 0 && !errorFile03" style="display: block;" appearance="fill">
                             <mat-label>Description 3</mat-label>
@@ -237,8 +237,7 @@
                 </mat-expansion-panel>
             </mat-accordion>
             <div style="float: right; display: flex; margin-top: 5px;">
-                <button mat-button type="submit">
-                    <!-- [disabled]="errorFile01 || errorFile02 || errorFile03 || errorProfilePhoto || formGrp.invalid"> -->
+                <button mat-button type="submit" [disabled]="errorFile01 || errorFile02 || errorFile03 || errorProfilePhoto || !(inputProfilePhoto.value.length > 1) || formGrp.invalid">
                     Submit</button>
             </div>
         </form>
