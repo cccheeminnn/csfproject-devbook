@@ -43,7 +43,15 @@ public class SecurityConfigurer {
             .disable()
             .exceptionHandling().authenticationEntryPoint(jwtAuthEntryPoint).and()
             // dont authenticate this particular request
-            .authorizeRequests().antMatchers("/authenticate", "/api/register").permitAll()
+            .authorizeRequests().antMatchers(
+                "/authenticate",
+                "/api/register",
+                "/api/retrieveall",
+                "/api/usercount",
+                "/api/usercount/filtered",
+                "/api/retrieveuserdetails",
+                "/api/retrievefilteredresults")
+            .permitAll()
             // all other requests requires authentication
             .anyRequest().authenticated()
             // make sure we use stateless session

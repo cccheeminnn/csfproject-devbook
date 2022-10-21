@@ -1,48 +1,52 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { DevbookUserComments, DevbookUser, CurrentUserLiked, CurrentUserRated } from '../../models/models';
+import { BackendService } from '../../services/backend.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BackendService } from '../../../services/backend.service';
-import { DevbookUser, DevbookUserComments, CurrentUserLiked, CurrentUserRated } from '../../../models/models';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { PreviewService } from '../../services/preview.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PreviewService } from '../../../services/preview.service';
-import { SnackbarComponent } from '../../snackbar/snackbar.component';
+import { SnackbarComponent } from '../snackbar/snackbar.component';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-personal',
-  templateUrl: './personal.component.html',
-  styleUrls: ['./personal.component.css']
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.css']
 })
-export class PersonalComponent implements OnInit {
+export class ProfileComponent implements OnInit {
 
+  formGrp!: FormGroup;
   textAreaInput = '';
 
   currentUser!: DevbookUser | null;
   likedUser!: boolean;
   ratedUser!: boolean;
-  sameUser: boolean = false;
+  sameUser!: boolean;
+  ratingValue!: string;
 
   user!: DevbookUser;
   userId: string = this.activatedRoute.snapshot.params['id'];
-  ratingValue!: string;
-
-  formGrp!: FormGroup;
   userComments!: DevbookUserComments[];
 
   constructor(
-    private snackbar: MatSnackBar,
     private router: Router,
     private backendSvc: BackendService,
-    private previewSvc: PreviewService,
     private activatedRoute: ActivatedRoute,
+    private previewSvc: PreviewService,
     private fb: FormBuilder,
-    private carouselConfig: NgbCarouselConfig) {
-    backendSvc.currentUser.subscribe(x => this.currentUser = x);
+    private snackbar: MatSnackBar,
+    private carouselConfig: NgbCarouselConfig
+  ) {
+    this.backendSvc.currentUser.subscribe(x => this.currentUser = x);
     carouselConfig.interval = 4000;
   }
 
   ngOnInit(): void {
-    this.retrieveUserDetails(this.userId);
+    if (this.currentUser === null) {
+      this.router.navigate(['/login']);
+    } else {
+      this.retrieveUserDetails(this.userId);
+    }
 
     this.formGrp = this.fb.group(
       {
@@ -57,8 +61,8 @@ export class PersonalComponent implements OnInit {
   retrieveUserDetails(userId: string) {
     this.backendSvc.retrieveUserDetails(userId).then(result => {
       this.user = result;
-      this.ratingValue = result.ratings;
       this.userComments = this.user.comments;
+      this.ratingValue = this.user.ratings;
       // means theres a user logged in
       if (this.currentUser != null) {
         // check if currently logged in user liked/rated this user
@@ -67,30 +71,10 @@ export class PersonalComponent implements OnInit {
           this.sameUser = true;
         }
       }
-      // console.log('>>>> user', this.user)
+
     }).catch(error => {
       console.log('>>>> retrieve user details error: ', error)
     })
-  }
-
-  addComment() {
-    this.formGrp.controls['email'].setValue(this.user.email);
-    this.formGrp.controls['id'].setValue(this.currentUser!.id);
-    this.formGrp.controls['name'].setValue(this.currentUser!.name);
-    this.formGrp.controls['text'].setValue(this.textAreaInput);
-    const comment: DevbookUserComments = this.formGrp.value as DevbookUserComments;
-    console.log('>>>new comments details: ', comment);
-
-    this.userComments.push(comment);
-
-    this.backendSvc.insertComment(comment);
-    this.textAreaInput = '';
-    this.formGrp.reset();
-  }
-
-  routeToLogin() {
-    document.documentElement.scrollTop = 0; // scroll to top of page automatically
-    this.router.navigate(['/login']);
   }
 
   checkLikedOrRated() {
@@ -156,32 +140,23 @@ export class PersonalComponent implements OnInit {
   }
 
   ratePressed() {
-    if (this.currentUser == null) {
-      this.router.navigate(['/login'])
-    } else {
-      const payload: CurrentUserRated = {
-        userEmail: this.user.email,
-        currentUserEmail: this.currentUser!.email,
-        ratingGiven: this.ratingValue
-      }
-      console.log(payload);
-
-      if (!this.sameUser) {
-        this.backendSvc.rated(payload).then(result => {
-          // console.log('>>>>rated result', result)
-          this.ratingValue = result.data
-        }).catch(error => {
-          // console.log('>>>>rated error', error)
-        })
-      } else {
-        this.previewSvc.snackbarMsg = 'YOU CAN\'T RATE YOURSELF SILLY';
-        this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
-      }
-    }
+    this.previewSvc.snackbarMsg = 'YOU CAN\'T RATE YOURSELF SILLY';
+    this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
   }
 
-}
+  addComment() {
+    this.formGrp.controls['email'].setValue(this.user.email);
+    this.formGrp.controls['id'].setValue(this.currentUser!.id);
+    this.formGrp.controls['name'].setValue(this.currentUser!.name);
+    this.formGrp.controls['text'].setValue(this.textAreaInput);
+    const comment: DevbookUserComments = this.formGrp.value as DevbookUserComments;
+    console.log('>>>new comments details: ', comment);
 
-interface HTMLInputEvent extends Event {
-  target: HTMLInputElement & EventTarget;
+    this.userComments.push(comment);
+
+    this.backendSvc.insertComment(comment);
+    this.textAreaInput = '';
+    this.formGrp.reset();
+  }
+
 }

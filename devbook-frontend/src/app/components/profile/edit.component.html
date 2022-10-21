@@ -15,10 +15,10 @@
       <button mat-button (click)="accordion.closeAll()">Collapse All</button>
     </div>
 
-    <form [formGroup]="formGrp" (submit)="onSubmit()" enctype="multipart/form-data">
+    <form [formGroup]="formGrp">
 
       <mat-accordion style="justify-content: space-between; align-items: center;" multi>
-        <!-- First Panel, Account Login Details -->
+        <!-- First Panel, Change Profile Photo -->
         <mat-expansion-panel>
           <!-- First Panel Headers -->
           <mat-expansion-panel-header>
@@ -26,29 +26,16 @@
               Account
             </mat-panel-title>
             <mat-panel-description style="justify-content: space-between; align-items: center;">
-              Login Information
+              Edit Information
               <mat-icon>account_circle</mat-icon>
             </mat-panel-description>
           </mat-expansion-panel-header>
           <!-- First Panel Form Fields -->
           <mat-divider></mat-divider>
           <div style="text-align: center;">
-            <mat-form-field style="display: block;" appearance="fill">
-              <mat-label>Name</mat-label>
-              <input matInput required formControlName="name">
-            </mat-form-field>
-            <mat-error style="text-align: left;" *ngIf="emailError">Email already exist!</mat-error>
-            <mat-form-field style="display: block;" appearance="fill">
-              <mat-label>Email</mat-label>
-              <input matInput type="email" placeholder="fred@example.com" required formControlName="email" #email>
-            </mat-form-field>
-            <mat-form-field style="display: block;" appearance="fill">
-              <mat-label>Password</mat-label>
-              <input matInput [type]="hide ? 'password' : 'text'" required formControlName="password">
-              <button mat-icon-button matSuffix (click)="hide = !hide">
-                <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
-              </button>
-            </mat-form-field>
+            <img class="portrait rounded-circle"
+              [src]="'https://bigbook.sgp1.digitaloceanspaces.com/users/'+user.id+'/profilephoto.jpg'"
+              alt="Portrait">
             <!-- Profile Picture -->
             <mat-error *ngIf="errorProfilePhoto">Image file only!</mat-error>
             <div class="input-group mb-3">
@@ -58,11 +45,12 @@
             </div>
             <mat-form-field style="display: block;" appearance="fill">
               <mat-label>Biography</mat-label>
-              <textarea matInput type="text" #bio maxlength="250" required formControlName="bio"
-                placeholder="Tell us about yourself!"></textarea>
+              <textarea matInput type="text" #bio maxlength="250" [value]="user.bio" required
+                formControlName="bio" placeholder="Tell us about yourself!"></textarea>
               <mat-hint>Max 250 characters</mat-hint>
               <mat-hint align="end">{{ bio.value.length }} / 250</mat-hint>
             </mat-form-field>
+            <button mat-button type="button" (click)="saveFirstPanel()">Save</button>
           </div>
         </mat-expansion-panel>
 
@@ -83,25 +71,26 @@
           <div style="text-align: center; align-items: center;">
             <mat-form-field style="width: 49%; margin-right: 3px;" appearance="fill">
               <mat-label>Current Role</mat-label>
-              <input matInput formControlName="currentJob">
+              <input matInput formControlName="currentJob" [value]="currentUser!.currentJob">
             </mat-form-field>
             <mat-form-field style="width: 49%; margin-left: 3px;" appearance="fill">
               <mat-label>Current Company</mat-label>
-              <input matInput formControlName="currentCompany">
+              <input matInput formControlName="currentCompany" [value]="currentUser!.currentCompany">
             </mat-form-field>
             <mat-form-field style="display: block;" appearance="fill">
               <mat-label>Previous Company</mat-label>
-              <input matInput type="email" formControlName="previousCompany">
+              <input matInput type="email" formControlName="previousCompany" [value]="currentUser!.previousCompany">
             </mat-form-field>
             <mat-form-field style="display: block;" appearance="fill">
               <mat-label>Highest/Relevant Certification</mat-label>
-              <input matInput required formControlName="education">
+              <input matInput required formControlName="education" [value]="currentUser!.education">
             </mat-form-field>
+            <button mat-button type="button" (click)="saveSecondPanel()">Save</button>
           </div>
         </mat-expansion-panel>
 
         <!-- Third Panel, Skills & Proficiency -->
-        <mat-expansion-panel>
+        <mat-expansion-panel style="text-align: center;">
           <!-- Third Panel Headers -->
           <mat-expansion-panel-header>
             <mat-panel-title>
@@ -135,14 +124,15 @@
                 <mat-option [value]="5">5 - Pro</mat-option>
               </mat-select>
             </mat-form-field>
-            <button mat-icon-button (click)="deleteSkill(i)">
+            <button mat-icon-button type="button" (click)="deleteSkill(i)">
               <mat-icon style="color: grey;">delete</mat-icon>
             </button>
           </div>
+          <button mat-button type="button" (click)="saveThirdPanel()">Save</button>
         </mat-expansion-panel>
 
         <!-- Fourth Panel, Websites -->
-        <mat-expansion-panel>
+        <mat-expansion-panel style="text-align: center;">
           <!-- Fourth Panel Headers -->
           <mat-expansion-panel-header>
             <mat-panel-title>
@@ -171,14 +161,15 @@
               <input matInput formControlName="url">
               <mat-hint align="end">Github, LinkedIn, Facebook etc</mat-hint>
             </mat-form-field>
-            <button mat-icon-button (click)="deleteWebsite(i)">
+            <button mat-icon-button type="button" (click)="deleteWebsite(i)">
               <mat-icon style="color: grey;">delete</mat-icon>
             </button>
           </div>
+          <button mat-button type="button" (click)="saveFourthPanel()">Save</button>
         </mat-expansion-panel>
 
         <!-- Fifth Panel, Screenshots -->
-        <mat-expansion-panel>
+        <mat-expansion-panel style="text-align: center;">
           <!-- Fifth Panel Headers -->
           <mat-expansion-panel-header>
             <mat-panel-title>
@@ -240,17 +231,10 @@
               <mat-hint align="end">{{ description.value.length }} / 100</mat-hint>
             </mat-form-field>
           </div>
+          <button mat-button type="button" (click)="saveFifthPanel()">Save</button>
         </mat-expansion-panel>
       </mat-accordion>
-      <div style="float: right; display: flex; margin-top: 5px;">
-        <button mat-button type="submit"
-          [disabled]="errorFile01 || errorFile02 || errorFile03 || errorProfilePhoto || !(inputProfilePhoto.value.length > 1) || formGrp.invalid">
-          Submit</button>
-      </div>
     </form>
-    <div style="float: right; display: flex; margin-top: 5px">
-      <button mat-button type="button" (click)="openPreview()">Preview</button>
-    </div>
   </div>
 </body>
 

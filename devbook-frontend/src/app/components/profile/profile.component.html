@@ -137,49 +137,38 @@
     </ngb-carousel>
   </div>
   <div class="border-margin-child">
-    <table class="table-properties" *ngIf="!currentUser">
-      <tbody>
-        <tr>
-          <td>
-            <p style="color: grey; font-size: smaller;">Please <span
-                style="color: blue; text-decoration: underline; cursor: pointer" (click)="routeToLogin()">login</span>
-              to comment</p>
-          </td>
-        </tr>
-      </tbody>
-    </table>
     <table class="table-properties" *ngIf="currentUser">
-      <tbody>
-        <tr>
-          <td>
-            <textarea [(ngModel)]="textAreaInput" #textAreaRef placeholder="Add a comment"
-              id="commentTextArea"></textarea>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <button mat-mini-fab type="button" color="primary" style="float: right; transform: scale(0.75);" (click)="addComment()"
-              [disabled]="!(textAreaRef.value.length > 0)">
-              <mat-icon>rate_review</mat-icon>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <tbody>
+      <tr>
+        <td>
+          <textarea [(ngModel)]="textAreaInput" #textAreaRef placeholder="Add a comment"
+            id="commentTextArea"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <button mat-mini-fab type="button" color="primary" style="float: right; transform: scale(0.75);" (click)="addComment()"
+            [disabled]="!(textAreaRef.value.length > 0)">
+            <mat-icon>rate_review</mat-icon>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
   </div>
   <div class="border-margin-child">
     <div *ngFor="let comment of user.comments" style="margin-bottom: 10px;">
-      <img [src]="'https://bigbook.sgp1.digitaloceanspaces.com/users/'+comment.id+'/profilephoto.jpg'"
-        class="rounded-circle" style="height: 50px; width: 50px; object-fit: cover; float: left; margin-right: 3px;">
-      <div
-        style="border: 1px solid #cfd8dc; border-radius: 5px; padding-left: 5px; padding-right: 5px; margin-left: 55px; margin-bottom: 5px; font-size: x-small; font-weight: bold; background-color: #cfd8dc;">
-        {{ comment.name }}
-        <p style="font-size: small; font-weight: normal; max-width: inherit;">
-          {{ comment.text }}
-        <p>
-      </div>
+        <img [src]="'https://bigbook.sgp1.digitaloceanspaces.com/users/'+comment.id+'/profilephoto.jpg'" class="rounded-circle"
+            style="height: 50px; width: 50px; object-fit: cover; float: left; margin-right: 3px;">
+        <div
+            style="border: 1px solid #cfd8dc; border-radius: 5px; padding-left: 5px; padding-right: 5px; margin-left: 55px; margin-bottom: 5px; font-size: x-small; font-weight: bold; background-color: #cfd8dc;">
+            {{ comment.name }}
+            <p style="font-size: small; font-weight: normal; max-width: inherit;">
+                {{ comment.text }}
+            <p>
+        </div>
     </div>
-  </div>
+</div>
 </body>
 
 </html>

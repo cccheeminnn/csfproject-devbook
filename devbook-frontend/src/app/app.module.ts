@@ -16,11 +16,19 @@ import { PreviewComponent } from './components/form/preview.component';
 import { PreviewService } from './services/preview.service';
 import { BackendService } from './services/backend.service';
 import { HttpClientModule } from '@angular/common/http';
+import { LoginComponent } from './components/form/login.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { SnackbarComponent } from './components/snackbar/snackbar.component';
+import { EditComponent } from './components/profile/edit.component';
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent},
-  {path: 'user/:userId', component: PersonalComponent},
-  {path: 'form', component: FormComponent},
+  {path: 'filter', component: HomeComponent},
+  {path: 'login', component: LoginComponent},
+  {path: 'user/:id/details', component: PersonalComponent}, // other users profile
+  {path: 'user/:id/profile', component: ProfileComponent}, // logged in user profile
+  {path: 'user/:id/edit', component: EditComponent}, // edit logged in user profile
+  {path: 'register', component: FormComponent},
   {path: '**', redirectTo: '/', pathMatch: 'full'}
 ]
 
@@ -31,7 +39,11 @@ const appRoutes: Routes = [
     PersonalComponent,
     HomeComponent,
     FormComponent,
-    PreviewComponent
+    PreviewComponent,
+    LoginComponent,
+    ProfileComponent,
+    SnackbarComponent,
+    EditComponent
   ],
   imports: [
     BrowserModule,

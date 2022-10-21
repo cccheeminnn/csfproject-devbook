@@ -44,4 +44,13 @@ export class PreviewService {
     public set profilePhoto(f: File) {
         this._profilePhoto = f;
     }
+
+    // to display message in the popup
+    private _snackbarMsg!: string;
+    public get snackbarMsg() {
+      return this._snackbarMsg;
+    }
+    public set snackbarMsg(message: string) {
+      this._snackbarMsg = message;
+    }
 }

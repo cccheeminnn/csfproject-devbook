@@ -1,64 +1,66 @@
 <div>
-    <div>
-        <mat-toolbar color="primary">
-            <button mat-icon-button (click)="sidenavDrawer.toggle()">
-                <mat-icon>list</mat-icon>
-            </button>
-            <input type="text" style="min-width: 20%;" placeholder="Search user">
+  <div>
+    <mat-toolbar color="primary">
+      <img [routerLink]="['']" (click)="toggleDrawer()" class="logo" src="https://bigbook.sgp1.digitaloceanspaces.com/Templates/logo5.jpg">
+      <button mat-icon-button (click)="sidenavDrawer.toggle()">
+        <mat-icon>list</mat-icon>
+      </button>
+      <input [(ngModel)]="searchTerm" style="min-width: 150px;" placeholder="Search user"
+        (keydown.enter)="searchUser()">
 
-            <span style="flex: 1 1 auto;"></span>
+      <span style="flex: 1 1 auto;"></span>
 
-            <button mat-icon-button #notificationsTrigger (click)="openNotificationsPanel()"
-                [matMenuTriggerFor]="notificationsPanel">
-                <mat-icon>notification_important</mat-icon>
-            </button>
-            <button mat-raised-button color="accent" type="button" style="margin: 1% 0% 1% 1%;">Login</button>
-            <button mat-raised-button color="accent" type="button" style="margin: 1% 0% 1% 1%;">Signup</button>
-        </mat-toolbar>
-    </div>
-    <div>
-        <mat-drawer-container class="sidenav-container" autosize>
-            <mat-drawer #sidenavDrawer class="sidenav" mode="over">
-                <h2 style="color: white;">Devbook</h2>
-                <mat-selection-list #notifications [multiple]="false">
-                    <mat-list-option [routerLink]="['']" style="color: white;" (click)="sidenavDrawer.toggle()">
-                        Home
-                    </mat-list-option>
-                    <mat-list-option [routerLink]="['/user/123']" style="color: white;" (click)="sidenavDrawer.toggle()">
-                        User
-                    </mat-list-option>
-                    <mat-list-option [routerLink]="['/form']" style="color: white;" (click)="sidenavDrawer.toggle()">
-                        Form
-                    </mat-list-option>
-                </mat-selection-list>
-            </mat-drawer>
-            <!-- content project main body -->
-            <div>
-                <ng-content></ng-content>
-            </div>
-        </mat-drawer-container>
-    </div>
+      <button mat-icon-button #notificationsTrigger *ngIf="currentUser" (click)="openNotificationsPanel()"
+        [matMenuTriggerFor]="notificationsPanel">
+        <mat-icon>notification_important</mat-icon>
+      </button>
+    </mat-toolbar>
+  </div>
+  <div>
+    <mat-drawer-container class="sidenav-container" autosize>
+      <mat-drawer #sidenavDrawer class="sidenav" mode="over">
+        <h2 style="color: white;">Welcome to Devbook<span *ngIf="currentUser">, {{currentUser.name}}</span></h2>
+        <div>
+          <button mat-raised-button color="accent" type="button" [routerLink]="['']" (click)="sidenavDrawer.toggle()"
+            style="margin: 1% 0% 1% 1%;">Home</button>
+        </div>
+        <button mat-raised-button color="accent" type="button" *ngIf="!currentUser" [routerLink]="['/login']"
+          (click)="sidenavDrawer.toggle()" style="margin: 1% 0% 1% 1%;">Login</button>
+        <button mat-raised-button color="accent" type="button" *ngIf="!currentUser" [routerLink]="['/register']"
+          (click)="sidenavDrawer.toggle()" style="margin: 1% 0% 1% 1%;">Register</button>
+        <button mat-raised-button color="accent" type="button" *ngIf="currentUser"
+          [routerLink]="['/user',currentUser.id,'profile']" (click)="sidenavDrawer.toggle()"
+          style="margin: 1% 0% 1% 1%;">Profile</button>
+        <button mat-raised-button color="accent" type="button" *ngIf="currentUser" (click)="logout()"
+          style="margin: 1% 0% 1% 1%;">Logout</button>
+      </mat-drawer>
+      <!-- content project main body -->
+      <div>
+        <ng-content></ng-content>
+      </div>
+    </mat-drawer-container>
+  </div>
 </div>
 <!-- for notification panel -->
 <!-- click > retrieve notification > populate (maybe 10 the most?) -->
 <mat-menu #notificationsPanel="matMenu">
-    <cdk-virtual-scroll-viewport itemSize="3" class="notification-viewport">
-        <mat-selection-list #notifications [multiple]="false">
-            <mat-list-option (click)="notificationClicked()" [value]="'notification 1'">
-                Notification 1
-            </mat-list-option>
-            <mat-list-option (click)="notificationClicked()" [value]="'notification 2'">
-                Notification 2
-            </mat-list-option>
-            <mat-list-option (click)="notificationClicked()" [value]="'notification 3'">
-                Notification 3
-            </mat-list-option>
-            <mat-list-option (click)="notificationClicked()" [value]="'notification 4'">
-                Notification 4
-            </mat-list-option>
-            <mat-list-option (click)="notificationClicked()" [value]="'notification 5'">
-                Notification 5
-            </mat-list-option>
-        </mat-selection-list>
-    </cdk-virtual-scroll-viewport>
+  <cdk-virtual-scroll-viewport itemSize="3" class="notification-viewport">
+    <mat-selection-list #notifications [multiple]="false">
+      <mat-list-option (click)="notificationClicked()" [value]="'notification 1'">
+        Notification 1
+      </mat-list-option>
+      <mat-list-option (click)="notificationClicked()" [value]="'notification 2'">
+        Notification 2
+      </mat-list-option>
+      <mat-list-option (click)="notificationClicked()" [value]="'notification 3'">
+        Notification 3
+      </mat-list-option>
+      <mat-list-option (click)="notificationClicked()" [value]="'notification 4'">
+        Notification 4
+      </mat-list-option>
+      <mat-list-option (click)="notificationClicked()" [value]="'notification 5'">
+        Notification 5
+      </mat-list-option>
+    </mat-selection-list>
+  </cdk-virtual-scroll-viewport>
 </mat-menu>

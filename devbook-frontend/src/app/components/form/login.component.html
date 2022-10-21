@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="login-table">
+    <p>
+      Welcome to Devbook
+    </p>
+    <form [formGroup]="formGrp" (ngSubmit)="onLoginSubmit()">
+      <table style="text-align: center;">
+        <tbody>
+          <tr>
+            <td>
+              <mat-form-field appearance="standard">
+                <mat-label>Enter your username</mat-label>
+                <input matInput type="text" id="username" formControlName="username">
+              </mat-form-field>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <mat-form-field appearance="standard">
+                <mat-label>Enter your password</mat-label>
+                <input matInput [type]="hide ? 'password' : 'text'" id="password" id="password" formControlName="password">
+                <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                  <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+              </mat-form-field>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <button mat-button type="submit" [disabled]="formGrp.invalid">Submit</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+
+</body>
+
+</html>

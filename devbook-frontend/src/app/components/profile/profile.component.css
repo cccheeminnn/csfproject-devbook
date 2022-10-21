@@ -155,13 +155,6 @@ textarea {
     margin-left: auto;
 }
 
-.thumbs-up-icon {
-  color: #3F51B5
-}
-.thumbs-up-icon:hover {
-  cursor: pointer;
-}
-
 .carousel-img {
   display: flex;
   justify-content: center;
@@ -169,4 +162,11 @@ textarea {
 .img-in-carousel {
   width:80%;
   height: auto;
+}
+
+.thumbs-up-icon {
+  color: #3F51B5
+}
+.thumbs-up-icon:hover {
+  cursor: pointer;
 }

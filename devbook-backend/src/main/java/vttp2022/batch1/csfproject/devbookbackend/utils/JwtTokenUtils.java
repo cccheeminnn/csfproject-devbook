@@ -28,7 +28,7 @@ public class JwtTokenUtils {
 
 	// retrieve expiration date from jwt token
 	public Date getExpirationDateFromToken(String token)
-    {
+    {	
 		return getClaimFromToken(token, Claims::getExpiration);
 	}
 

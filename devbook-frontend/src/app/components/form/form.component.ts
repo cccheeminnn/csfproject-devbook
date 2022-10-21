@@ -1,11 +1,14 @@
-import { Component, OnInit, Type, ViewChild } from '@angular/core';
+import { Component, OnInit, Type, ViewChild, ElementRef } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatAccordion } from '@angular/material/expansion';
 import { PreviewComponent } from './preview.component';
 import { PreviewService } from '../../services/preview.service';
-import { Registration } from 'src/app/models/models';
 import { BackendService } from 'src/app/services/backend.service';
+import { DevbookUser } from '../../models/models';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackbarComponent } from '../snackbar/snackbar.component';
 
 @Component({
   selector: 'app-form',
@@ -14,22 +17,33 @@ import { BackendService } from 'src/app/services/backend.service';
 })
 export class FormComponent implements OnInit {
 
+  currentUser!: DevbookUser | null;
+
   // for Expand/Collaspe all
   @ViewChild(MatAccordion)
   accordion: MatAccordion = new MatAccordion;
 
+  // for email
+  @ViewChild('email')
+  emailHTMLEle!: ElementRef;
+  emailError = false;
+
   // for password field toggle visibility
   hide:boolean = true;
 
+  // for form
   formGrp!: FormGroup;
   skillsArray!: FormArray;
   websitesArray!: FormArray;
 
   constructor(
+    private snackBar: MatSnackBar,
+    private router: Router,
     private fb: FormBuilder,
     private dialog: MatDialog, // for Preview
     private previewSvc: PreviewService,
-    private backendSvc: BackendService) { }
+    private backendSvc: BackendService) {
+    }
 
   ngOnInit(): void {
     this.skillsArray = this.fb.array([]);
@@ -58,7 +72,7 @@ export class FormComponent implements OnInit {
 
   pushSkillsArray() {
     const skillsArrayCtrl = this.fb.group({
-      name: this.fb.control<string>('', [ Validators.maxLength(10) ]),
+      name: this.fb.control<string>('', [ Validators.maxLength(15) ]),
       rating: this.fb.control<number>(1, [ ])
     })
     this.skillsArray.push(skillsArrayCtrl);
@@ -69,7 +83,7 @@ export class FormComponent implements OnInit {
 
   pushWebsitesArray() {
     const websitesArrayCtrl = this.fb.group({
-      name: this.fb.control<string>('', [ Validators.maxLength(10) ]),
+      name: this.fb.control<string>('', [ Validators.maxLength(15) ]),
       url: this.fb.control<string>('', [ ])
     })
     this.websitesArray.push(websitesArrayCtrl);
@@ -116,7 +130,16 @@ export class FormComponent implements OnInit {
     })
 
     this.backendSvc.register(formData).then(result => {
-      console.log('>>>> postRegister response: ', result)
+      // console.log('>>>> postRegister response: ', result)
+      this.previewSvc.snackbarMsg = 'REGISTER_SUCCESSFUL';
+      this.snackBar.openFromComponent(SnackbarComponent, {duration: 3000, verticalPosition: 'top'}); // 3000 is 3s
+      this.router.navigate(['/login'])
+    }).catch(error => {
+      // console.log('>>>> postRegister response: ', error);
+      if ((<string>(error.error.message)).match('exist')) {
+        this.emailHTMLEle.nativeElement.scrollIntoView({behavior: 'smooth', block: 'end', inline: 'start'})
+        this.emailError = true;
+      }
     })
   }
 
@@ -153,6 +176,7 @@ export class FormComponent implements OnInit {
             // we will then set the actual file to the respective control
             // when it hits the backend we retrieve it by MultipartFile
             this.formGrp.controls['file01'].setValue(inputFile);
+            // show 2nd upload input
           } else if (elementId === 'inputFile02') {
             this.errorFile02 = false;
             this.previewSvc.file02 = event.target.result;
