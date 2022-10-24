@@ -1,7 +1,7 @@
 <span *ngIf="message == 'REGISTER_SUCCESSFUL'" class="green">
   {{message}}
 </span>
-<span *ngIf="message == 'PLEASE LOGIN AGAIN'" class="hotpink">
+<span *ngIf="message == 'PLEASE_LOGIN_AGAIN'" class="hotpink">
   {{message}}
 </span>
 <span *ngIf="message == 'INVALID_CREDENTIALS'" class="hotpink">
@@ -22,8 +22,18 @@
 <span *ngIf="message == 'NO_USERS_FOUND'" class="hotpink">
   {{message}}
 </span>
-<span *ngIf="message == 'YOU CAN\'T RATE YOURSELF SILLY'" class="hotpink">
+<span *ngIf="message == 'YOU_CAN\'T_RATE_YOURSELF_SILLY'" class="hotpink">
   {{message}}
 </span>
 
+<span *ngIf="message == 'CHANGES_SAVED'" class="green">
+  {{message}}
+</span>
+<span *ngIf="message == 'DELETE_SUCCESSFUL'" class="green">
+  {{message}}
+</span>
 
+<!-- generic -->
+<span *ngIf="message == 'ERROR_OCCURRED, REFRESH_&_TRY_AGAIN'" class="hotpink">
+  {{message}}
+</span>

@@ -27,6 +27,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   pageSizeOptions = [1, 8, 12, 16, 20];
   ttlUserCount: number = 0;
   devbookUsers: DevbookUser[] = [];
+  quote!: string;
 
   constructor(
     carouselConfig: NgbCarouselConfig,
@@ -45,6 +46,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
       // console.log('>>>subscribe',params['filterby']);
     })
+
+
   }
 
   ngOnDestroy(): void {
@@ -58,6 +61,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     } else {
       this.retrieveDisplayInfoFromBackend();
     }
+
+    this.backendSvc.getQuote().then(result => {
+      this.quote = result.data
+      console.log(this.quote)
+    });
   }
 
   // mat-paginator EventEmitters
@@ -109,4 +117,5 @@ export class HomeComponent implements OnInit, OnDestroy {
       console.error('>>>> an error has occurred while retrieving filtered users from backend', error);
     })
   }
+
 }

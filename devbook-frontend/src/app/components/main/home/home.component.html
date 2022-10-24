@@ -66,11 +66,12 @@
         <button mat-icon-button [routerLink]="['/user', user.id ,'details']">
           <mat-icon>perm_contact_calendar</mat-icon>
         </button>
-        <button mat-icon-button type="button">
-          <mat-icon>email</mat-icon>
-        </button>
       </mat-card-actions>
     </mat-card>
+    <!-- QOTD -->
+    <div style="margin-top: 5px; font-style: italic; font-size: medium;">
+      <p>{{ quote }}</p>
+    </div>
     <!-- bottom page pagination -->
     <div style="float: right;">
       <mat-paginator #paginator [length]="ttlUserCount" [pageSize]="8" [pageSizeOptions]="pageSizeOptions"

@@ -15,8 +15,8 @@ export interface DevbookUser {
       education: string,
       likes: number,
       ratings: string,
-      skills: DevbookUserWebsites[],
-      websites: DevbookUserSkills[],
+      skills: DevbookUserSkills[],
+      websites: DevbookUserWebsites[],
       images: DevbookUserImages[],
       comments: DevbookUserComments[]
 }
@@ -27,11 +27,13 @@ export interface DevbookUserWebsites {
 }
 
 export interface DevbookUserSkills {
+  userEmail?: string,
   name: string,
   rating: string
 }
 
 export interface DevbookUserImages {
+  userEmail?: string,
   name: string,
   description: string
 }
@@ -58,4 +60,12 @@ export interface CurrentUserRated {
   userEmail: string,
   currentUserEmail: string,
   ratingGiven: string
+}
+
+export interface SecondPanelData {
+  userEmail: string,
+  currentJob?: string,
+  currentCompany?: string,
+  previousCompany?: string,
+  education: string
 }

@@ -50,9 +50,9 @@
               </button>
             </mat-form-field>
             <!-- Profile Picture -->
-            <mat-error *ngIf="errorProfilePhoto">Image file only!</mat-error>
+            <mat-error *ngIf="errorProfilePhoto">Image filetype only and filesize below 1.05mb!</mat-error>
             <div class="input-group mb-3">
-              <label class="input-group-text" for="inputGroupFile04">Profile Photo</label>
+              <label class="input-group-text" for="inputProfilePhoto">Profile Photo</label>
               <input #inputProfilePhoto type="file" accept="image/*" class="form-control" id="inputProfilePhoto"
                 (change)="readFileType($event)">
             </div>
@@ -196,7 +196,7 @@
               Upload up to 3 images of anything! Yourself or your creations!
             </div>
             <!-- Image 1 -->
-            <mat-error *ngIf="errorFile01">Image file only!</mat-error>
+            <mat-error *ngIf="errorFile01">Image filetype only and filesize below 1.05mb!</mat-error>
             <div class="input-group mb-3">
               <label class="input-group-text" for="inputFile01">Upload 01</label>
               <input #inputFile01 type="file" accept="image/*" class="form-control" id="inputFile01"
@@ -205,13 +205,13 @@
             <mat-form-field style="display: block; margin-bottom: 5px;" appearance="fill">
               <mat-label>Description 1</mat-label>
               <textarea matInput type="text" #description01 formControlName="file01Description" maxlength="100"
-                placeholder="Describe the image!"></textarea>
+                placeholder="Caption the image!"></textarea>
               <mat-hint>Max 100 characters</mat-hint>
               <mat-hint align="end">{{ description01.value.length }} / 100</mat-hint>
             </mat-form-field>
 
             <!-- Image 2 -->
-            <mat-error *ngIf="errorFile02">Image file only!</mat-error>
+            <mat-error *ngIf="errorFile02">Image filetype only and filesize below 1.05mb!</mat-error>
             <div class="input-group mb-3">
               <label class="input-group-text" for="inputFile02">Upload 02</label>
               <input #inputFile02 type="file" accept="image/*" class="form-control" id="inputFile02"
@@ -220,13 +220,13 @@
             <mat-form-field style="display: block; margin-bottom: 5px;" appearance="fill">
               <mat-label>Description 2</mat-label>
               <textarea matInput type="text" #description formControlName="file02Description" maxlength="100"
-                placeholder="Describe the image!"></textarea>
+                placeholder="Caption the image!"></textarea>
               <mat-hint>Max 100 characters</mat-hint>
               <mat-hint align="end">{{ description.value.length }} / 100</mat-hint>
             </mat-form-field>
 
             <!-- Image 3 -->
-            <mat-error *ngIf="errorFile03">Image file only!</mat-error>
+            <mat-error *ngIf="errorFile03">Image filetype only and filesize below 1.05mb!</mat-error>
             <div class="input-group mb-3">
               <label class="input-group-text" for="inputFile03">Upload 03</label>
               <input #inputFile03 type="file" accept="image/*" class="form-control" id="inputFile03"
@@ -235,7 +235,7 @@
             <mat-form-field style="display: block;" appearance="fill">
               <mat-label>Description 3</mat-label>
               <textarea matInput type="text" #description formControlName="file03Description" maxlength="100"
-                placeholder="Describe the image!"></textarea>
+                placeholder="Caption the image!"></textarea>
               <mat-hint>Max 100 characters</mat-hint>
               <mat-hint align="end">{{ description.value.length }} / 100</mat-hint>
             </mat-form-field>

@@ -8,12 +8,15 @@ public class Queries {
     public final static String SQL_RETRIEVE_USER_DETAILS_EMAIL =
         "select user_id, user_name, user_email from user_credentials where user_email = ?";
 
+    public final static String SQL_VERIFY_USER_EMAIL =
+        "update user_credentials set verified = true where user_id = ?";
+
     // retrieve ALL users
     public final static String SQL_RETRIEVE_LIST_OF_USERS =
         "select user_id, user_name, user_email from user_credentials limit ? offset ?";
     public final static String SQL_RETRIEVE_COUNT_OF_USERS =
         "select count(*) from user_credentials";
-        
+
     // retrieve FILTERED users
     public final static String SQL_RETRIEVE_LIST_OF_FILTERED_USERS =
         "select user_id, user_name, user_email from user_credentials where user_name like ? limit ? offset ?";
@@ -33,8 +36,17 @@ public class Queries {
     public final static String SQL_RETRIEVE_USER_IMAGES =
         "select * from user_images where user_email = ?";
 
+    public final static String SQL_CHECK_USER_IMAGE_EXIST =
+        "select * from user_images where user_email = ? and image_name = ?";
+
     public final static String SQL_INSERT_USER_IMAGES =
         "insert into user_images (user_email, image_name, image_description) values (?,?,?)";
+
+    public final static String SQL_UPDATE_USER_IMAGES =
+        "update user_images set image_description = ? where user_email = ? and image_name = ?";
+
+    public final static String SQL_DELETE_USER_IMAGE =
+        "delete from user_images where user_email = ? and image_name = ?";
 
     // user_occupation queries
     public final static String SQL_RETRIEVE_USER_OCCUPATION =
@@ -43,6 +55,12 @@ public class Queries {
     public final static String SQL_INSERT_USER_OCCUPATION =
         "insert into user_occupation values (?,?,?,?,?,?)";
 
+    public final static String SQL_UPDATE_USER_OCCUPATION =
+        "update user_occupation set current_occupation = ?, current_company = ?, previous_company = ?, education_certification = ? where user_email = ?";
+
+    public final static String SQL_UPDATE_USER_BIO =
+        "update user_occupation set user_bio = ? where user_email = ?";
+
     // user_skills queries
     public final static String SQL_RETRIEVE_USER_SKILLS =
         "select * from user_skills where user_email = ?";
@@ -50,12 +68,18 @@ public class Queries {
     public final static String SQL_INSERT_USER_SKILLS =
         "insert into user_skills (user_email, skill_name, skill_rating) values (?,?,?)";
 
+    public final static String SQL_DELETE_USER_SKILLS =
+        "delete from user_skills where user_email = ?";
+
     // user_websites queries
     public final static String SQL_RETRIEVE_USER_WEBSITES =
         "select * from user_websites where user_email = ?";
 
     public final static String SQL_INSERT_USER_WEBSITES =
         "insert into user_websites (user_email, website_name, website_url) values (?,?,?)";
+
+    public final static String SQL_DELETE_USER_WEBSITES =
+        "delete from user_websites where user_email = ?";
 
     // user_comments queries
     public final static String SQL_RETRIEVE_USER_COMMENTS =
@@ -65,7 +89,7 @@ public class Queries {
         "insert into user_comments (user_email, comment_id, comment_name, comment_text) values (?,?,?,?)";
 
     // user_likes_ratings queries
-    public final static String SQL_INSERT_USER_LIKES_RATINGS = 
+    public final static String SQL_INSERT_USER_LIKES_RATINGS =
         "insert into user_likes_ratings values (?,?,?)";
     public final static String SQL_RETRIEVE_USER_LIKES_RATINGS =
         "select * from user_likes_ratings where user_email = ?";

@@ -59,6 +59,13 @@ public class DevbookRepository {
         return exist;
     }
 
+    public boolean verifyUser(String userId) {
+        int update = template.update(SQL_VERIFY_USER_EMAIL, userId);
+        if (update == 1)
+            return true;
+        return false;
+    }
+
     // for pagination ALL users
     public Integer retrieveTotalUserCount() {
         SqlRowSet rs = template.queryForRowSet(SQL_RETRIEVE_COUNT_OF_USERS);
@@ -505,4 +512,5 @@ public class DevbookRepository {
     }
     // retrieve from mysql
     // -------------------------- END
+
 }

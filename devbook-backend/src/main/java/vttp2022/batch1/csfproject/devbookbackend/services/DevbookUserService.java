@@ -16,6 +16,8 @@ import vttp2022.batch1.csfproject.devbookbackend.repositories.DevbookRepository;
 @Service
 public class DevbookUserService {
 
+    String host = "https://devbookapp.herokuapp.com/api/verify/";
+
     @Autowired
     private DevbookRepository devbookRepo;
 
@@ -23,6 +25,18 @@ public class DevbookUserService {
     public boolean insertNewUser(Register newUserReg)
     {
         return devbookRepo.insertNewUser(newUserReg);
+    }
+
+    public String generateVerificationLink(String userEmail) {
+        DevbookUser user = devbookRepo.retrieveUserDetailsEmail(userEmail).get();
+        String userId = user.getId();
+
+        String link = host+userId;
+        return link;
+    }
+
+    public boolean verifyUser(String userId) {
+        return devbookRepo.verifyUser(userId);
     }
 
     public boolean insertComment(UserComment comment) {
@@ -94,4 +108,5 @@ public class DevbookUserService {
     public Optional<DevbookUser> retrieveUserDetailsEmail(String email) {
         return devbookRepo.retrieveUserDetailsEmail(email);
     }
+
 }

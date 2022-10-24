@@ -23,7 +23,6 @@
   padding: auto;
   vertical-align: middle;
   text-align: center;
-  display: table-cell;
 }
 
 .portrait {
@@ -162,11 +161,34 @@ textarea {
   cursor: pointer;
 }
 
-.carousel-img {
+.frame {
+  max-width: 800px;
+  max-height: 200px;
+  width: 100%;
+  height: auto;
+  margin: auto;
   display: flex;
   justify-content: center;
 }
-.img-in-carousel {
-  width:80%;
+.picture-in-frame {
+  max-width: 100%;
+  object-fit: contain;
+}
+
+/* .frame {
+  width: 800px;
+  height: 200px;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+}
+.picture-in-frame {
+  max-width: 800px;
+  max-height: 200px;
+  width: auto;
   height: auto;
+} */
+
+.save-icon {
+  color: #3F51B5
 }

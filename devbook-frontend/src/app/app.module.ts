@@ -20,6 +20,7 @@ import { LoginComponent } from './components/form/login.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { SnackbarComponent } from './components/snackbar/snackbar.component';
 import { EditComponent } from './components/profile/edit.component';
+import { UpdateService } from './services/update.service';
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent},
@@ -57,7 +58,8 @@ const appRoutes: Routes = [
   ],
   providers: [
     PreviewService,
-    BackendService ],
+    BackendService,
+    UpdateService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

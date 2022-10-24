@@ -20,7 +20,8 @@
         </tr>
         <tr>
           <td colspan="2" style="text-align: center;">
-            <ngx-material-rating [dense]="true" [max]="5" [color]="'accent'" [(ngModel)]="ratingValue" (click)="ratePressed()" [readonly]="sameUser">
+            <ngx-material-rating [dense]="true" [max]="5" [color]="'accent'" [(ngModel)]="ratingValue"
+              (click)="ratePressed()" [readonly]="sameUser">
             </ngx-material-rating>
           </td>
         </tr>
@@ -50,7 +51,11 @@
       <tbody>
         <tr>
           <td colspan="2">
-            <p class="name">{{ user.name }}</p>
+            <p class="name">{{ user.name }}
+              <button mat-icon-button style="vertical-align: middle;" type="button" (click)="openOutlook()">
+                <mat-icon class="thumbs-up-icon">email</mat-icon>
+              </button>
+            </p>
           </td>
         </tr>
         <tr>
@@ -128,7 +133,8 @@
     <ngb-carousel [showNavigationArrows]="false" [showNavigationIndicators]="false">
       <ng-template ngbSlide *ngFor="let image of user.images">
         <div class="picsum-img-wrapper carousel-img">
-          <img class="img-in-carousel" [src]="'https://bigbook.sgp1.digitaloceanspaces.com/users/'+user.id+'/'+image.name">
+          <img class="img-in-carousel"
+            [src]="'https://bigbook.sgp1.digitaloceanspaces.com/users/'+user.id+'/'+image.name">
         </div>
         <div class="carousel-caption">
           <p>{{ image.description }}</p>
@@ -158,8 +164,8 @@
         </tr>
         <tr>
           <td>
-            <button mat-mini-fab type="button" color="primary" style="float: right; transform: scale(0.75);" (click)="addComment()"
-              [disabled]="!(textAreaRef.value.length > 0)">
+            <button mat-mini-fab type="button" color="primary" style="float: right; transform: scale(0.75);"
+              (click)="addComment()" [disabled]="!(textAreaRef.value.length > 0)">
               <mat-icon>rate_review</mat-icon>
             </button>
           </td>

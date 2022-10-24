@@ -83,7 +83,7 @@ export class ProfileComponent implements OnInit {
       console.log('have i like? ', this.likedUser);
     }).catch(error => { // chances are jwt expired
       this.backendSvc.logout();
-      this.previewSvc.snackbarMsg = 'PLEASE LOGIN AGAIN';
+      this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
       this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
       this.router.navigate(['/login'])
     });
@@ -92,7 +92,7 @@ export class ProfileComponent implements OnInit {
       console.log('have i rated? ', this.ratedUser);
     }).catch(error => { // chances are jwt expired
       this.backendSvc.logout();
-      this.previewSvc.snackbarMsg = 'PLEASE LOGIN AGAIN';
+      this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
       this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
       this.router.navigate(['/login'])
     });
@@ -140,7 +140,7 @@ export class ProfileComponent implements OnInit {
   }
 
   ratePressed() {
-    this.previewSvc.snackbarMsg = 'YOU CAN\'T RATE YOURSELF SILLY';
+    this.previewSvc.snackbarMsg = 'YOU_CAN\'T_RATE_YOURSELF_SILLY';
     this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
   }
 

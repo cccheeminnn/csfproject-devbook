@@ -148,9 +148,11 @@ select * from user_comments;
 
 DELETE FROM user_received_likes where user_email = 'aaronkwok@devbook.com' and liked_user = 'hughjackman@devbook.com';
 DELETE FROM user_received_ratings where user_email = 'ianfong@devbook.com' and rated_user = 'ianfong@devbook.com';
-update user_credentials set verified = true where user_email = 'keiraknightley@devbook.com';
-update user_likes_ratings set user_likes = 1 where user_email = 'aaronkwok@devbook.com';
+update user_credentials set verified = true where user_email = 'lokiodinson@devbook.com';
+update user_likes_ratings set user_likes = 2, user_ratings = 3.8 where user_email = 'aaronkwok@devbook.com';
+update user_images set image_description = 'This was not my finest moment.' where user_email like 'loki%' and image_name = 'image01.jpg';
 select * from user_credentials where user_name like 'aaron%';
 select * from user_received_likes where user_email like 'aaron%';
+select * from user_images where user_email like 'loki%';
 
 select user_email, liked_user from user_received_likes where user_email = 'aaronkwok@devbook.com';

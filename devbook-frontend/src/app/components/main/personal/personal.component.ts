@@ -99,7 +99,7 @@ export class PersonalComponent implements OnInit {
       console.log('have i like? ', this.likedUser);
     }).catch(error => { // chances are jwt expired
       this.backendSvc.logout();
-      this.previewSvc.snackbarMsg = 'PLEASE LOGIN AGAIN';
+      this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
       this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
       this.router.navigate(['/login'])
     });
@@ -108,7 +108,7 @@ export class PersonalComponent implements OnInit {
       console.log('have i rated? ', this.ratedUser);
     }).catch(error => { // chances are jwt expired
       this.backendSvc.logout();
-      this.previewSvc.snackbarMsg = 'PLEASE LOGIN AGAIN';
+      this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
       this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
       this.router.navigate(['/login'])
     });
@@ -174,14 +174,14 @@ export class PersonalComponent implements OnInit {
           // console.log('>>>>rated error', error)
         })
       } else {
-        this.previewSvc.snackbarMsg = 'YOU CAN\'T RATE YOURSELF SILLY';
+        this.previewSvc.snackbarMsg = 'YOU_CAN\'T_RATE_YOURSELF_SILLY';
         this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
       }
     }
   }
 
-}
+  openOutlook() {
+    window.open(`mailto:${this.user.email}?subject=Hi ${this.user.name} from Devbook&body=I saw your profile on Devbook!`);
+  }
 
-interface HTMLInputEvent extends Event {
-  target: HTMLInputElement & EventTarget;
 }

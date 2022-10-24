@@ -1,7 +1,7 @@
 import { DevbookUserComments, LoginFormDetails } from './../models/models';
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { firstValueFrom, map, Observable, BehaviorSubject } from 'rxjs';
+import { firstValueFrom, map, Observable, BehaviorSubject, first } from 'rxjs';
 import { DevbookUser, CurrentUserLiked, CurrentUserRated, Response } from '../models/models';
 
 @Injectable()
@@ -131,4 +131,9 @@ export class BackendService {
     )
   }
 
+  getQuote(): Promise<Response> {
+    return firstValueFrom(
+      this.http.get<Response>('/api/quote')
+    )
+  }
 }

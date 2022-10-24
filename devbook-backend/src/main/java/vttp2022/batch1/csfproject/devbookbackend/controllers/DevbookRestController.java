@@ -1,23 +1,31 @@
 package vttp2022.batch1.csfproject.devbookbackend.controllers;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
+
+import javax.mail.util.ByteArrayDataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import jakarta.json.Json;
+import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
 import vttp2022.batch1.csfproject.devbookbackend.models.UserComment;
 import vttp2022.batch1.csfproject.devbookbackend.models.UserLikes;
 import vttp2022.batch1.csfproject.devbookbackend.models.UserRatings;
@@ -25,6 +33,7 @@ import vttp2022.batch1.csfproject.devbookbackend.models.DevbookUser;
 import vttp2022.batch1.csfproject.devbookbackend.models.Register;
 import vttp2022.batch1.csfproject.devbookbackend.models.Response;
 import vttp2022.batch1.csfproject.devbookbackend.services.DevbookUserService;
+import vttp2022.batch1.csfproject.devbookbackend.services.EmailService;
 
 @RestController
 @RequestMapping(path = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -33,12 +42,36 @@ public class DevbookRestController {
     @Autowired
     private DevbookUserService userSvc;
 
+    @Autowired
+    private EmailService emailSvc;
+
     // test jwt auth in cookie
     @GetMapping(path = "/helloworld")
     public ResponseEntity<String> getHelloWorld() {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return ResponseEntity.ok("hello world");
+    }
 
-        return ResponseEntity.ok(passwordEncoder.encode("password@o"));
+    @GetMapping(path = "/quote")
+    public ResponseEntity<String> getQuote() {
+
+        RestTemplate template = new RestTemplate();
+        ResponseEntity<String> resp = template.getForEntity("https://zenquotes.io/api/random", String.class);
+
+        InputStream is = new ByteArrayInputStream(resp.getBody().getBytes());
+        JsonReader reader = Json.createReader(is);
+        JsonArray array = reader.readArray();
+
+        String q = "";
+        String a = "";
+        JsonObject o = array.get(0).asJsonObject();
+        q = o.getString("q");
+        a = o.getString("a");
+
+        Response response = new Response();
+        response.setCode(HttpStatus.OK.value());
+        response.setMessage("Quote received.");
+        response.setData("\"" + q + "\"" + " - " + a);
+        return ResponseEntity.status(resp.getStatusCode()).body(Response.toJson(response).toString());
     }
 
     // GetMappings to retrieve ALL users ---START---
@@ -127,6 +160,23 @@ public class DevbookRestController {
         }
     }
 
+    // user verify email
+    @GetMapping(path = "/verify/{userId}")
+    public ResponseEntity<String> getVerify(@PathVariable(value = "userId") String userId) {
+        System.out.println("pathvariable userid " + userId);
+        boolean verified = userSvc.verifyUser(userId);
+
+        Response resp = new Response();
+        if (verified) {
+            resp.setCode(HttpStatus.OK.value());
+            resp.setMessage("Email verification successful");
+        } else {
+            resp.setCode(HttpStatus.BAD_REQUEST.value());
+            resp.setMessage("Email verification failed.");
+        }
+        return ResponseEntity.ok().body(Response.toJson(resp).toString());
+    }
+
     // new user creation
     @PostMapping(path = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> postRegister(@ModelAttribute Register register) {
@@ -144,6 +194,13 @@ public class DevbookRestController {
             if (userCreated) {
                 resp.setMessage("User %s successfully created.".formatted(register.getEmail()));
                 resp.setCode(HttpStatus.CREATED.value());
+
+                try {
+                    String link = userSvc.generateVerificationLink(register.getEmail());
+                    emailSvc.sendVerificationEmail(register.getEmail(), link);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else {
                 resp.setMessage("Something went wrong while trying to create %s user.".formatted(register.getEmail()));
                 resp.setCode(HttpStatus.EXPECTATION_FAILED.value());

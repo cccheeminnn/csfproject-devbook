@@ -46,8 +46,8 @@ export class FormComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    this.skillsArray = this.fb.array([]);
-    this.websitesArray = this.fb.array([]);
+    this.skillsArray = this.fb.array([], [ Validators.required, Validators.minLength(1) ]);
+    this.websitesArray = this.fb.array([],[ Validators.required, Validators.minLength(1) ]);
 
     this.formGrp = this.fb.group({
       name: this.fb.control<string>('', [ Validators.required ]),
@@ -163,7 +163,7 @@ export class FormComponent implements OnInit {
     try {
       // console.log('>>>> selected fileType: ', inputFile);
       // user uploaded the correct file type image/jpeg or image/png
-      if (inputFile.type.startsWith('image')){
+      if (inputFile.type.startsWith('image') && inputFile.size < 1048576){
         reader.readAsDataURL(inputFile);
         // onload is fired when file is read successfully
         reader.onload = (event:any) => {

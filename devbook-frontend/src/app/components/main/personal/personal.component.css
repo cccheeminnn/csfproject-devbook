@@ -162,11 +162,22 @@ textarea {
   cursor: pointer;
 }
 
-.carousel-img {
+/* .carousel-img {
   display: flex;
   justify-content: center;
 }
 .img-in-carousel {
   width:80%;
   height: auto;
+} */
+.carousel-img {
+  width: 1000px;
+  height: 600px;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+}
+.img-in-carousel {
+  max-width: 100%;
+  object-fit: contain;
 }

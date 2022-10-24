@@ -46,6 +46,7 @@ public class SecurityConfigurer {
             .authorizeRequests().antMatchers(
                 "/authenticate",
                 "/api/register",
+                "/api/verify/{userId}",
                 "/api/retrieveall",
                 "/api/usercount",
                 "/api/usercount/filtered",
