@@ -45,6 +45,7 @@ public class SecurityConfigurer {
             // dont authenticate this particular request
             .authorizeRequests().antMatchers(
                 "/authenticate",
+                "/api/quote",
                 "/api/register",
                 "/api/verify/{userId}",
                 "/api/retrieveall",
