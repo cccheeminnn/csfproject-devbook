@@ -15,10 +15,6 @@
 	<description>Devbook</description>
 	<properties>
 		<java.version>19</java.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.source>19</maven.compiler.source>
-		<maven.compiler.target>19</maven.compiler.target>
 	</properties>
 	<dependencies>
 
@@ -95,14 +91,6 @@
 			<version>2.6.3</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-resources-plugin -->
-		<dependency>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-resources-plugin</artifactId>
-			<version>3.2.0</version>
-		</dependency>
-
-		
 	</dependencies>
 
 	<build>
