@@ -1,7 +1,7 @@
+/* keep */
 .logo {
   max-height: 40px;
 }
-
 .logo:hover {
   cursor: pointer;
 }
@@ -9,10 +9,6 @@
 .notification-viewport {
     height: 150px;
     width: 200px;
-}
-
-.notification-item {
-    height: 50px;
 }
 
 .sidenav-container {
@@ -43,3 +39,4 @@ input {
     text-align: left;
     vertical-align: middle;
 }
+/* keep */
