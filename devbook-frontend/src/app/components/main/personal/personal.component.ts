@@ -15,6 +15,8 @@ import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 })
 export class PersonalComponent implements OnInit {
 
+  loading = false;
+
   textAreaInput = '';
 
   currentUser!: DevbookUser | null;
@@ -42,6 +44,7 @@ export class PersonalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loading = true;
     this.retrieveUserDetails(this.userId);
 
     this.formGrp = this.fb.group(
@@ -59,6 +62,7 @@ export class PersonalComponent implements OnInit {
       this.user = result;
       this.ratingValue = result.ratings;
       this.userComments = this.user.comments;
+      this.loading = false;
       // means theres a user logged in
       if (this.currentUser != null) {
         // check if currently logged in user liked/rated this user
@@ -69,11 +73,13 @@ export class PersonalComponent implements OnInit {
       }
       // console.log('>>>> user', this.user)
     }).catch(error => {
+      this.loading = false;
       console.log('>>>> retrieve user details error: ', error)
     })
   }
 
   addComment() {
+    this.loading = true;
     this.formGrp.controls['email'].setValue(this.user.email);
     this.formGrp.controls['id'].setValue(this.currentUser!.id);
     this.formGrp.controls['name'].setValue(this.currentUser!.name);
@@ -83,7 +89,13 @@ export class PersonalComponent implements OnInit {
 
     this.userComments.push(comment);
 
-    this.backendSvc.insertComment(comment);
+    this.backendSvc.insertComment(comment).then(result => {
+      this.loading = false;
+      this.previewSvc.snackbarMsg = 'COMMENT_ADDED';
+      this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
+    }).catch(error => {
+      this.loading = false;
+    });
     this.textAreaInput = '';
     this.formGrp.reset();
   }
@@ -94,10 +106,13 @@ export class PersonalComponent implements OnInit {
   }
 
   checkLikedOrRated() {
+    this.loading = true;
     this.backendSvc.checkIfLiked(this.user.email, this.currentUser!.email).then(result => {
       this.likedUser = result;
-      console.log('have i like? ', this.likedUser);
+      this.loading = false;
+      // console.log('have i like? ', this.likedUser);
     }).catch(error => { // chances are jwt expired
+      this.loading = false;
       this.backendSvc.logout();
       this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
       this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
@@ -105,8 +120,10 @@ export class PersonalComponent implements OnInit {
     });
     this.backendSvc.checkIfRated(this.user.email, this.currentUser!.email).then(result => {
       this.ratedUser = result;
-      console.log('have i rated? ', this.ratedUser);
+      this.loading = false;
+      // console.log('have i rated? ', this.ratedUser);
     }).catch(error => { // chances are jwt expired
+      this.loading = false;
       this.backendSvc.logout();
       this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
       this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
@@ -115,6 +132,7 @@ export class PersonalComponent implements OnInit {
   }
 
   likePressed() {
+    this.loading = true;
     if (this.currentUser == null) {
       this.router.navigate(['/login']);
     } else {
@@ -129,9 +147,11 @@ export class PersonalComponent implements OnInit {
 
         this.backendSvc.liked(payload).then(result => {
           // console.log('>>>>liked result', result)
+          this.loading = false;
           this.previewSvc.snackbarMsg = 'LIKED';
           this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
         }).catch(error => {
+          this.loading = false;
           // console.log('>>>>liked error', error)
         })
       } else {
@@ -146,9 +166,11 @@ export class PersonalComponent implements OnInit {
 
         this.backendSvc.liked(payload).then(result => {
           // console.log('>>>>liked result', result)
+          this.loading = false;
           this.previewSvc.snackbarMsg = 'UNLIKED';
           this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
         }).catch(error => {
+          this.loading = false;
           // console.log('>>>>liked error', error)
         })
       }
@@ -156,6 +178,7 @@ export class PersonalComponent implements OnInit {
   }
 
   ratePressed() {
+    this.loading = true;
     if (this.currentUser == null) {
       this.router.navigate(['/login'])
     } else {
@@ -169,11 +192,16 @@ export class PersonalComponent implements OnInit {
       if (!this.sameUser) {
         this.backendSvc.rated(payload).then(result => {
           // console.log('>>>>rated result', result)
+          this.loading = false;
           this.ratingValue = result.data
+          this.previewSvc.snackbarMsg = 'RATED';
+          this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
         }).catch(error => {
+          this.loading = false;
           // console.log('>>>>rated error', error)
         })
       } else {
+        this.loading = false;
         this.previewSvc.snackbarMsg = 'YOU_CAN\'T_RATE_YOURSELF_SILLY';
         this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
       }

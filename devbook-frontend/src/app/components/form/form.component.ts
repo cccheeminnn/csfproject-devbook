@@ -18,6 +18,7 @@ import { SnackbarComponent } from '../snackbar/snackbar.component';
 export class FormComponent implements OnInit {
 
   currentUser!: DevbookUser | null;
+  loading: boolean = false;
 
   // for Expand/Collaspe all
   @ViewChild(MatAccordion)
@@ -46,6 +47,8 @@ export class FormComponent implements OnInit {
     }
 
   ngOnInit(): void {
+    this.loading = false;
+
     this.skillsArray = this.fb.array([], [ Validators.required, Validators.minLength(1) ]);
     this.websitesArray = this.fb.array([],[ Validators.required, Validators.minLength(1) ]);
 
@@ -102,6 +105,7 @@ export class FormComponent implements OnInit {
   }
 
   onSubmit() {
+    this.loading = true;
     // since some of the file uploads are optional
     // check value for these form controls and if they are null (default)
     // throw in a blank File so backend MultipartFile does not give us error
@@ -131,11 +135,13 @@ export class FormComponent implements OnInit {
 
     this.backendSvc.register(formData).then(result => {
       // console.log('>>>> postRegister response: ', result)
+      this.loading = false;
       this.previewSvc.snackbarMsg = 'REGISTER_SUCCESSFUL';
       this.snackBar.openFromComponent(SnackbarComponent, {duration: 3000, verticalPosition: 'top'}); // 3000 is 3s
       this.router.navigate(['/login'])
     }).catch(error => {
       // console.log('>>>> postRegister response: ', error);
+      this.loading = false;
       if ((<string>(error.error.message)).match('exist')) {
         this.emailHTMLEle.nativeElement.scrollIntoView({behavior: 'smooth', block: 'end', inline: 'start'})
         this.emailError = true;

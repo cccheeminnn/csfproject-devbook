@@ -15,6 +15,8 @@ import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ProfileComponent implements OnInit {
 
+  loading = false;
+
   formGrp!: FormGroup;
   textAreaInput = '';
 
@@ -42,6 +44,7 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loading = true;
     if (this.currentUser === null) {
       this.router.navigate(['/login']);
     } else {
@@ -63,6 +66,7 @@ export class ProfileComponent implements OnInit {
       this.user = result;
       this.userComments = this.user.comments;
       this.ratingValue = this.user.ratings;
+      this.loading = false;
       // means theres a user logged in
       if (this.currentUser != null) {
         // check if currently logged in user liked/rated this user
@@ -73,15 +77,19 @@ export class ProfileComponent implements OnInit {
       }
 
     }).catch(error => {
+      this.loading = false;
       console.log('>>>> retrieve user details error: ', error)
     })
   }
 
   checkLikedOrRated() {
+    this.loading = true;
     this.backendSvc.checkIfLiked(this.user.email, this.currentUser!.email).then(result => {
       this.likedUser = result;
-      console.log('have i like? ', this.likedUser);
+      this.loading = false;
+      // console.log('have i like? ', this.likedUser);
     }).catch(error => { // chances are jwt expired
+      this.loading = false;
       this.backendSvc.logout();
       this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
       this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
@@ -89,8 +97,10 @@ export class ProfileComponent implements OnInit {
     });
     this.backendSvc.checkIfRated(this.user.email, this.currentUser!.email).then(result => {
       this.ratedUser = result;
-      console.log('have i rated? ', this.ratedUser);
+      this.loading = false;
+      // console.log('have i rated? ', this.ratedUser);
     }).catch(error => { // chances are jwt expired
+      this.loading = false;
       this.backendSvc.logout();
       this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
       this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
@@ -99,6 +109,7 @@ export class ProfileComponent implements OnInit {
   }
 
   likePressed() {
+    this.loading = true;
     if (this.currentUser == null) {
       this.router.navigate(['/login']);
     } else {
@@ -113,9 +124,11 @@ export class ProfileComponent implements OnInit {
 
         this.backendSvc.liked(payload).then(result => {
           // console.log('>>>>liked result', result)
+          this.loading = false;
           this.previewSvc.snackbarMsg = 'LIKED';
           this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
         }).catch(error => {
+          this.loading = false;
           // console.log('>>>>liked error', error)
         })
       } else {
@@ -130,9 +143,11 @@ export class ProfileComponent implements OnInit {
 
         this.backendSvc.liked(payload).then(result => {
           // console.log('>>>>liked result', result)
+          this.loading = false;
           this.previewSvc.snackbarMsg = 'UNLIKED';
           this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
         }).catch(error => {
+          this.loading = false;
           // console.log('>>>>liked error', error)
         })
       }
@@ -145,6 +160,7 @@ export class ProfileComponent implements OnInit {
   }
 
   addComment() {
+    this.loading = true;
     this.formGrp.controls['email'].setValue(this.user.email);
     this.formGrp.controls['id'].setValue(this.currentUser!.id);
     this.formGrp.controls['name'].setValue(this.currentUser!.name);
@@ -154,7 +170,13 @@ export class ProfileComponent implements OnInit {
 
     this.userComments.push(comment);
 
-    this.backendSvc.insertComment(comment);
+    this.backendSvc.insertComment(comment).then(result => {
+      this.loading = false;
+      this.previewSvc.snackbarMsg = 'COMMENT_ADDED';
+      this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
+    }).catch(error => {
+      this.loading = false;
+    });
     this.textAreaInput = '';
     this.formGrp.reset();
   }

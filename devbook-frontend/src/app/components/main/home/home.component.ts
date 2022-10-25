@@ -19,9 +19,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   sub$!: Subscription;
 
-  alphabet: string[] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p','q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+  alphabet: string[] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+  loading: boolean = false;
 
-  filterBy!:string;
+  filterBy!: string;
   limit: number = 8;
   offset: number = 0;
   pageSizeOptions = [1, 8, 12, 16, 20];
@@ -35,8 +36,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private backendSvc: BackendService,
-    private previewSvc: PreviewService)
-  {
+    private previewSvc: PreviewService) {
     carouselConfig.interval = 0
     carouselConfig.showNavigationIndicators = false;
     this.sub$ = this.activatedRoute.queryParams.subscribe(params => {
@@ -55,6 +55,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.loading = true;
     // console.log('filterBy value:', this.filterBy)
     if (this.filterBy != undefined) {
       this.filterByAlp(this.filterBy);
@@ -69,8 +70,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   // mat-paginator EventEmitters
-  onPageEvent(event: PageEvent)
-  {
+  onPageEvent(event: PageEvent) {
+    this.loading = true;
     // user changes items per page
     this.limit = event.pageSize;
     // user press next/previous page
@@ -84,36 +85,45 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   // retrieve total user count and user info from backend
-  retrieveDisplayInfoFromBackend()
-  {
+  retrieveDisplayInfoFromBackend() {
+    this.loading = true;
     this.backendSvc.retrieveTotalUserCount().then(result => {
+      this.loading = false;
       document.documentElement.scrollTop = 0; // scroll to top of page automatically
       this.ttlUserCount = result;
     }).catch(error => {
+      this.loading = false;
       console.error('>>>> an error occurred while retrieving total user count', error);
     })
 
     this.backendSvc.retrieveAllUsers(this.limit, this.offset).then(results => {
+      this.loading = false;
       this.devbookUsers = results;
     }).catch(error => {
+      this.loading = false;
       console.error('>>>> an error has occurred while retrieving users from backend', error);
     })
   }
 
   filterByAlp(alp: string) {
+    this.loading = true;
     this.router.navigate(['/filter'], { queryParams: { filterby: alp } });
 
     this.backendSvc.retrieveTotalFilteredUserCount(alp).then(result => {
+      this.loading = false;
       this.ttlUserCount = result;
     }).catch(error => {
+      this.loading = false;
       console.error('>>>> an error occurred while retrieving total filtered user count', error);
       this.previewSvc.snackbarMsg = 'NO_USERS_FOUND';
-      this.snackBar.openFromComponent(SnackbarComponent, {duration: 3000, verticalPosition: 'top'}); // 3000 is 3s
+      this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' }); // 3000 is 3s
     })
 
     this.backendSvc.retrieveFilteredUsers(this.limit, this.offset, alp).then(results => {
+      this.loading = false;
       this.devbookUsers = results;
     }).catch(error => {
+      this.loading = false;
       console.error('>>>> an error has occurred while retrieving filtered users from backend', error);
     })
   }

@@ -1,3 +1,9 @@
+body {
+  z-index: -1;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 /* overall div border */
 .border-margin-parent {
   border-top: 5px solid #D3D3D3;
@@ -78,7 +84,10 @@ textarea {
 }
 
 /* specific tags properties */
-.name, .title, .portfolio, .website {
+.name,
+.title,
+.portfolio,
+.website {
   margin: auto;
   padding: auto;
   text-align: center;
@@ -91,72 +100,73 @@ textarea {
 }
 
 .title {
-    font-size: large;
+  font-size: large;
 }
 
 .portfolio {
-    font-size: larger;
-    font-weight: bold;
+  font-size: larger;
+  font-weight: bold;
 }
 
 .caption {
-    margin: auto;
-    padding: auto;
-    text-align: center;
-    vertical-align: middle;
-    font-style: italic;
+  margin: auto;
+  padding: auto;
+  text-align: center;
+  vertical-align: middle;
+  font-style: italic;
 }
 
 .category {
-    margin: auto;
-    padding: 0 10px 0 0;
-    float: right;
-    vertical-align: middle;
-    display: table-cell;
-    color: grey;
-    font-size: small;
+  margin: auto;
+  padding: 0 10px 0 0;
+  float: right;
+  vertical-align: middle;
+  display: table-cell;
+  color: grey;
+  font-size: small;
 }
 
 .skill {
-    margin: auto;
-    padding: 0 8px 0 0;
-    float: right;
-    vertical-align: middle;
-    display: table-cell;
-    font-size: small;
+  margin: auto;
+  padding: 0 8px 0 0;
+  float: right;
+  vertical-align: middle;
+  display: table-cell;
+  font-size: small;
 }
 
 /* for quotation mark */
 .td-open-quotation {
-    margin: auto;
-    padding: auto;
-    text-align: left;
-    vertical-align: bottom;
+  margin: auto;
+  padding: auto;
+  text-align: left;
+  vertical-align: bottom;
 }
 
 .open-quotation {
-    height: 3vh;
-    display: block;
+  height: 3vh;
+  display: block;
 }
 
 .td-close-quotation {
-    margin: auto;
-    padding: auto;
-    height: 3vh;
-    text-align: right;
-    vertical-align: bottom;
+  margin: auto;
+  padding: auto;
+  height: 3vh;
+  text-align: right;
+  vertical-align: bottom;
 }
 
 .close-quotation {
-    height: 3vh;
-    text-align: right;
-    display: block;
-    margin-left: auto;
+  height: 3vh;
+  text-align: right;
+  display: block;
+  margin-left: auto;
 }
 
 .thumbs-up-icon {
   color: #3F51B5
 }
+
 .thumbs-up-icon:hover {
   cursor: pointer;
 }
@@ -170,25 +180,22 @@ textarea {
   display: flex;
   justify-content: center;
 }
+
 .picture-in-frame {
   max-width: 100%;
   object-fit: contain;
 }
 
-/* .frame {
-  width: 800px;
-  height: 200px;
-  margin: auto;
-  display: flex;
-  justify-content: center;
-}
-.picture-in-frame {
-  max-width: 800px;
-  max-height: 200px;
-  width: auto;
-  height: auto;
-} */
-
 .save-icon {
   color: #3F51B5
+}
+
+.loading-spinner {
+  width: 100%;
+  height: auto;
+  /* margin: auto; */
+  display: table-cell;
+  vertical-align: middle;
+  z-index: 1;
+  position: fixed;
 }

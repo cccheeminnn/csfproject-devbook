@@ -18,12 +18,20 @@
             <td style="display: inline-block; color: #BEBEBE; font-size: x-small;">
               Filter:
             </td>
-              <td *ngFor="let alp of alphabet" style="margin-right: 3px; text-decoration: underline; color: blue; cursor: pointer; display: inline-block; font-size: x-small;" (click)="filterByAlp(alp)"> {{ alp | uppercase }}</td>
+            <td *ngFor="let alp of alphabet" style="margin-right: 3px; text-decoration: underline; color: blue; cursor: pointer; display: inline-block; font-size: x-small;" (click)="filterByAlp(alp)"> {{ alp | uppercase }}</td>
           </tr>
         </tbody>
       </table>
     </div>
   </mat-toolbar>
+  <div *ngIf="loading" class="loading-spinner">
+    <mat-progress-spinner
+    style="margin-left: auto; margin-right: auto;"
+          diameter="60"
+          color="primary"
+          [mode]="'indeterminate'">
+      </mat-progress-spinner>
+  </div>
   <div class="div-main row justify-content-center ">
 
     <mat-card *ngFor="let user of devbookUsers">
@@ -83,3 +91,4 @@
 </body>
 
 </html>
+

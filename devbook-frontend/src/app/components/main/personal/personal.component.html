@@ -9,6 +9,15 @@
 </head>
 
 <body>
+  <div *ngIf="loading" class="loading-spinner">
+    <mat-progress-spinner
+    style="margin-left: auto; margin-right: auto;"
+          diameter="60"
+          color="primary"
+          [mode]="'indeterminate'">
+      </mat-progress-spinner>
+  </div>
+
   <div class="border-margin-parent">
     <table class="table-properties">
       <tbody>

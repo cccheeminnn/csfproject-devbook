@@ -14,6 +14,14 @@
       <button mat-button (click)="accordion.openAll()">Expand All</button>
       <button mat-button (click)="accordion.closeAll()">Collapse All</button>
     </div>
+    <div *ngIf="loading" class="loading-spinner">
+      <mat-progress-spinner
+      style="margin-left: auto; margin-right: auto;"
+            diameter="60"
+            color="primary"
+            [mode]="'indeterminate'">
+        </mat-progress-spinner>
+    </div>
 
     <form [formGroup]="formGrp" (submit)="onSubmit()" enctype="multipart/form-data">
 

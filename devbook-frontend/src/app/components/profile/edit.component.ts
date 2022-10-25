@@ -16,6 +16,8 @@ import { SnackbarComponent } from '../snackbar/snackbar.component';
 })
 export class EditComponent implements OnInit {
 
+  loading: boolean = false;
+
   // for Expand/Collaspe all
   @ViewChild(MatAccordion)
   accordion: MatAccordion = new MatAccordion;
@@ -64,13 +66,15 @@ export class EditComponent implements OnInit {
       this.backendSvc.logout();
       this.router.navigate(['/login'])
     } else {
+      this.loading = true;
       this.backendSvc.retrieveUserDetails(this.userId).then(result => {
         this.user = result;
         this.profilePhotoSrc = `https://bigbook.sgp1.digitaloceanspaces.com/users/${this.user.id}/profilephoto.jpg`
         this.initImageDisplay(this.user.images);
-        console.log(this.user)
         this.initPanelFormGrps();
+        this.loading = false;
       }).catch (error => {
+        this.loading = false;
         this.previewSvc.snackbarMsg = 'ERROR_OCCURRED, REFRESH_&_TRY_AGAIN';
         this.snackBar.openFromComponent(SnackbarComponent, {duration: 3000, verticalPosition: 'top'}); // 3000 is 3s
       })
@@ -178,6 +182,7 @@ export class EditComponent implements OnInit {
   }
 
   deleteUploadedImg(img: string) {
+    this.loading = true;
     console.log(img);
     if (img == 'image01') {
       this.image01Src = 'https://bigbook.sgp1.digitaloceanspaces.com/Templates/editimgplaceholder.jpg';
@@ -193,9 +198,11 @@ export class EditComponent implements OnInit {
       this.img03Avail = false;
     }
     this.updateSvc.deleteImage(this.userId, (img+'.jpg')).then(result => {
+      this.loading = false;
       this.previewSvc.snackbarMsg = 'DELETE_SUCCESSFUL';
       this.snackBar.openFromComponent(SnackbarComponent, {duration: 3000, verticalPosition: 'top'}); // 3000 is 3s
     }).catch(error => { // chances are jwt expired
+      this.loading = false;
       this.backendSvc.logout();
       this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
@@ -204,6 +211,7 @@ export class EditComponent implements OnInit {
   }
 
   saveFirstPanel() {
+    this.loading = true;
     if (this.firstPanelFormGrp.controls['profilePhoto'].value === null) {
       const blankFile: File = new File([],'');
       this.firstPanelFormGrp.controls['profilePhoto'].setValue(blankFile);
@@ -217,9 +225,11 @@ export class EditComponent implements OnInit {
     })
 
     this.updateSvc.updateFirstPanel(formData).then(result => {
+      this.loading = false;
       this.previewSvc.snackbarMsg = 'CHANGES_SAVED';
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
     }).catch(error => { // chances are jwt expired
+      this.loading = false;
       this.backendSvc.logout();
       this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
@@ -228,11 +238,14 @@ export class EditComponent implements OnInit {
   }
 
   saveSecondPanel() {
+    this.loading = true;
     const secondPanelFG = this.secondPanelFormGrp.value as SecondPanelData
     this.updateSvc.updateSecondPanel(secondPanelFG).then(result => {
+      this.loading = false;
       this.previewSvc.snackbarMsg = 'CHANGES_SAVED';
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
     }).catch(error => { // chances are jwt expired
+      this.loading = false;
       this.backendSvc.logout();
       this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
@@ -241,12 +254,15 @@ export class EditComponent implements OnInit {
   }
 
   saveThirdPanel() {
+    this.loading = true;
     const updatedSkillsArray = this.thirdPanelFormGrp.value as DevbookUserSkills
     console.log(updatedSkillsArray);
     this.updateSvc.updateThirdPanel(updatedSkillsArray).then(result => {
+      this.loading = false;
       this.previewSvc.snackbarMsg = 'CHANGES_SAVED';
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
     }).catch(error => { // chances are jwt expired
+      this.loading = false;
       this.backendSvc.logout();
       this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
@@ -255,12 +271,15 @@ export class EditComponent implements OnInit {
   }
 
   saveFourthPanel() {
+    this.loading = true;
     const updatedWebsitesArray = this.fourthPanelFormGrp.value as DevbookUserWebsites
     console.log(updatedWebsitesArray);
     this.updateSvc.updateFourthPanel(updatedWebsitesArray).then(result => {
+      this.loading = false;
       this.previewSvc.snackbarMsg = 'CHANGES_SAVED';
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
     }).catch(error => { // chances are jwt expired
+      this.loading = false;
       this.backendSvc.logout();
       this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
@@ -270,6 +289,7 @@ export class EditComponent implements OnInit {
 
   saveFifthPanel()
   {
+    this.loading = true;
     const blankFile = new File([], '');
     if (this.fifthPanelFormGrp.controls['file01'].value === null) {
       this.fifthPanelFormGrp.controls['file01'].setValue(blankFile);
@@ -292,9 +312,11 @@ export class EditComponent implements OnInit {
     })
     console.log(this.fifthPanelFormGrp.value)
     this.updateSvc.updateFifthPanel(formData).then(result => {
+      this.loading = false;
       this.previewSvc.snackbarMsg = 'CHANGES_SAVED';
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
     }).catch(error => { // chances are jwt expired
+      this.loading = false;
       this.backendSvc.logout();
       this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });

@@ -1,3 +1,9 @@
+body {
+  z-index: -1;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 /* overall div border */
 .border-margin-parent {
   border-top: 5px solid #D3D3D3;
@@ -186,4 +192,14 @@ textarea {
   float:right;
   color: #3F51B5;
   cursor: pointer;
+}
+
+.loading-spinner {
+  width: 100%;
+  height: auto;
+  /* margin: auto; */
+  display: table-cell;
+  vertical-align: middle;
+  z-index: 1;
+  position: fixed;
 }
