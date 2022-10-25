@@ -43,7 +43,10 @@ public class SecurityConfigurer {
             .disable()
             .exceptionHandling().authenticationEntryPoint(jwtAuthEntryPoint).and()
             // dont authenticate this particular request
-            .authorizeRequests().antMatchers(
+            .authorizeRequests()
+            // .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // permits CSS, JS, ICO, images and NOT to html.
+            .antMatchers("/*", "/assets/**").permitAll() // /* will permit one directory down, no secured links so auth not required
+            .antMatchers(
                 "/authenticate",
                 "/api/quote",
                 "/api/register",
@@ -72,7 +75,7 @@ public class SecurityConfigurer {
     {
         return (web) -> web.debug(securityDebug)
             .ignoring()
-            .antMatchers("/css/**", "/js/**", "/img/**", "/lib/**", "/favicon.ico");
+            .antMatchers("/css/**", "/js/**", "/img/**", "/lib/**", "/favicon.ico", "/resources/**", "/static/**");
     }
 
     @Bean

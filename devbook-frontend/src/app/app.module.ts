@@ -52,7 +52,7 @@ const appRoutes: Routes = [
     NgbModule,
     BrowserAnimationsModule,
     MaterialModule,
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(appRoutes, { useHash: true }),
     NgxMaterialRatingModule,
     HttpClientModule
   ],
