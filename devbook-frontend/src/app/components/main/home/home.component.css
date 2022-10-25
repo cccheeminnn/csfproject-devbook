@@ -21,5 +21,25 @@ body {
   transform: translateY(-50%);
 }
 /* unique */
+mat-card {
+  width: 400px;
+  height: 560px;
+  margin: 5px;
+}
+
+mat-card-header {
+  width: 368px;
+  height: 71px;
+}
+
+mat-card-title,
+mat-card-subtitle {
+  text-align: left;
+}
+
+mat-card-content {
+  width: 370px;
+  height: 100px;
+}
 /* keep */
 
