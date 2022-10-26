@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { DevbookUserComments, DevbookUser, CurrentUserLiked, CurrentUserRated } from '../../models/models';
 import { BackendService } from '../../services/backend.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,9 +13,9 @@ import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, AfterViewInit {
 
-  loading = false;
+  loading = true;
 
   formGrp!: FormGroup;
   textAreaInput = '';
@@ -23,7 +23,7 @@ export class ProfileComponent implements OnInit {
   currentUser!: DevbookUser | null;
   likedUser!: boolean;
   ratedUser!: boolean;
-  sameUser!: boolean;
+  sameUser: boolean = false;
   ratingValue!: string;
 
   user!: DevbookUser;
@@ -43,13 +43,12 @@ export class ProfileComponent implements OnInit {
     carouselConfig.interval = 4000;
   }
 
+  ngAfterViewInit(): void {
+    this.loading = false;
+  }
+
   ngOnInit(): void {
-    this.loading = true;
-    if (this.currentUser === null) {
-      this.router.navigate(['/login']);
-    } else {
-      this.retrieveUserDetails(this.userId);
-    }
+    this.retrieveUserDetails(this.userId);
 
     this.formGrp = this.fb.group(
       {
@@ -59,6 +58,7 @@ export class ProfileComponent implements OnInit {
         text: this.fb.control<string>('')
       }
     )
+
   }
 
   retrieveUserDetails(userId: string) {
@@ -66,45 +66,30 @@ export class ProfileComponent implements OnInit {
       this.user = result;
       this.userComments = this.user.comments;
       this.ratingValue = this.user.ratings;
-      this.loading = false;
       // means theres a user logged in
       if (this.currentUser != null) {
         // check if currently logged in user liked/rated this user
         this.checkLikedOrRated();
+        // check if currently logged in user is the same as profile user
         if (this.currentUser.email == this.user.email) {
           this.sameUser = true;
         }
       }
-
     }).catch(error => {
-      this.loading = false;
-      console.log('>>>> retrieve user details error: ', error)
+      // console.log('>>>> retrieve user details error: ', error)
     })
   }
 
   checkLikedOrRated() {
-    this.loading = true;
     this.backendSvc.checkIfLiked(this.user.email, this.currentUser!.email).then(result => {
       this.likedUser = result;
-      this.loading = false;
       // console.log('have i like? ', this.likedUser);
-    }).catch(error => { // chances are jwt expired
-      this.loading = false;
-      this.backendSvc.logout();
-      this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
-      this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
-      this.router.navigate(['/login'])
+    }).catch(error => {
     });
     this.backendSvc.checkIfRated(this.user.email, this.currentUser!.email).then(result => {
       this.ratedUser = result;
-      this.loading = false;
       // console.log('have i rated? ', this.ratedUser);
-    }).catch(error => { // chances are jwt expired
-      this.loading = false;
-      this.backendSvc.logout();
-      this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
-      this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
-      this.router.navigate(['/login'])
+    }).catch(error => {
     });
   }
 
@@ -155,8 +140,34 @@ export class ProfileComponent implements OnInit {
   }
 
   ratePressed() {
-    this.previewSvc.snackbarMsg = 'YOU_CAN\'T_RATE_YOURSELF_SILLY';
-    this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
+    this.loading = true;
+    if (this.currentUser == null) {
+      this.router.navigate(['/login'])
+    } else {
+      const payload: CurrentUserRated = {
+        userEmail: this.user.email,
+        currentUserEmail: this.currentUser!.email,
+        ratingGiven: this.ratingValue
+      }
+      // console.log(payload);
+
+      if (!this.sameUser) {
+        this.backendSvc.rated(payload).then(result => {
+          // console.log('>>>>rated result', result)
+          this.ratingValue = result.data
+          this.loading = false;
+          this.previewSvc.snackbarMsg = 'RATED';
+          this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
+        }).catch(error => {
+          this.loading = false;
+          // console.log('>>>>rated error', error)
+        })
+      } else {
+        this.loading = false;
+        this.previewSvc.snackbarMsg = 'YOU_CAN\'T_RATE_YOURSELF_SILLY';
+        this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
+      }
+    }
   }
 
   addComment() {
@@ -166,7 +177,7 @@ export class ProfileComponent implements OnInit {
     this.formGrp.controls['name'].setValue(this.currentUser!.name);
     this.formGrp.controls['text'].setValue(this.textAreaInput);
     const comment: DevbookUserComments = this.formGrp.value as DevbookUserComments;
-    console.log('>>>new comments details: ', comment);
+    // console.log('>>>new comments details: ', comment);
 
     this.userComments.push(comment);
 
@@ -181,4 +192,12 @@ export class ProfileComponent implements OnInit {
     this.formGrp.reset();
   }
 
+  openOutlook() {
+    window.open(`mailto:${this.user.email}?subject=Hi ${this.user.name} from Devbook&body=I saw your profile on Devbook!`);
+  }
+
+  routeToLogin() {
+    document.documentElement.scrollTop = 0; // scroll to top of page automatically
+    this.router.navigate(['/login']);
+  }
 }

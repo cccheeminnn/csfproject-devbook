@@ -36,7 +36,7 @@
 
     <mat-card *ngFor="let user of devbookUsers">
       <mat-card-header>
-        <div mat-card-avatar [routerLink]="['/user', user.id, 'details']" class="avatar-img" style="background-image:
+        <div mat-card-avatar [routerLink]="['/user', user.id, 'profile']" class="avatar-img" style="background-image:
                             url('https://bigbook.sgp1.digitaloceanspaces.com/users/{{ user.id }}/profilephoto.jpg')">
         </div>
         <mat-card-title>{{ user.name }}</mat-card-title>
@@ -71,7 +71,7 @@
         </p>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-icon-button [routerLink]="['/user', user.id ,'details']">
+        <button mat-icon-button [routerLink]="['/user', user.id ,'profile']">
           <mat-icon>perm_contact_calendar</mat-icon>
         </button>
       </mat-card-actions>

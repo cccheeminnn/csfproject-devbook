@@ -19,7 +19,7 @@
   </div>
 
   <div class="border-margin-parent">
-    <mat-icon class="edit-button" [routerLink]="['/user',user.id,'edit']">edit</mat-icon>
+    <mat-icon *ngIf="sameUser" class="edit-button" [routerLink]="['/user',user.id,'edit']">edit</mat-icon>
     <table class="table-properties">
       <tbody>
         <tr>
@@ -30,7 +30,7 @@
         </tr>
         <tr>
           <td colspan="2" style="text-align: center;">
-            <ngx-material-rating [dense]="true" [max]="5" [color]="'accent'" [(ngModel)]="ratingValue" (click)="ratePressed()" [readonly]="sameUser">
+            <ngx-material-rating [dense]="true" [max]="5" [color]="'accent'" [(ngModel)]="ratingValue" (click)="ratePressed()">
             </ngx-material-rating>
           </td>
         </tr>
@@ -148,6 +148,17 @@
     </ngb-carousel>
   </div>
   <div class="border-margin-child">
+    <table class="table-properties" *ngIf="!currentUser">
+      <tbody>
+        <tr>
+          <td>
+            <p style="color: grey; font-size: smaller;">Please <span
+                style="color: blue; text-decoration: underline; cursor: pointer" (click)="routeToLogin()">login</span>
+              to comment</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
     <table class="table-properties" *ngIf="currentUser">
     <tbody>
       <tr>

@@ -7,7 +7,6 @@ import { MaterialModule } from './material.module';
 import { RouterModule, Routes } from '@angular/router';
 
 import { HeaderComponent } from './components/header/header.component';
-import { PersonalComponent } from './components/main/personal/personal.component';
 import { HomeComponent } from './components/main/home/home.component';
 import { NgxMaterialRatingModule } from 'ngx-material-rating';
 import { FormComponent } from './components/form/form.component';
@@ -26,7 +25,6 @@ const appRoutes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'filter', component: HomeComponent},
   {path: 'login', component: LoginComponent},
-  {path: 'user/:id/details', component: PersonalComponent}, // other users profile
   {path: 'user/:id/profile', component: ProfileComponent}, // logged in user profile
   {path: 'user/:id/edit', component: EditComponent}, // edit logged in user profile
   {path: 'register', component: FormComponent},
@@ -37,7 +35,6 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     HeaderComponent,
-    PersonalComponent,
     HomeComponent,
     FormComponent,
     PreviewComponent,

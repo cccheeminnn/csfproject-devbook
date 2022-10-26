@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 import { DevbookUser } from 'src/app/models/models';
 import { BackendService } from '../../../services/backend.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, TitleStrategy } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { PreviewService } from '../../../services/preview.service';
 import { SnackbarComponent } from '../../snackbar/snackbar.component';
@@ -15,12 +15,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   sub$!: Subscription;
 
   alphabet: string[] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-  loading: boolean = false;
+  loading: boolean = true;
 
   filterBy!: string;
   limit: number = 6;
@@ -46,8 +46,11 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
       // console.log('>>>subscribe',params['filterby']);
     })
+  }
 
-
+  ngAfterViewInit(): void {
+    console.log('view init, loading false')
+    this.loading = false;
   }
 
   ngOnDestroy(): void {
@@ -55,7 +58,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loading = true;
     // console.log('filterBy value:', this.filterBy)
     if (this.filterBy != undefined) {
       this.filterByAlp(this.filterBy);
@@ -67,11 +69,11 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.quote = result.data
       console.log(this.quote)
     });
+
   }
 
   // mat-paginator EventEmitters
   onPageEvent(event: PageEvent) {
-    this.loading = true;
     // user changes items per page
     this.limit = event.pageSize;
     // user press next/previous page
@@ -86,44 +88,34 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // retrieve total user count and user info from backend
   retrieveDisplayInfoFromBackend() {
-    this.loading = true;
     this.backendSvc.retrieveTotalUserCount().then(result => {
-      this.loading = false;
       document.documentElement.scrollTop = 0; // scroll to top of page automatically
       this.ttlUserCount = result;
     }).catch(error => {
-      this.loading = false;
       console.error('>>>> an error occurred while retrieving total user count', error);
     })
 
     this.backendSvc.retrieveAllUsers(this.limit, this.offset).then(results => {
-      this.loading = false;
       this.devbookUsers = results;
     }).catch(error => {
-      this.loading = false;
       console.error('>>>> an error has occurred while retrieving users from backend', error);
     })
   }
 
   filterByAlp(alp: string) {
-    this.loading = true;
     this.router.navigate(['/filter'], { queryParams: { filterby: alp } });
 
     this.backendSvc.retrieveTotalFilteredUserCount(alp).then(result => {
-      this.loading = false;
       this.ttlUserCount = result;
     }).catch(error => {
-      this.loading = false;
       console.error('>>>> an error occurred while retrieving total filtered user count', error);
       this.previewSvc.snackbarMsg = 'NO_USERS_FOUND';
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' }); // 3000 is 3s
     })
 
     this.backendSvc.retrieveFilteredUsers(this.limit, this.offset, alp).then(results => {
-      this.loading = false;
       this.devbookUsers = results;
     }).catch(error => {
-      this.loading = false;
       console.error('>>>> an error has occurred while retrieving filtered users from backend', error);
     })
   }
