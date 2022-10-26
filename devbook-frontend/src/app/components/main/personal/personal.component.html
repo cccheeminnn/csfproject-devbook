@@ -35,12 +35,10 @@
           </td>
         </tr>
         <tr>
-          <td style="width: 50%;">
-            <p class="cell-properties likes">
-              {{ user.likes }}
-            </p>
+          <td style="width: 50%; font-size: small;" align="right">
+            {{ user.likes }}
           </td>
-          <td style="width: 50%;">
+          <td style="width: 50%;" align="left">
             <mat-icon class="thumbs-up-icon" (click)="likePressed()">thumb_up</mat-icon>
           </td>
         </tr>
@@ -59,21 +57,20 @@
     <table class="table-properties">
       <tbody>
         <tr>
-          <td colspan="2">
-            <p class="name">{{ user.name }}
+          <td colspan="2" class="name">
+            {{user.name}}
               <button mat-icon-button style="vertical-align: middle;" type="button" (click)="openOutlook()">
                 <mat-icon class="thumbs-up-icon">email</mat-icon>
               </button>
-            </p>
           </td>
         </tr>
         <tr>
-          <td colspan="2">
-            <p class="title">{{ user.currentJob }}</p>
+          <td colspan="2" class="title">
+            {{ user.currentJob }}
           </td>
         </tr>
         <tr>
-          <td style="width: 40%;">
+          <td style="width: 40%;" align="right">
             <p class="category">Current</p>
           </td>
           <td>
@@ -81,7 +78,7 @@
           </td>
         </tr>
         <tr>
-          <td>
+          <td align="right">
             <p class="category">Previous</p>
           </td>
           <td>
@@ -89,7 +86,7 @@
           </td>
         </tr>
         <tr>
-          <td>
+          <td align="right">
             <p class="category">Education</p>
           </td>
           <td>
@@ -103,8 +100,8 @@
     <table class="table-properties">
       <tbody>
         <tr>
-          <td colspan="2">
-            <p class="portfolio">Websites</p>
+          <td colspan="2" class="portfolio">
+            Websites
           </td>
         </tr>
         <tr>
@@ -122,13 +119,13 @@
     <table class="table-properties">
       <tbody>
         <tr>
-          <td colspan="2">
-            <p class="portfolio">Skills & Proficiency</p>
+          <td colspan="2" class="portfolio">
+            Skills & Proficiency
           </td>
         </tr>
         <tr *ngFor="let skill of user.skills">
-          <td style="width: 45%;">
-            <p class="skill">{{ skill.name }}</p>
+          <td style="width: 45%; padding-right: 5px;" align="right">
+            <p class="category">{{ skill.name }}</p>
           </td>
           <td style="text-align: left;">
             <ngx-material-rating [dense]="true" [readonly]="true" [color]="'warn'" [max]="5" [value]="skill.rating">

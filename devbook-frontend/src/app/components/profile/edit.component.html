@@ -42,9 +42,15 @@
           <!-- First Panel Form Fields -->
           <mat-divider></mat-divider>
           <div style="text-align: center;">
-            <div class="portrait-properties">
-              <img class="portrait rounded-circle" [src]="profilePhotoSrc" alt="Portrait">
-            </div>
+            <table class="table-properties">
+              <tbody>
+                <tr>
+                  <td class="portrait-properties">
+                    <img class="portrait rounded-circle" [src]="profilePhotoSrc" alt="Portrait">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
             <!-- Profile Picture -->
             <mat-error *ngIf="errorProfilePhoto" style="margin-top: 10px;">Image filetype only and filesize below 1.05mb!</mat-error>
             <div class="input-group mb-3" style="margin-top: 10px;">
@@ -207,7 +213,7 @@
           </div>
           <!-- if there is a prev uploaded img show it (with delete btn) -->
           <div *ngIf="img01Avail">
-            <button mat-button type="button" (click)="deleteUploadedImg('image01')">Delete</button>
+            <button mat-icon-button type="button" class="thumbs-up-icon" (click)="deleteUploadedImg('image01')"><mat-icon>delete</mat-icon></button>
             <mat-form-field style="display: block;" appearance="fill">
               <mat-label>Description 01</mat-label>
               <textarea matInput type="text" #description [(ngModel)]="image01Desc" maxlength="100"
@@ -240,7 +246,7 @@
           </div>
           <!-- if there is a prev uploaded img show it (with delete btn) -->
           <div *ngIf="img02Avail">
-            <button mat-button type="button" (click)="deleteUploadedImg('image02')">Delete</button>
+            <button mat-icon-button type="button" class="thumbs-up-icon" (click)="deleteUploadedImg('image02')"><mat-icon>delete</mat-icon></button>
             <mat-form-field style="display: block;" appearance="fill">
               <mat-label>Description 02</mat-label>
               <textarea matInput type="text" #description [(ngModel)]="image02Desc" maxlength="100"
@@ -273,7 +279,7 @@
           </div>
           <!-- if there is a prev uploaded img show it (with delete btn) -->
           <div *ngIf="img03Avail">
-            <button mat-button type="button" (click)="deleteUploadedImg('image03')">Delete</button>
+            <button mat-icon-button type="button" class="thumbs-up-icon" (click)="deleteUploadedImg('image03')"><mat-icon>delete</mat-icon></button>
             <mat-form-field style="display: block;" appearance="fill">
               <mat-label>Description 03</mat-label>
               <textarea matInput type="text" #description [(ngModel)]="image03Desc" maxlength="100"

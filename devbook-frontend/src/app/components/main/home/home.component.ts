@@ -23,9 +23,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   loading: boolean = false;
 
   filterBy!: string;
-  limit: number = 8;
+  limit: number = 6;
   offset: number = 0;
-  pageSizeOptions = [1, 8, 12, 16, 20];
+  pageSizeOptions = [1, 6, 10, 14];
   ttlUserCount: number = 0;
   devbookUsers: DevbookUser[] = [];
   quote!: string;

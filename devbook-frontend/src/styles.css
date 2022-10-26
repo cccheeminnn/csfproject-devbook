@@ -127,9 +127,9 @@ body {
 
 .cell-properties {
   margin: auto;
-  padding: auto;
-  vertical-align: middle;
+  padding: 0 0 0 5px;
   text-align: left;
+  vertical-align: middle;
   display: table-cell;
   font-size: small;
 }
@@ -140,8 +140,8 @@ body {
 
 .category {
   margin: auto;
-  padding: 0 10px 0 0;
-  float: right;
+  padding: auto;
+  text-align: right;
   vertical-align: middle;
   display: table-cell;
   color: grey;
