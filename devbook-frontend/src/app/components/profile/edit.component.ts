@@ -60,7 +60,9 @@ export class EditComponent implements OnInit {
 
     this.loading = true;
 
-    backendSvc.currentUser.subscribe(x => this.currentUser = x)
+    backendSvc.currentUser.subscribe(x => {
+      this.currentUser = x;
+    })
   }
 
   ngOnInit(): void {
@@ -73,12 +75,12 @@ export class EditComponent implements OnInit {
         this.profilePhotoSrc = `https://bigbook.sgp1.digitaloceanspaces.com/users/${this.user.id}/profilephoto.jpg`
         this.initImageDisplay(this.user.images);
         this.initPanelFormGrps();
+        this.loading = false;
       }).catch(error => {
         this.loading = false;
         this.previewSvc.snackbarMsg = 'ERROR_OCCURRED, REFRESH_&_TRY_AGAIN';
         this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' }); // 3000 is 3s
       })
-
     }
   }
 
@@ -183,7 +185,7 @@ export class EditComponent implements OnInit {
 
   deleteUploadedImg(img: string) {
     this.loading = true;
-    console.log(img);
+    // console.log(img);
     if (img == 'image01') {
       this.image01Src = 'https://bigbook.sgp1.digitaloceanspaces.com/Templates/editimgplaceholder.jpg';
       this.image01Desc = '';
@@ -256,7 +258,7 @@ export class EditComponent implements OnInit {
   saveThirdPanel() {
     this.loading = true;
     const updatedSkillsArray = this.thirdPanelFormGrp.value as DevbookUserSkills
-    console.log(updatedSkillsArray);
+    // console.log(updatedSkillsArray);
     this.updateSvc.updateThirdPanel(updatedSkillsArray).then(result => {
       this.loading = false;
       this.previewSvc.snackbarMsg = 'CHANGES_SAVED';
@@ -273,7 +275,7 @@ export class EditComponent implements OnInit {
   saveFourthPanel() {
     this.loading = true;
     const updatedWebsitesArray = this.fourthPanelFormGrp.value as DevbookUserWebsites
-    console.log(updatedWebsitesArray);
+    // console.log(updatedWebsitesArray);
     this.updateSvc.updateFourthPanel(updatedWebsitesArray).then(result => {
       this.loading = false;
       this.previewSvc.snackbarMsg = 'CHANGES_SAVED';
@@ -309,7 +311,7 @@ export class EditComponent implements OnInit {
     Object.keys(this.fifthPanelFormGrp.controls).forEach(formControlName => {
       formData.append(formControlName, this.fifthPanelFormGrp.controls[formControlName].value);
     })
-    console.log(this.fifthPanelFormGrp.value)
+    // console.log(this.fifthPanelFormGrp.value)
     this.updateSvc.updateFifthPanel(formData).then(result => {
       this.loading = false;
       this.previewSvc.snackbarMsg = 'CHANGES_SAVED';
@@ -338,7 +340,7 @@ export class EditComponent implements OnInit {
       // user uploads correct file, typeof image
       if (inputFile.type.startsWith('image') && inputFile.size < 1048576) {
         reader.readAsDataURL(inputFile);
-        console.log('file size>> ', inputFile.size)
+        // console.log('file size>> ', inputFile.size)
         reader.onload = (event: any) => {
           if (elementId === 'inputProfilePhoto') {
             this.errorProfilePhoto = false;
@@ -398,9 +400,6 @@ export class EditComponent implements OnInit {
     }
   }
 
-  imgLoaded() {
-    this.loading = false;
-  }
 }
 
 interface HTMLInputEvent extends Event {

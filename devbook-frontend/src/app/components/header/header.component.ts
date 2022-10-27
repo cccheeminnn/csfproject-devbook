@@ -89,7 +89,9 @@ export class HeaderComponent implements OnInit {
     this.loading = true;
     this.sidenavDrawer.toggle(false).then(result => {
       this.loading = false
-      this.router.navigate(['/user', this.currentUser!.id, 'profile']);
+      this.router.navigate(['/user', this.currentUser!.id, 'profile']).then(result => {
+        location.reload();
+      });
     });
   }
 }

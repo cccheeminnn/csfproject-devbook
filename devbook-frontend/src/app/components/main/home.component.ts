@@ -62,7 +62,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.backendSvc.getQuote().then(result => {
       this.quote = result.data
-      console.log(this.quote)
+      // console.log(this.quote)
     });
   }
 
