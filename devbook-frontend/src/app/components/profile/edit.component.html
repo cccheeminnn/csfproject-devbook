@@ -127,27 +127,29 @@
           <div style="text-align: right;">
             <button mat-button type="button" style="color: GREY" (click)="pushSkillsArray()">+</button>
           </div>
-          <div *ngFor="let skill of skillsArray.controls; let i = index;" [formGroup]="skill"
-            style="text-align: center; align-items: center;">
-            <mat-form-field style="margin-left: 4px; margin-bottom: 8px;" appearance="fill">
-              <mat-label>Skill {{ i+1 }}</mat-label>
-              <input matInput #skillName maxlength="10" formControlName="name"
-                placeholder="Language, frameworks, libraries">
-              <mat-hint>Max 10 characters</mat-hint>
-              <mat-hint align="end">{{ skillName.value.length }} / 10</mat-hint>
-            </mat-form-field>
-            <mat-form-field style="margin-left: 4px; margin-bottom: 8px; width: 4rem;" appearance="fill">
-              <mat-select formControlName="rating">
-                <mat-option [value]="1">1 - Poor</mat-option>
-                <mat-option [value]="2">2 - Below Average</mat-option>
-                <mat-option [value]="3">3 - Average</mat-option>
-                <mat-option [value]="4">4 - Above Average</mat-option>
-                <mat-option [value]="5">5 - Pro</mat-option>
-              </mat-select>
-            </mat-form-field>
-            <button mat-icon-button type="button" (click)="deleteSkill(i)">
-              <mat-icon style="color: grey;">delete</mat-icon>
-            </button>
+          <div formArrayName="skills">
+            <div *ngFor="let skill of skillsArray.controls; let i = index;" [formGroup]="skill"
+              style="text-align: center; align-items: center;">
+              <mat-form-field style="margin-left: 4px; margin-bottom: 8px;" appearance="fill">
+                <mat-label>Skill {{ i+1 }}</mat-label>
+                <input matInput #skillName maxlength="10" formControlName="name"
+                  placeholder="Language, frameworks, libraries">
+                <mat-hint>Max 10 characters</mat-hint>
+                <mat-hint align="end">{{ skillName.value.length }} / 10</mat-hint>
+              </mat-form-field>
+              <mat-form-field style="margin-left: 4px; margin-bottom: 8px; width: 4rem;" appearance="fill">
+                <mat-select formControlName="rating">
+                  <mat-option [value]="1">1 - Poor</mat-option>
+                  <mat-option [value]="2">2 - Below Average</mat-option>
+                  <mat-option [value]="3">3 - Average</mat-option>
+                  <mat-option [value]="4">4 - Above Average</mat-option>
+                  <mat-option [value]="5">5 - Pro</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <button mat-icon-button type="button" (click)="deleteSkill(i)">
+                <mat-icon style="color: grey;">delete</mat-icon>
+              </button>
+            </div>
           </div>
           <button mat-button class="save-icon" type="button" (click)="saveThirdPanel()" [disabled]="thirdPanelFormGrp.invalid"><mat-icon>save</mat-icon></button>
         </mat-expansion-panel>
@@ -172,22 +174,24 @@
           <div style="text-align: right;">
             <button mat-button type="button" style="color: GREY" (click)="pushWebsitesArray()">+</button>
           </div>
-          <div *ngFor="let website of websitesArray.controls; let i = index;" [formGroup]="website"
-            style="text-align: center; align-items: center;">
-            <mat-form-field style="margin-left: 4px; margin-bottom: 8px; width: 7rem;" appearance="fill">
-              <mat-label>Web {{ i+1 }}</mat-label>
-              <input matInput #webName maxlength="15" formControlName="name" placeholder="Socials, github, apps..">
-              <mat-hint>Max</mat-hint>
-              <mat-hint align="end">{{ webName.value.length }} / 15</mat-hint>
-            </mat-form-field>
-            <mat-form-field style="margin-left: 4px; margin-bottom: 8px; " appearance="fill">
-              <mat-label>Link</mat-label>
-              <input matInput formControlName="url">
-              <mat-hint align="end">Github, LinkedIn, Facebook etc</mat-hint>
-            </mat-form-field>
-            <button mat-icon-button type="button" (click)="deleteWebsite(i)">
-              <mat-icon style="color: grey;">delete</mat-icon>
-            </button>
+          <div formArrayName="websites">
+            <div *ngFor="let website of websitesArray.controls; let i = index;" [formGroup]="website"
+              style="text-align: center; align-items: center;">
+              <mat-form-field style="margin-left: 4px; margin-bottom: 8px; width: 7rem;" appearance="fill">
+                <mat-label>Web {{ i+1 }}</mat-label>
+                <input matInput #webName maxlength="15" formControlName="name" placeholder="Socials, github, apps..">
+                <mat-hint>Max</mat-hint>
+                <mat-hint align="end">{{ webName.value.length }} / 15</mat-hint>
+              </mat-form-field>
+              <mat-form-field style="margin-left: 4px; margin-bottom: 8px; " appearance="fill">
+                <mat-label>Link</mat-label>
+                <input matInput formControlName="url">
+                <mat-hint align="end">Github, LinkedIn, Facebook etc</mat-hint>
+              </mat-form-field>
+              <button mat-icon-button type="button" (click)="deleteWebsite(i)">
+                <mat-icon style="color: grey;">delete</mat-icon>
+              </button>
+            </div>
           </div>
           <button mat-button class="save-icon" type="button" (click)="saveFourthPanel()" [disabled]="fourthPanelFormGrp.invalid"><mat-icon>save</mat-icon></button>
         </mat-expansion-panel>

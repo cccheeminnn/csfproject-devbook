@@ -73,7 +73,6 @@ export class EditComponent implements OnInit {
         this.profilePhotoSrc = `https://bigbook.sgp1.digitaloceanspaces.com/users/${this.user.id}/profilephoto.jpg`
         this.initImageDisplay(this.user.images);
         this.initPanelFormGrps();
-        this.loading = false;
       }).catch(error => {
         this.loading = false;
         this.previewSvc.snackbarMsg = 'ERROR_OCCURRED, REFRESH_&_TRY_AGAIN';

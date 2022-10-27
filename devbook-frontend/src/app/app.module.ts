@@ -22,12 +22,12 @@ import { UpdateService } from './services/update.service';
 import { HomeComponent } from './components/main/home.component';
 
 const appRoutes: Routes = [
-  {path: '', component: HomeComponent},
-  {path: 'filter', component: HomeComponent},
-  {path: 'login', component: LoginComponent},
-  {path: 'user/:id/profile', component: ProfileComponent}, // logged in user profile
-  {path: 'user/:id/edit', component: EditComponent}, // edit logged in user profile
-  {path: 'register', component: FormComponent},
+  {path: '', title: 'Devbook', component: HomeComponent},
+  {path: 'filter', title: 'Devbook', component: HomeComponent},
+  {path: 'login', title: 'Login', component: LoginComponent},
+  {path: 'user/:id/profile', title: 'Profile', component: ProfileComponent}, // logged in user profile
+  {path: 'user/:id/edit', title: 'Edit', component: EditComponent}, // edit logged in user profile
+  {path: 'register', title: 'Register', component: FormComponent},
   {path: '**', redirectTo: '/', pathMatch: 'full'}
 ]
 

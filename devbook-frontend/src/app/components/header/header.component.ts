@@ -17,6 +17,8 @@ import { PreviewService } from '../../services/preview.service';
 })
 export class HeaderComponent implements OnInit {
 
+  loading!: boolean;
+
   searchTerm = '';
 
   currentUser!: DevbookUser | null;
@@ -81,5 +83,13 @@ export class HeaderComponent implements OnInit {
       this.router.navigate(['/filter'], {queryParams: {filterby: this.searchTerm}});
     }
     this.searchTerm = '';
+  }
+
+  goToProfile() {
+    this.loading = true;
+    this.sidenavDrawer.toggle(false).then(result => {
+      this.loading = false
+      this.router.navigate(['/user', this.currentUser!.id, 'profile']);
+    });
   }
 }

@@ -62,7 +62,6 @@ export class ProfileComponent implements OnInit {
   retrieveUserDetails(userId: string) {
     this.backendSvc.retrieveUserDetails(userId).then(result => {
       this.user = result;
-      console.log(this.user.websites)
       this.userComments = this.user.comments;
       this.ratingValue = this.user.ratings;
       // means theres a user logged in

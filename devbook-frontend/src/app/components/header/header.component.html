@@ -29,12 +29,19 @@
         <button mat-raised-button color="accent" type="button" *ngIf="!currentUser" [routerLink]="['/register']"
           (click)="sidenavDrawer.toggle()" style="margin: 1% 0% 1% 1%;">Register</button>
         <button mat-raised-button color="accent" type="button" *ngIf="currentUser"
-          [routerLink]="['/user',currentUser.id,'profile']" (click)="sidenavDrawer.toggle()"
-          style="margin: 1% 0% 1% 1%;">Profile</button>
+        (click)="goToProfile()" style="margin: 1% 0% 1% 1%;">Profile</button>
         <button mat-raised-button color="accent" type="button" *ngIf="currentUser" (click)="logout()"
           style="margin: 1% 0% 1% 1%;">Logout</button>
       </mat-drawer>
       <!-- content project main body -->
+      <div *ngIf="loading" class="loading-spinner">
+        <mat-progress-spinner
+        style="margin-left: auto; margin-right: auto;"
+              diameter="60"
+              color="primary"
+              [mode]="'indeterminate'">
+          </mat-progress-spinner>
+      </div>
       <div>
         <ng-content></ng-content>
       </div>
