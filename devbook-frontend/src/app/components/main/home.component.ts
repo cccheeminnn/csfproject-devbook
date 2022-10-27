@@ -37,6 +37,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private backendSvc: BackendService,
     private previewSvc: PreviewService) {
+      
     this.loading = true;
 
     carouselConfig.interval = 0
@@ -44,9 +45,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.sub$ = this.activatedRoute.queryParams.subscribe(params => {
       this.filterBy = params['filterby'];
-      if (this.filterBy != undefined) {
-        this.filterByAlp(this.filterBy)
-      }
       // console.log('>>>subscribe',params['filterby']);
     })
   }
