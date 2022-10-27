@@ -7,7 +7,6 @@ import { MaterialModule } from './material.module';
 import { RouterModule, Routes } from '@angular/router';
 
 import { HeaderComponent } from './components/header/header.component';
-import { HomeComponent } from './components/main/home/home.component';
 import { NgxMaterialRatingModule } from 'ngx-material-rating';
 import { FormComponent } from './components/form/form.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -20,6 +19,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { SnackbarComponent } from './components/snackbar/snackbar.component';
 import { EditComponent } from './components/profile/edit.component';
 import { UpdateService } from './services/update.service';
+import { HomeComponent } from './components/main/home.component';
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent},

@@ -46,7 +46,7 @@
       <ngb-carousel>
         <ng-template ngbSlide *ngFor="let image of user.images">
           <div class="carousel-img picsum-img-wrapper">
-            <img class="img-in-carousel" mat-card-image
+            <img class="img-in-carousel" mat-card-image (load)="imgLoaded()"
               [src]="'https://bigbook.sgp1.digitaloceanspaces.com/users/'+user.id+'/'+image.name">
           </div>
           <div class="carousel-caption">

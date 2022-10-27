@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LoginFormDetails } from '../../models/models';
 import { BackendService } from '../../services/backend.service';
@@ -12,7 +12,9 @@ import { SnackbarComponent } from '../snackbar/snackbar.component';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, AfterViewInit {
+
+  loading!: boolean;
 
   formGrp!: FormGroup
 
@@ -23,8 +25,14 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private backendSvc: BackendService,
     private snackBar: MatSnackBar,
-    private previewSvc: PreviewService // to display login messages in popup
-  ) { }
+    private previewSvc: PreviewService) { // to display login messages in popup
+
+      this.loading = true;
+    }
+
+  ngAfterViewInit(): void {
+    this.loading = false;
+  }
 
   ngOnInit(): void {
     this.formGrp = this.fb.group({
@@ -34,15 +42,19 @@ export class LoginComponent implements OnInit {
   }
 
   onLoginSubmit() {
+    this.loading = true;
+
     const formValue = this.formGrp.value as LoginFormDetails
     this.backendSvc.login(formValue).then(results => {
       // console.log('>>>> login results: ', results)
       // this.router.navigate(['/user', results.id, 'profile'])
+      this.loading = false;
       this.previewSvc.snackbarMsg = 'LOGIN_SUCCESSFUL';
       this.snackBar.openFromComponent(SnackbarComponent, {duration: 3000, verticalPosition: 'top'}); // 3000 is 3s
       this.router.navigate(['/'])
     }).catch(error => {
       // console.error('>>>> login error: ', error)
+      this.loading = false;
       this.previewSvc.snackbarMsg = error.error;
       this.snackBar.openFromComponent(SnackbarComponent, {duration: 3000, verticalPosition: 'top'}); // 3000 is 3s
     })

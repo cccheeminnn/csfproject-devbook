@@ -1,5 +1,5 @@
-import { Component, OnInit, Type, ViewChild, ElementRef } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatAccordion } from '@angular/material/expansion';
 import { PreviewComponent } from './preview.component';
@@ -15,10 +15,10 @@ import { SnackbarComponent } from '../snackbar/snackbar.component';
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.css']
 })
-export class FormComponent implements OnInit {
+export class FormComponent implements OnInit, AfterViewInit {
 
   currentUser!: DevbookUser | null;
-  loading: boolean = false;
+  loading!: boolean;
 
   // for Expand/Collaspe all
   @ViewChild(MatAccordion)
@@ -30,7 +30,7 @@ export class FormComponent implements OnInit {
   emailError = false;
 
   // for password field toggle visibility
-  hide:boolean = true;
+  hide: boolean = true;
 
   // for form
   formGrp!: FormGroup;
@@ -44,24 +44,28 @@ export class FormComponent implements OnInit {
     private dialog: MatDialog, // for Preview
     private previewSvc: PreviewService,
     private backendSvc: BackendService) {
-    }
+      
+    this.loading = true;
+  }
+
+  ngAfterViewInit(): void {
+    this.loading = false;
+  }
 
   ngOnInit(): void {
-    this.loading = false;
-
-    this.skillsArray = this.fb.array([], [ Validators.required, Validators.minLength(1) ]);
-    this.websitesArray = this.fb.array([],[ Validators.required, Validators.minLength(1) ]);
+    this.skillsArray = this.fb.array([], [Validators.required, Validators.minLength(1)]);
+    this.websitesArray = this.fb.array([], [Validators.required, Validators.minLength(1)]);
 
     this.formGrp = this.fb.group({
-      name: this.fb.control<string>('', [ Validators.required ]),
-      email: this.fb.control<string>('', [ Validators.required, Validators.email ]),
-      password: this.fb.control<string>('', [ Validators.required, Validators.minLength(8) ]),
+      name: this.fb.control<string>('', [Validators.required]),
+      email: this.fb.control<string>('', [Validators.required, Validators.email]),
+      password: this.fb.control<string>('', [Validators.required, Validators.minLength(8)]),
       profilePhoto: [null], // inserted during input (change) event
-      bio: this.fb.control<string>('', [ Validators.required, Validators.minLength(10) ]),
+      bio: this.fb.control<string>('', [Validators.required, Validators.minLength(10)]),
       currentJob: this.fb.control<string>(''),
       currentCompany: this.fb.control<string>(''),
       previousCompany: this.fb.control<string>(''),
-      education: this.fb.control<string>('', [ Validators.required ]),
+      education: this.fb.control<string>('', [Validators.required]),
       skills: this.skillsArray,
       websites: this.websitesArray,
       file01: [null], // inserted during input (change) event
@@ -75,8 +79,8 @@ export class FormComponent implements OnInit {
 
   pushSkillsArray() {
     const skillsArrayCtrl = this.fb.group({
-      name: this.fb.control<string>('', [ Validators.maxLength(15) ]),
-      rating: this.fb.control<number>(1, [ ])
+      name: this.fb.control<string>('', [Validators.maxLength(15)]),
+      rating: this.fb.control<number>(1, [])
     })
     this.skillsArray.push(skillsArrayCtrl);
   }
@@ -86,8 +90,8 @@ export class FormComponent implements OnInit {
 
   pushWebsitesArray() {
     const websitesArrayCtrl = this.fb.group({
-      name: this.fb.control<string>('', [ Validators.maxLength(15) ]),
-      url: this.fb.control<string>('', [ ])
+      name: this.fb.control<string>('', [Validators.maxLength(15)]),
+      url: this.fb.control<string>('', [])
     })
     this.websitesArray.push(websitesArrayCtrl);
   }
@@ -125,9 +129,9 @@ export class FormComponent implements OnInit {
     // iterate through all keys in our FormGroup
     Object.keys(this.formGrp.controls).forEach(formControlName => {
       // skills and websites are array, have to JSON.stringify to extract out actual value
-      if(formControlName.match('skills') || formControlName.match('websites')) {
+      if (formControlName.match('skills') || formControlName.match('websites')) {
         // append key value pair to formData
-        formData.append(formControlName, JSON.stringify(this.formGrp.get(formControlName)?.value).replace("\\",""))
+        formData.append(formControlName, JSON.stringify(this.formGrp.get(formControlName)?.value).replace("\\", ""))
       } else {
         formData.append(formControlName, this.formGrp.get(formControlName)?.value)
       }
@@ -137,25 +141,24 @@ export class FormComponent implements OnInit {
       // console.log('>>>> postRegister response: ', result)
       this.loading = false;
       this.previewSvc.snackbarMsg = 'REGISTER_SUCCESSFUL';
-      this.snackBar.openFromComponent(SnackbarComponent, {duration: 3000, verticalPosition: 'top'}); // 3000 is 3s
+      this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' }); // 3000 is 3s
       this.router.navigate(['/login'])
     }).catch(error => {
       // console.log('>>>> postRegister response: ', error);
       this.loading = false;
       if ((<string>(error.error.message)).match('exist')) {
-        this.emailHTMLEle.nativeElement.scrollIntoView({behavior: 'smooth', block: 'end', inline: 'start'})
+        this.emailHTMLEle.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'start' })
         this.emailError = true;
       }
     })
   }
 
   // check type of selected file for upload
-  errorFile01:boolean = false; // showcase picture 1
-  errorFile02:boolean = false; // showcase picture 2
-  errorFile03:boolean = false; // showcase picture 3
-  errorProfilePhoto:boolean = false; // profile picture
-  readFileType(fileEvent: HTMLInputEvent)
-  {
+  errorFile01: boolean = false; // showcase picture 1
+  errorFile02: boolean = false; // showcase picture 2
+  errorFile03: boolean = false; // showcase picture 3
+  errorProfilePhoto: boolean = false; // profile picture
+  readFileType(fileEvent: HTMLInputEvent) {
     // blank file to reset svc var
     const blankFile: File = new File([], '');
 
@@ -169,10 +172,10 @@ export class FormComponent implements OnInit {
     try {
       // console.log('>>>> selected fileType: ', inputFile);
       // user uploaded the correct file type image/jpeg or image/png
-      if (inputFile.type.startsWith('image') && inputFile.size < 1048576){
+      if (inputFile.type.startsWith('image') && inputFile.size < 1048576) {
         reader.readAsDataURL(inputFile);
         // onload is fired when file is read successfully
-        reader.onload = (event:any) => {
+        reader.onload = (event: any) => {
           if (elementId === 'inputFile01') {
             // switch the error msg to false
             this.errorFile01 = false;
@@ -220,7 +223,7 @@ export class FormComponent implements OnInit {
           this.errorProfilePhoto = true;
           this.previewSvc.profilePhoto = blankFile;
           this.formGrp.controls['profilePhoto'].reset();
-          }
+        }
 
       }
     } catch (error) {
@@ -265,11 +268,11 @@ export class FormComponent implements OnInit {
 
     // set the bytes of the buffer to the correct values
     for (var i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
+      ia[i] = byteString.charCodeAt(i);
     }
 
     // write the ArrayBuffer to a blob, and you're done
-    var blob = new Blob([ab], {type: mimeString});
+    var blob = new Blob([ab], { type: mimeString });
     return blob;
   }
 

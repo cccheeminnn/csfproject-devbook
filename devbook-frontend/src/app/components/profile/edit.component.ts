@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { DevbookUser, DevbookUserWebsites, DevbookUserSkills, DevbookUserImages, SecondPanelData } from '../../models/models';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { BackendService } from '../../services/backend.service';
@@ -14,9 +14,9 @@ import { SnackbarComponent } from '../snackbar/snackbar.component';
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.css']
 })
-export class EditComponent implements OnInit {
+export class EditComponent implements OnInit, AfterViewInit {
 
-  loading: boolean = false;
+  loading!: boolean;
 
   // for Expand/Collaspe all
   @ViewChild(MatAccordion)
@@ -56,9 +56,14 @@ export class EditComponent implements OnInit {
     private previewSvc: PreviewService,
     private snackBar: MatSnackBar,
     private activatedRoute: ActivatedRoute,
-    private router: Router
-  ) {
+    private router: Router) {
+
+    this.loading = true;
+
     backendSvc.currentUser.subscribe(x => this.currentUser = x)
+  }
+  ngAfterViewInit(): void {
+    this.loading = false;
   }
 
   ngOnInit(): void {
@@ -66,17 +71,16 @@ export class EditComponent implements OnInit {
       this.backendSvc.logout();
       this.router.navigate(['/login'])
     } else {
-      this.loading = true;
       this.backendSvc.retrieveUserDetails(this.userId).then(result => {
         this.user = result;
         this.profilePhotoSrc = `https://bigbook.sgp1.digitaloceanspaces.com/users/${this.user.id}/profilephoto.jpg`
         this.initImageDisplay(this.user.images);
         this.initPanelFormGrps();
         this.loading = false;
-      }).catch (error => {
+      }).catch(error => {
         this.loading = false;
         this.previewSvc.snackbarMsg = 'ERROR_OCCURRED, REFRESH_&_TRY_AGAIN';
-        this.snackBar.openFromComponent(SnackbarComponent, {duration: 3000, verticalPosition: 'top'}); // 3000 is 3s
+        this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' }); // 3000 is 3s
       })
 
     }
@@ -98,7 +102,7 @@ export class EditComponent implements OnInit {
       education: this.fb.control<string>(this.user.education, [Validators.required]),
     })
 
-    this.skillsArray = this.fb.array([], [ Validators.required, Validators.minLength(1) ]);
+    this.skillsArray = this.fb.array([], [Validators.required, Validators.minLength(1)]);
     for (let i = 0; i < this.user.skills.length; i++) {
       this.pushCurrentSkillsArray(this.user.skills[i]);
     }
@@ -107,7 +111,7 @@ export class EditComponent implements OnInit {
       skills: this.skillsArray
     })
 
-    this.websitesArray = this.fb.array([], [ Validators.required, Validators.minLength(1) ]);
+    this.websitesArray = this.fb.array([], [Validators.required, Validators.minLength(1)]);
     for (let i = 0; i < this.user.websites.length; i++) {
       this.pushCurrentWebsitesArray(this.user.websites[i]);
     }
@@ -197,10 +201,10 @@ export class EditComponent implements OnInit {
       this.image03Desc = '';
       this.img03Avail = false;
     }
-    this.updateSvc.deleteImage(this.userId, (img+'.jpg')).then(result => {
+    this.updateSvc.deleteImage(this.userId, (img + '.jpg')).then(result => {
       this.loading = false;
       this.previewSvc.snackbarMsg = 'DELETE_SUCCESSFUL';
-      this.snackBar.openFromComponent(SnackbarComponent, {duration: 3000, verticalPosition: 'top'}); // 3000 is 3s
+      this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' }); // 3000 is 3s
     }).catch(error => { // chances are jwt expired
       this.loading = false;
       this.backendSvc.logout();
@@ -213,7 +217,7 @@ export class EditComponent implements OnInit {
   saveFirstPanel() {
     this.loading = true;
     if (this.firstPanelFormGrp.controls['profilePhoto'].value === null) {
-      const blankFile: File = new File([],'');
+      const blankFile: File = new File([], '');
       this.firstPanelFormGrp.controls['profilePhoto'].setValue(blankFile);
 
     }
@@ -287,8 +291,7 @@ export class EditComponent implements OnInit {
     });
   }
 
-  saveFifthPanel()
-  {
+  saveFifthPanel() {
     this.loading = true;
     const blankFile = new File([], '');
     if (this.fifthPanelFormGrp.controls['file01'].value === null) {

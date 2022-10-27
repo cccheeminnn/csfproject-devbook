@@ -1,13 +1,13 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 import { DevbookUser } from 'src/app/models/models';
-import { BackendService } from '../../../services/backend.service';
-import { Router, ActivatedRoute, TitleStrategy } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { PreviewService } from '../../../services/preview.service';
-import { SnackbarComponent } from '../../snackbar/snackbar.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { BackendService } from 'src/app/services/backend.service';
+import { PreviewService } from 'src/app/services/preview.service';
+import { SnackbarComponent } from '../snackbar/snackbar.component';
 
 
 @Component({
@@ -15,12 +15,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
   sub$!: Subscription;
 
   alphabet: string[] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-  loading: boolean = true;
+  loading!: boolean;
 
   filterBy!: string;
   limit: number = 6;
@@ -37,8 +37,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     private activatedRoute: ActivatedRoute,
     private backendSvc: BackendService,
     private previewSvc: PreviewService) {
+    this.loading = true;
+
     carouselConfig.interval = 0
     carouselConfig.showNavigationIndicators = false;
+
     this.sub$ = this.activatedRoute.queryParams.subscribe(params => {
       this.filterBy = params['filterby'];
       if (this.filterBy != undefined) {
@@ -46,11 +49,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       // console.log('>>>subscribe',params['filterby']);
     })
-  }
-
-  ngAfterViewInit(): void {
-    console.log('view init, loading false')
-    this.loading = false;
   }
 
   ngOnDestroy(): void {
@@ -120,4 +118,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     })
   }
 
+  imgLoaded() {
+    console.log('img loading?')
+    this.loading = false;
+  }
 }
