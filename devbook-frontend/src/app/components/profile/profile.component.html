@@ -18,7 +18,7 @@
       </mat-progress-spinner>
   </div>
 
-  <div class="border-margin-parent">
+  <div *ngIf="!loading" class="border-margin-parent">
     <mat-icon *ngIf="sameUser" class="edit-button" [routerLink]="['/user',user.id,'edit']">edit</mat-icon>
     <table class="table-properties">
       <tbody>
@@ -53,7 +53,7 @@
       </tbody>
     </table>
   </div>
-  <div class="border-margin-child">
+  <div *ngIf="!loading" class="border-margin-child">
     <table class="table-properties">
       <tbody>
         <tr>
@@ -96,7 +96,7 @@
       </tbody>
     </table>
   </div>
-  <div class="border-margin-child">
+  <div *ngIf="!loading" class="border-margin-child">
     <table class="table-properties">
       <tbody>
         <tr>
@@ -115,7 +115,7 @@
       </tbody>
     </table>
   </div>
-  <div class="border-margin-child">
+  <div *ngIf="!loading" class="border-margin-child">
     <table class="table-properties">
       <tbody>
         <tr>
@@ -135,7 +135,7 @@
       </tbody>
     </table>
   </div>
-  <div class="border-margin-child">
+  <div *ngIf="!loading" class="border-margin-child">
     <ngb-carousel [showNavigationArrows]="false" [showNavigationIndicators]="false">
       <ng-template ngbSlide *ngFor="let image of user.images">
         <div class="picsum-img-wrapper carousel-img">
@@ -148,7 +148,7 @@
       </ng-template>
     </ngb-carousel>
   </div>
-  <div class="border-margin-child">
+  <div *ngIf="!loading" class="border-margin-child">
     <table class="table-properties" *ngIf="!currentUser">
       <tbody>
         <tr>
@@ -179,7 +179,7 @@
     </tbody>
   </table>
   </div>
-  <div class="border-margin-child">
+  <div *ngIf="!loading" class="border-margin-child">
     <div *ngFor="let comment of user.comments" style="margin-bottom: 10px;">
         <img [src]="'https://bigbook.sgp1.digitaloceanspaces.com/users/'+comment.id+'/profilephoto.jpg'" class="rounded-circle"
             style="height: 50px; width: 50px; object-fit: cover; float: left; margin-right: 3px;">

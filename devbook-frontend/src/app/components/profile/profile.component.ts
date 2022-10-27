@@ -64,6 +64,7 @@ export class ProfileComponent implements OnInit {
       this.user = result;
       this.userComments = this.user.comments;
       this.ratingValue = this.user.ratings;
+      this.loading = false;
       // means theres a user logged in
       if (this.currentUser != null) {
         // check if currently logged in user liked/rated this user

@@ -65,7 +65,10 @@ export class EditComponent implements OnInit {
     })
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void
+  {
+    this.initPanelFormGrps();
+
     if (this.currentUser == null || this.currentUser.id != this.userId) {
       this.backendSvc.logout();
       this.router.navigate(['/login'])
@@ -73,8 +76,8 @@ export class EditComponent implements OnInit {
       this.backendSvc.retrieveUserDetails(this.userId).then(result => {
         this.user = result;
         this.profilePhotoSrc = `https://bigbook.sgp1.digitaloceanspaces.com/users/${this.user.id}/profilephoto.jpg`
+        this.populateFormGrps();
         this.initImageDisplay(this.user.images);
-        this.initPanelFormGrps();
         this.loading = false;
       }).catch(error => {
         this.loading = false;
@@ -84,48 +87,69 @@ export class EditComponent implements OnInit {
     }
   }
 
-  initPanelFormGrps() {
+  populateFormGrps() {
 
-    this.firstPanelFormGrp = this.fb.group({
-      userEmail: this.fb.control<string>(this.user.email),
-      profilePhoto: [null], // inserted during input (change) event
-      bio: this.fb.control<string>(this.user.bio, [Validators.required, Validators.minLength(10)]),
-    })
+    this.firstPanelFormGrp.controls['userEmail'].setValue(this.user.email);
+    this.firstPanelFormGrp.controls['bio'].setValue(this.user.bio);
 
-    this.secondPanelFormGrp = this.fb.group({
-      userEmail: this.fb.control<string>(this.user.email),
-      currentJob: this.fb.control<string>(this.user.currentJob),
-      currentCompany: this.fb.control<string>(this.user.currentCompany),
-      previousCompany: this.fb.control<string>(this.user.previousCompany),
-      education: this.fb.control<string>(this.user.education, [Validators.required]),
-    })
+    this.secondPanelFormGrp.controls['userEmail'].setValue(this.user.email);
+    this.secondPanelFormGrp.controls['currentJob'].setValue(this.user.currentJob);
+    this.secondPanelFormGrp.controls['currentCompany'].setValue(this.user.currentCompany);
+    this.secondPanelFormGrp.controls['previousCompany'].setValue(this.user.previousCompany);
+    this.secondPanelFormGrp.controls['education'].setValue(this.user.education);
 
-    this.skillsArray = this.fb.array([], [Validators.required, Validators.minLength(1)]);
+    this.thirdPanelFormGrp.controls['userEmail'].setValue(this.user.email);
     for (let i = 0; i < this.user.skills.length; i++) {
       this.pushCurrentSkillsArray(this.user.skills[i]);
     }
+
+    this.fourthPanelFormGrp.controls['userEmail'].setValue(this.user.email);
+    for (let i = 0; i < this.user.websites.length; i++) {
+      this.pushCurrentWebsitesArray(this.user.websites[i]);
+    }
+
+    this.fifthPanelFormGrp.controls['userEmail'].setValue(this.user.email);
+    this.fifthPanelFormGrp.controls['file01Description'].setValue(this.user.images[0]?.description || '');
+    this.fifthPanelFormGrp.controls['file02Description'].setValue(this.user.images[1]?.description || '');
+    this.fifthPanelFormGrp.controls['file03Description'].setValue(this.user.images[2]?.description || '');
+  }
+
+  initPanelFormGrps() {
+
+    this.firstPanelFormGrp = this.fb.group({
+      userEmail: this.fb.control<string>(''),
+      profilePhoto: [null], // inserted during input (change) event
+      bio: this.fb.control<string>('', [Validators.required, Validators.minLength(10)]),
+    })
+
+    this.secondPanelFormGrp = this.fb.group({
+      userEmail: this.fb.control<string>(''),
+      currentJob: this.fb.control<string>(''),
+      currentCompany: this.fb.control<string>(''),
+      previousCompany: this.fb.control<string>(''),
+      education: this.fb.control<string>('', [Validators.required]),
+    })
+
+    this.skillsArray = this.fb.array([], [Validators.required, Validators.minLength(1)]);
     this.thirdPanelFormGrp = this.fb.group({
-      userEmail: this.fb.control<string>(this.user.email),
+      userEmail: this.fb.control<string>(''),
       skills: this.skillsArray
     })
 
     this.websitesArray = this.fb.array([], [Validators.required, Validators.minLength(1)]);
-    for (let i = 0; i < this.user.websites.length; i++) {
-      this.pushCurrentWebsitesArray(this.user.websites[i]);
-    }
     this.fourthPanelFormGrp = this.fb.group({
-      userEmail: this.fb.control<string>(this.user.email),
+      userEmail: this.fb.control<string>(''),
       websites: this.websitesArray
     })
 
     this.fifthPanelFormGrp = this.fb.group({
-      userEmail: this.fb.control<string>(this.user.email),
+      userEmail: this.fb.control<string>(''),
       file01: [null], // inserted during input (change) event
-      file01Description: this.fb.control<string>(this.user.images[0]?.description || ''),
+      file01Description: this.fb.control<string>(''),
       file02: [null], // inserted during input (change) event
-      file02Description: this.fb.control<string>(this.user.images[1]?.description || ''),
+      file02Description: this.fb.control<string>(''),
       file03: [null], // inserted during input (change) event
-      file03Description: this.fb.control<string>(this.user.images[2]?.description || '')
+      file03Description: this.fb.control<string>('')
     })
   }
 
