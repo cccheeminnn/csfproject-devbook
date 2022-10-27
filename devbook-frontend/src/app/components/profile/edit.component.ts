@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DevbookUser, DevbookUserWebsites, DevbookUserSkills, DevbookUserImages, SecondPanelData } from '../../models/models';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { BackendService } from '../../services/backend.service';
@@ -14,7 +14,7 @@ import { SnackbarComponent } from '../snackbar/snackbar.component';
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.css']
 })
-export class EditComponent implements OnInit, AfterViewInit {
+export class EditComponent implements OnInit {
 
   loading!: boolean;
 
@@ -61,9 +61,6 @@ export class EditComponent implements OnInit, AfterViewInit {
     this.loading = true;
 
     backendSvc.currentUser.subscribe(x => this.currentUser = x)
-  }
-  ngAfterViewInit(): void {
-    this.loading = false;
   }
 
   ngOnInit(): void {
@@ -400,6 +397,10 @@ export class EditComponent implements OnInit, AfterViewInit {
         this.image03Src = 'https://bigbook.sgp1.digitaloceanspaces.com/Templates/editimgplaceholder.jpg';
       }
     }
+  }
+
+  imgLoaded() {
+    this.loading = false;
   }
 }
 

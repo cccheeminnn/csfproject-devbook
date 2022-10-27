@@ -11,6 +11,14 @@
 <body>
   <div class="login-table">
     <img src="https://bigbook.sgp1.digitaloceanspaces.com/Templates/logo5.jpg" style="width: 50px;" alt="">
+    <div *ngIf="loading" class="loading-spinner">
+      <mat-progress-spinner
+      style="margin-left: auto; margin-right: auto;"
+            diameter="60"
+            color="primary"
+            [mode]="'indeterminate'">
+        </mat-progress-spinner>
+    </div>
     <form [formGroup]="formGrp" (ngSubmit)="onLoginSubmit()">
       <table style="text-align: center;">
         <tbody>

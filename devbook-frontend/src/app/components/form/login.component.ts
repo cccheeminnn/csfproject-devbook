@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LoginFormDetails } from '../../models/models';
 import { BackendService } from '../../services/backend.service';
@@ -12,12 +12,13 @@ import { SnackbarComponent } from '../snackbar/snackbar.component';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit, AfterViewInit {
+export class LoginComponent implements OnInit {
 
   loading!: boolean;
 
   formGrp!: FormGroup
 
+  // for show password
   hide = true;
 
   constructor(
@@ -27,12 +28,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private snackBar: MatSnackBar,
     private previewSvc: PreviewService) { // to display login messages in popup
 
-      this.loading = true;
     }
-
-  ngAfterViewInit(): void {
-    this.loading = false;
-  }
 
   ngOnInit(): void {
     this.formGrp = this.fb.group({

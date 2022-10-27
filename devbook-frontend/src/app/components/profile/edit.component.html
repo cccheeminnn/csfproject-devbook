@@ -209,7 +209,7 @@
           <!-- First Image Upload -->
           <!-- frame and pic-in-frame always show either placeholder or prev uploaded img -->
           <div class="frame">
-            <img class="picture-in-frame" [src]="image01Src">
+            <img class="picture-in-frame" [src]="image01Src" (load)="imgLoaded()">
           </div>
           <!-- if there is a prev uploaded img show it (with delete btn) -->
           <div *ngIf="img01Avail">
@@ -242,7 +242,7 @@
           <!-- Second Image Upload -->
           <!-- frame and pic-in-frame always show either placeholder or prev uploaded img -->
           <div class="frame">
-            <img class="picture-in-frame" [src]="image02Src">
+            <img class="picture-in-frame" [src]="image02Src" (load)="imgLoaded()">
           </div>
           <!-- if there is a prev uploaded img show it (with delete btn) -->
           <div *ngIf="img02Avail">
@@ -275,7 +275,7 @@
           <!-- Third Image Upload -->
           <!-- frame and pic-in-frame always show either placeholder or prev uploaded img -->
           <div class="frame">
-            <img class="picture-in-frame" [src]="image03Src">
+            <img class="picture-in-frame" [src]="image03Src" (load)="imgLoaded()">
           </div>
           <!-- if there is a prev uploaded img show it (with delete btn) -->
           <div *ngIf="img03Avail">

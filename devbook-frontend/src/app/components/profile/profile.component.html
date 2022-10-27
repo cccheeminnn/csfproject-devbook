@@ -139,7 +139,8 @@
     <ngb-carousel [showNavigationArrows]="false" [showNavigationIndicators]="false">
       <ng-template ngbSlide *ngFor="let image of user.images">
         <div class="picsum-img-wrapper carousel-img">
-          <img class="img-in-carousel" [src]="'https://bigbook.sgp1.digitaloceanspaces.com/users/'+user.id+'/'+image.name">
+          <img class="img-in-carousel" (load)="imgLoaded()"
+            [src]="'https://bigbook.sgp1.digitaloceanspaces.com/users/'+user.id+'/'+image.name">
         </div>
         <div class="carousel-caption">
           <p>{{ image.description }}</p>

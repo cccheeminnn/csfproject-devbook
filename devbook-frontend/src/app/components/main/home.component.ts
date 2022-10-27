@@ -9,7 +9,6 @@ import { BackendService } from 'src/app/services/backend.service';
 import { PreviewService } from 'src/app/services/preview.service';
 import { SnackbarComponent } from '../snackbar/snackbar.component';
 
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -37,7 +36,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private backendSvc: BackendService,
     private previewSvc: PreviewService) {
-      
+
     this.loading = true;
 
     carouselConfig.interval = 0
@@ -65,7 +64,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.quote = result.data
       console.log(this.quote)
     });
-
   }
 
   // mat-paginator EventEmitters
@@ -99,12 +97,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   filterByAlp(alp: string) {
-    this.router.navigate(['/filter'], { queryParams: { filterby: alp } });
-
     this.backendSvc.retrieveTotalFilteredUserCount(alp).then(result => {
       this.ttlUserCount = result;
     }).catch(error => {
       console.error('>>>> an error occurred while retrieving total filtered user count', error);
+      this.loading = false;
       this.previewSvc.snackbarMsg = 'NO_USERS_FOUND';
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' }); // 3000 is 3s
     })
@@ -117,7 +114,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   imgLoaded() {
-    console.log('img loading?')
+    // console.log('img loading?')
     this.loading = false;
+  }
+
+  redirectToFilter(alp: string) {
+    this.router.navigate(['/filter'], { queryParams: { filterby: alp } });
+    this.filterByAlp(alp);
   }
 }

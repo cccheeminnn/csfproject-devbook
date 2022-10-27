@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DevbookUserComments, DevbookUser, CurrentUserLiked, CurrentUserRated } from '../../models/models';
 import { BackendService } from '../../services/backend.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,9 +13,9 @@ import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit, AfterViewInit {
+export class ProfileComponent implements OnInit {
 
-  loading = true;
+  loading!: boolean;
 
   formGrp!: FormGroup;
   textAreaInput = '';
@@ -37,14 +37,12 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     private previewSvc: PreviewService,
     private fb: FormBuilder,
     private snackbar: MatSnackBar,
-    private carouselConfig: NgbCarouselConfig
-  ) {
+    private carouselConfig: NgbCarouselConfig) {
+
+    this.loading = true;
+
     this.backendSvc.currentUser.subscribe(x => this.currentUser = x);
     carouselConfig.interval = 4000;
-  }
-
-  ngAfterViewInit(): void {
-    this.loading = false;
   }
 
   ngOnInit(): void {
@@ -64,6 +62,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   retrieveUserDetails(userId: string) {
     this.backendSvc.retrieveUserDetails(userId).then(result => {
       this.user = result;
+      console.log(this.user.websites)
       this.userComments = this.user.comments;
       this.ratingValue = this.user.ratings;
       // means theres a user logged in
@@ -199,5 +198,9 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   routeToLogin() {
     document.documentElement.scrollTop = 0; // scroll to top of page automatically
     this.router.navigate(['/login']);
+  }
+
+  imgLoaded() {
+    this.loading = false;
   }
 }
