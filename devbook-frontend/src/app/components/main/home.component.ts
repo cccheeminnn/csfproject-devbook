@@ -21,6 +21,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   alphabet: string[] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
   loading!: boolean;
 
+  // ttl no of carousel images to load
+  ttlNoOfImgToLoad: number = 0;
+  ttlNoOfImgLoaded: number = 0;
+
   filterBy!: string;
   limit: number = 6;
   offset: number = 0;
@@ -68,6 +72,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // mat-paginator EventEmitters
   onPageEvent(event: PageEvent) {
+    this.loading = true;
     // user changes items per page
     this.limit = event.pageSize;
     // user press next/previous page
@@ -82,6 +87,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // retrieve total user count and user info from backend
   retrieveDisplayInfoFromBackend() {
+    this.ttlNoOfImgToLoad = 0;
+    this.ttlNoOfImgLoaded = 0;
+
     this.backendSvc.retrieveTotalUserCount().then(result => {
       document.documentElement.scrollTop = 0; // scroll to top of page automatically
       this.ttlUserCount = result;
@@ -91,12 +99,23 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.backendSvc.retrieveAllUsers(this.limit, this.offset).then(results => {
       this.devbookUsers = results;
+      results.forEach(user => {
+        this.ttlNoOfImgToLoad += user.images.length
+        // console.log('>>>>ttlNoOfCarouselImg', this.ttlNoOfImgToLoad)
+      })
+      if (this.ttlNoOfImgToLoad == 0) {
+        this.ttlNoOfImgToLoad += 1;
+      }
     }).catch(error => {
       console.error('>>>> an error has occurred while retrieving users from backend', error);
     })
   }
 
   filterByAlp(alp: string) {
+    this.loading = true;
+    this.ttlNoOfImgToLoad = 0;
+    this.ttlNoOfImgLoaded = 0;
+
     this.backendSvc.retrieveTotalFilteredUserCount(alp).then(result => {
       this.ttlUserCount = result;
     }).catch(error => {
@@ -108,14 +127,26 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.backendSvc.retrieveFilteredUsers(this.limit, this.offset, alp).then(results => {
       this.devbookUsers = results;
+      results.forEach(user => {
+        this.ttlNoOfImgToLoad += user.images.length
+        // console.log('>>>>ttlNoOfCarouselImg', this.ttlNoOfImgToLoad)
+      })
+      if (this.ttlNoOfImgToLoad == 0) {
+        this.ttlNoOfImgToLoad += 1;
+      }
     }).catch(error => {
       console.error('>>>> an error has occurred while retrieving filtered users from backend', error);
     })
   }
 
   imgLoaded() {
-    // console.log('img loading?')
-    this.loading = false;
+    this.ttlNoOfImgLoaded += 1;
+    // console.log('loaded> ', this.ttlNoOfImgLoaded)
+    // console.log('toLoad> ', this.ttlNoOfImgToLoad)
+    if (this.ttlNoOfImgLoaded == this.ttlNoOfImgToLoad) {
+      this.loading = false;
+    }
+    // console.log('loading?> ', this.loading)
   }
 
   redirectToFilter(alp: string) {

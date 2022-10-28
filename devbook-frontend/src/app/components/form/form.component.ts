@@ -44,7 +44,7 @@ export class FormComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog, // for Preview
     private previewSvc: PreviewService,
     private backendSvc: BackendService) {
-      
+
     this.loading = true;
   }
 
@@ -110,6 +110,7 @@ export class FormComponent implements OnInit, AfterViewInit {
 
   onSubmit() {
     this.loading = true;
+    this.previewSvc.reset();
     // since some of the file uploads are optional
     // check value for these form controls and if they are null (default)
     // throw in a blank File so backend MultipartFile does not give us error
