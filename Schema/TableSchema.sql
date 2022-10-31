@@ -185,5 +185,5 @@ insert into user_notifications (user_email, notification_email, notification_nam
 	-- ('hughjackman@devbook.com','x','Patrick Jane','rated you!','NEW');
 	('hughjackman@devbook.com','x','Patrick Jane','left you a comment!','NEW');
 select * from user_notifications order by date_time asc;
-delete from user_notifications where user_email = 'hughjackman@devbook.com' order by date_time asc;
+delete from user_notifications where user_email = 'hughjackman@devbook.com' order by date_time asc limit 1;
 select count(*) from user_notifications where user_email = 'aaronkwok@devbook.com' and notification_status = 'NEW'
