@@ -1,4 +1,4 @@
-package vttp2022.batch1.csfproject.devbookbackend.models;
+package vttp2022.batch1.csfproject.devbookbackend.models.jwt;
 
 public class JwtRequest {
 

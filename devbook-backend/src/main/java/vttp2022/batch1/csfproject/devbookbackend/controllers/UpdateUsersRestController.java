@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import vttp2022.batch1.csfproject.devbookbackend.models.Response;
-import vttp2022.batch1.csfproject.devbookbackend.models.UpdateUser.FifthPanel;
-import vttp2022.batch1.csfproject.devbookbackend.models.UpdateUser.FirstPanel;
-import vttp2022.batch1.csfproject.devbookbackend.models.UpdateUser.FourthPanel;
-import vttp2022.batch1.csfproject.devbookbackend.models.UpdateUser.SecondPanel;
-import vttp2022.batch1.csfproject.devbookbackend.models.UpdateUser.ThirdPanel;
+import vttp2022.batch1.csfproject.devbookbackend.models.updateUser.FifthPanel;
+import vttp2022.batch1.csfproject.devbookbackend.models.updateUser.FirstPanel;
+import vttp2022.batch1.csfproject.devbookbackend.models.updateUser.FourthPanel;
+import vttp2022.batch1.csfproject.devbookbackend.models.updateUser.SecondPanel;
+import vttp2022.batch1.csfproject.devbookbackend.models.updateUser.ThirdPanel;
 import vttp2022.batch1.csfproject.devbookbackend.services.UpdateUserService;
 
 @RestController

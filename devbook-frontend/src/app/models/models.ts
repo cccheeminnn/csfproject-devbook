@@ -41,6 +41,7 @@ export interface DevbookUserImages {
 export interface DevbookUserComments {
   email: string, // of the user
   id: string, // of the commenter
+  comment_email: string,
   name: string, // of the commenter
   text: string // of the comment
 }
@@ -68,4 +69,9 @@ export interface SecondPanelData {
   currentCompany?: string,
   previousCompany?: string,
   education: string
+}
+
+export interface CurrentUserNotifications {
+  name: string,
+  content: string
 }

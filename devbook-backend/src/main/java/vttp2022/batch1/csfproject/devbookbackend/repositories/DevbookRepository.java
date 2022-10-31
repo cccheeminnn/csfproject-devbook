@@ -18,11 +18,11 @@ import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
-
-import vttp2022.batch1.csfproject.devbookbackend.models.UserComment;
-import vttp2022.batch1.csfproject.devbookbackend.models.UserRatings;
 import vttp2022.batch1.csfproject.devbookbackend.models.DevbookUser;
 import vttp2022.batch1.csfproject.devbookbackend.models.Register;
+import vttp2022.batch1.csfproject.devbookbackend.models.specificUser.UserComment;
+import vttp2022.batch1.csfproject.devbookbackend.models.specificUser.UserNotification;
+import vttp2022.batch1.csfproject.devbookbackend.models.specificUser.UserRatings;
 import vttp2022.batch1.csfproject.devbookbackend.services.DigitalOceanService;
 
 import static vttp2022.batch1.csfproject.devbookbackend.repositories.Queries.*;
@@ -57,6 +57,16 @@ public class DevbookRepository {
             exist = true;
         }
         return exist;
+    }
+
+    public String retrieveNameFromEmail(String email) {
+        SqlRowSet rs = template.queryForRowSet(SQL_RETRIEVE_USER_NAME, email);
+
+        if (rs.next()) {
+            return rs.getString("user_name");
+        } else {
+            return "";
+        }
     }
 
     public boolean verifyUser(String userId) {
@@ -344,6 +354,66 @@ public class DevbookRepository {
         template.update(SQL_INSERT_USER_LIKES_RATINGS, newUserReg.getEmail(), 1, 0.0); // default 1 like, ratings 0
 
         if (credentials == 1)
+            return true;
+        return false;
+    }
+
+    // user_notifications table
+    public Integer retrieveNewNotificationsCount(String email) {
+
+        SqlRowSet rs = template.queryForRowSet(SQL_RETRIEVE_USER_NEW_NOTIFICATIONS_COUNT, email);
+        Integer newNotificationsCount = 0;
+        if (rs.next()) {
+            newNotificationsCount = rs.getInt("count(*)");
+        }
+        return newNotificationsCount;
+    }
+
+    public boolean updateNotificationStatus(String userEmail) {
+        int update = template.update(SQL_UPDATE_USER_NOTIFICATIONS_STATUS, userEmail);
+        if (update > 0)
+            return true;
+        return false;
+    }
+
+    public Optional<List<UserNotification>> retrieveNotifications(String email) {
+
+        List<UserNotification> notificationsList = new LinkedList<>();
+
+        // sorted by date_time desc, newest first then oldest
+        SqlRowSet rs = template.queryForRowSet(SQL_RETRIEVE_USER_NOTIFICATIONS, email);
+
+        while (rs.next()) {
+            // add in same order
+            UserNotification notification = UserNotification.createFromRs(rs);
+            notificationsList.add(notification);
+        }
+
+        if (notificationsList.isEmpty())
+            return Optional.empty();
+
+        return Optional.of(notificationsList);
+    }
+
+    public int retrieveTotalNotificationsCount(String email) {
+        SqlRowSet rs = template.queryForRowSet(SQL_RETRIEVE_USER_NOTIFICATIONS_TOTAL_COUNT, email);
+        rs.next();
+        return rs.getInt("count(*)");
+    }
+
+    public void deleteOldestNotification(String email) {
+        template.update(SQL_DELETE_OLDEST_NOTIFICATION, email);
+    }
+
+    public boolean insertNewNotification(
+        String emailOfUserNotified, 
+        String emailOfUserNotifying, 
+        String notificationContent)
+    {
+        String userName = retrieveNameFromEmail(emailOfUserNotifying);
+        int update = template.update(SQL_INSERT_USER_NOTIFICATIONS, emailOfUserNotified, emailOfUserNotifying, userName, notificationContent, "NEW");
+
+        if (update == 1)
             return true;
         return false;
     }

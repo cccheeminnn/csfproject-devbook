@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import vttp2022.batch1.csfproject.devbookbackend.models.UpdateUser.FifthPanel;
-import vttp2022.batch1.csfproject.devbookbackend.models.UpdateUser.FirstPanel;
-import vttp2022.batch1.csfproject.devbookbackend.models.UpdateUser.FourthPanel;
-import vttp2022.batch1.csfproject.devbookbackend.models.UpdateUser.SecondPanel;
-import vttp2022.batch1.csfproject.devbookbackend.models.UpdateUser.ThirdPanel;
+import vttp2022.batch1.csfproject.devbookbackend.models.updateUser.FifthPanel;
+import vttp2022.batch1.csfproject.devbookbackend.models.updateUser.FirstPanel;
+import vttp2022.batch1.csfproject.devbookbackend.models.updateUser.FourthPanel;
+import vttp2022.batch1.csfproject.devbookbackend.models.updateUser.SecondPanel;
+import vttp2022.batch1.csfproject.devbookbackend.models.updateUser.ThirdPanel;
 import vttp2022.batch1.csfproject.devbookbackend.repositories.UpdateUserRepository;
 
 @Service

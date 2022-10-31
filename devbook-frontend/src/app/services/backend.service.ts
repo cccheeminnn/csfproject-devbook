@@ -1,7 +1,7 @@
 import { DevbookUserComments, LoginFormDetails } from './../models/models';
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { firstValueFrom, map, Observable, BehaviorSubject, first } from 'rxjs';
+import { firstValueFrom, map, Observable, BehaviorSubject, ReplaySubject } from 'rxjs';
 import { DevbookUser, CurrentUserLiked, CurrentUserRated, Response } from '../models/models';
 
 @Injectable()
@@ -10,12 +10,17 @@ export class BackendService {
   private currentUserSubject: BehaviorSubject<DevbookUser | null>;
   public currentUser: Observable<DevbookUser | null>;
 
+  private notificationsSub: ReplaySubject<number> = new ReplaySubject<number>;
+  public notificationsCountObs: Observable<number>;
+
   constructor(
     private http: HttpClient
   ) {
     this.currentUserSubject = new BehaviorSubject<DevbookUser | null>(
       JSON.parse(localStorage.getItem('currentUser')!));
     this.currentUser = this.currentUserSubject.asObservable();
+
+    this.notificationsCountObs = this.notificationsSub.asObservable();
   }
 
   public get currentUserValue(): DevbookUser | null{
@@ -134,6 +139,35 @@ export class BackendService {
   getQuote(): Promise<Response> {
     return firstValueFrom(
       this.http.get<Response>('/api/quote')
+    )
+  }
+
+  // notifications
+  getNewNotificationsCount(userEmail: string):Promise<number> {
+    const params = new HttpParams().append('userEmail', userEmail);
+
+    return firstValueFrom(
+      this.http.get<number>('/api/countofnewnotifications', { params }).pipe(map(result => {
+        this.notificationsSub.next(result);
+        // console.log('map? ', result);
+        return result;
+      }))
+    )
+  }
+
+  updateNotificationsStatus(userEmail: string):Promise<Response> {
+    const params = new HttpParams().append('userEmail', userEmail);
+
+    return firstValueFrom(
+      this.http.get<Response>('/api/updatenotificationsstatus', { params })
+    )
+  }
+
+  getNotifications(userEmail: string):Promise<Response> {
+    const params = new HttpParams().append('userEmail', userEmail);
+
+    return firstValueFrom(
+      this.http.get<Response>('/api/notifications', { params })
     )
   }
 }

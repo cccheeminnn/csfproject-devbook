@@ -1,4 +1,4 @@
-package vttp2022.batch1.csfproject.devbookbackend.models;
+package vttp2022.batch1.csfproject.devbookbackend.models.specificUser;
 
 import java.io.StringReader;
 

@@ -7,10 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import vttp2022.batch1.csfproject.devbookbackend.models.UserComment;
-import vttp2022.batch1.csfproject.devbookbackend.models.UserRatings;
 import vttp2022.batch1.csfproject.devbookbackend.models.DevbookUser;
 import vttp2022.batch1.csfproject.devbookbackend.models.Register;
+import vttp2022.batch1.csfproject.devbookbackend.models.specificUser.UserComment;
+import vttp2022.batch1.csfproject.devbookbackend.models.specificUser.UserNotification;
+import vttp2022.batch1.csfproject.devbookbackend.models.specificUser.UserRatings;
 import vttp2022.batch1.csfproject.devbookbackend.repositories.DevbookRepository;
 
 @Service
@@ -39,8 +40,20 @@ public class DevbookUserService {
         return devbookRepo.verifyUser(userId);
     }
 
-    public boolean insertComment(UserComment comment) {
-        return devbookRepo.insertComment(comment);
+    public boolean insertComment(UserComment comment) 
+    {
+        boolean commentInserted = devbookRepo.insertComment(comment);
+
+        int ttlNotificationCount = devbookRepo.retrieveTotalNotificationsCount(comment.getEmail());
+        if (ttlNotificationCount >= 5) {
+            devbookRepo.deleteOldestNotification(comment.getEmail());
+        }
+
+        boolean notiUpdated = devbookRepo.insertNewNotification(comment.getEmail(), comment.getComment_email(), "commented on your page!");
+
+        if (commentInserted && notiUpdated)
+            return true;
+        return false;
     }
 
     @Transactional
@@ -48,7 +61,18 @@ public class DevbookUserService {
         String emailOfUserGivenALiked, Integer userUpdatedLikes,
         String emailOfUserGivingALike)
     {
-        return devbookRepo.updateUserLikes(emailOfUserGivenALiked, userUpdatedLikes, emailOfUserGivingALike);
+        boolean likeUpdated = devbookRepo.updateUserLikes(emailOfUserGivenALiked, userUpdatedLikes, emailOfUserGivingALike);
+
+        int ttlNotificationCount = devbookRepo.retrieveTotalNotificationsCount(emailOfUserGivenALiked);
+        if (ttlNotificationCount >= 5) {
+            devbookRepo.deleteOldestNotification(emailOfUserGivenALiked);
+        }
+
+        boolean notiUpdated = devbookRepo.insertNewNotification(emailOfUserGivenALiked, emailOfUserGivingALike, "gave you a like!");
+
+        if (likeUpdated && notiUpdated)
+            return true;
+        return false;
     }
 
     public boolean checkIfCurrentUserGaveALike(String userEmail, String currentUserEmail) {
@@ -65,7 +89,18 @@ public class DevbookUserService {
         String emailOfUserGivenARating,
         String emailOfUserGivingARating, float ratingsGiven)
     {
-        return devbookRepo.updateUserRatings(emailOfUserGivenARating, emailOfUserGivingARating, ratingsGiven);
+        float updatedRating = devbookRepo.updateUserRatings(emailOfUserGivenARating, emailOfUserGivingARating, ratingsGiven);
+
+        int ttlNotificationCount = devbookRepo.retrieveTotalNotificationsCount(emailOfUserGivenARating);
+        if (ttlNotificationCount >= 5) {
+            devbookRepo.deleteOldestNotification(emailOfUserGivenARating);
+        }
+
+        boolean notiUpdated = devbookRepo.insertNewNotification(emailOfUserGivenARating, emailOfUserGivingARating, "rated you!");
+
+        if (updatedRating > 0f && notiUpdated)
+            return updatedRating;
+        return 0f;
     }
 
     public boolean checkIfCurrentUserGaveARating(String userEmail, String currentUserEmail) {
@@ -107,6 +142,18 @@ public class DevbookUserService {
 
     public Optional<DevbookUser> retrieveUserDetailsEmail(String email) {
         return devbookRepo.retrieveUserDetailsEmail(email);
+    }
+
+    public Integer retrieveNewNotificationsCount(String email) {
+        return devbookRepo.retrieveNewNotificationsCount(email);
+    }
+
+    public Optional<List<UserNotification>> retrieveNotifications(String email) {
+        return devbookRepo.retrieveNotifications(email);
+    }
+
+    public boolean updateNotificationStatus(String userEmail) {
+        return devbookRepo.updateNotificationStatus(userEmail);
     }
 
 }

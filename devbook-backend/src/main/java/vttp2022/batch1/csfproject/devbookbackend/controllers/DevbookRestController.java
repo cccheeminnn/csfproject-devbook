@@ -24,12 +24,13 @@ import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
-import vttp2022.batch1.csfproject.devbookbackend.models.UserComment;
-import vttp2022.batch1.csfproject.devbookbackend.models.UserLikes;
-import vttp2022.batch1.csfproject.devbookbackend.models.UserRatings;
 import vttp2022.batch1.csfproject.devbookbackend.models.DevbookUser;
 import vttp2022.batch1.csfproject.devbookbackend.models.Register;
 import vttp2022.batch1.csfproject.devbookbackend.models.Response;
+import vttp2022.batch1.csfproject.devbookbackend.models.specificUser.UserComment;
+import vttp2022.batch1.csfproject.devbookbackend.models.specificUser.UserLikes;
+import vttp2022.batch1.csfproject.devbookbackend.models.specificUser.UserNotification;
+import vttp2022.batch1.csfproject.devbookbackend.models.specificUser.UserRatings;
 import vttp2022.batch1.csfproject.devbookbackend.services.DevbookUserService;
 import vttp2022.batch1.csfproject.devbookbackend.services.EmailService;
 
@@ -144,8 +145,7 @@ public class DevbookRestController {
 
     // for details page
     @GetMapping(path = "/retrieveuserdetails")
-    public ResponseEntity<String> getUserDetails(@RequestParam String id)
-    {
+    public ResponseEntity<String> getUserDetails(@RequestParam String id) {
         Optional<DevbookUser> optUser = userSvc.retrieveUserDetailsId(id);
         Response resp = new Response();
         if (optUser.isEmpty()) {
@@ -158,7 +158,7 @@ public class DevbookRestController {
         }
     }
 
-    // user verify email
+    // user verify email for new registers
     @GetMapping(path = "/verify/{userId}")
     public ResponseEntity<String> getVerify(@PathVariable(value = "userId") String userId) {
         System.out.println("pathvariable userid " + userId);
@@ -228,22 +228,23 @@ public class DevbookRestController {
 
     // check if currently logged in user has given a rating to this user
     @GetMapping(path = "/checkrated") // since only logged in can check, no need add to permitAll()
-    public ResponseEntity<Boolean> getWhetherUserGaveARating(@RequestParam String userEmail, @RequestParam String currentUser)
-    {
+    public ResponseEntity<Boolean> getWhetherUserGaveARating(@RequestParam String userEmail,
+            @RequestParam String currentUser) {
         boolean ratedUser = userSvc.checkIfCurrentUserGaveARating(userEmail, currentUser);
         System.out.println("checkrated: " + ratedUser);
         return ResponseEntity.ok().body(ratedUser);
     }
 
-    // ratings given, tallied ratings are calculated at front end, backend just updates
+    // ratings given, tallied ratings are calculated at front end, backend just
+    // updates
     // since only logged in can check, no need add to permitAll()
     @PostMapping(path = "/rated", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> postRated(@RequestBody String payload) {
         UserRatings userRatings = UserRatings.createFromPayload(payload);
         float ratingsUpdated = userSvc.insertNewRatings(
-            userRatings.getUserEmail(),
-            userRatings.getCurrentUserEmail(),
-            userRatings.getRatingGiven());
+                userRatings.getUserEmail(),
+                userRatings.getCurrentUserEmail(),
+                userRatings.getRatingGiven());
 
         Response resp = new Response();
         if (ratingsUpdated > 0f) {
@@ -260,8 +261,8 @@ public class DevbookRestController {
 
     // check if currently logged in user has given a like to this user
     @GetMapping(path = "/checkliked") // since only logged in can check, no need add to permitAll()
-    public ResponseEntity<Boolean> getWhetherUserGaveALike(@RequestParam String userEmail, @RequestParam String currentUser)
-    {
+    public ResponseEntity<Boolean> getWhetherUserGaveALike(@RequestParam String userEmail,
+            @RequestParam String currentUser) {
         boolean likedUser = userSvc.checkIfCurrentUserGaveALike(userEmail, currentUser);
         if (likedUser) {
             return ResponseEntity.ok().body(true);
@@ -292,4 +293,52 @@ public class DevbookRestController {
         return ResponseEntity.status(resp.getCode()).body(Response.toJson(resp).toString());
     }
 
+
+    // for notifications
+    @GetMapping(path = "/countofnewnotifications")
+    public ResponseEntity<Integer> getNewNotificationsCount(@RequestParam String userEmail) {
+        Integer newNotifications = userSvc.retrieveNewNotificationsCount(userEmail);
+        return ResponseEntity.ok().body(newNotifications);
+    }
+
+    @GetMapping(path = "/updatenotificationsstatus")
+    public ResponseEntity<String> getUpdateNotificationsStatus(@RequestParam String userEmail) {
+        boolean update = userSvc.updateNotificationStatus(userEmail);
+
+        Response resp = new Response();
+
+        if (update) {
+            resp.setCode(HttpStatus.OK.value());
+            resp.setMessage("Notification status updated.");
+        } else {
+            resp.setCode(HttpStatus.NOT_FOUND.value());
+            resp.setMessage("No notification updated.");
+        }
+
+        return ResponseEntity.status(resp.getCode()).body(Response.toJson(resp).toString());
+    }
+
+    @GetMapping(path = "/notifications")
+    public ResponseEntity<String> getNotifications(@RequestParam String userEmail) 
+    {
+        System.out.println("/api/notifications " + userEmail);
+        Response resp = new Response();
+
+        Optional<List<UserNotification>> notificationsListOpt = userSvc.retrieveNotifications(userEmail);
+        if (notificationsListOpt.isEmpty()) {
+            resp.setCode(HttpStatus.NOT_FOUND.value());
+            resp.setMessage("No notifications available.");
+        } else {
+            resp.setCode(HttpStatus.OK.value());
+            resp.setMessage("Notifications found.");
+            List<UserNotification> notificationsList = notificationsListOpt.get();
+            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+            for (UserNotification noti : notificationsList) {
+                arrayBuilder.add(noti.toJson());
+            }
+            resp.setData(arrayBuilder.build().toString());
+        }
+
+        return ResponseEntity.status(resp.getCode()).body(Response.toJson(resp).toString());
+    }
 }

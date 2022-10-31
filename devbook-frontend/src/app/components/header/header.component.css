@@ -2,41 +2,53 @@
 .logo {
   max-height: 40px;
 }
+
 .logo:hover {
   cursor: pointer;
 }
 
 .notification-viewport {
-    height: 150px;
-    width: 200px;
+  height: 150px;
+  width: 300px;
 }
 
 .sidenav-container {
-    height: 100%;
-    min-height: 1000px;
-    border: 1px solid #D3D3D3;
-    background-color: #D3D3D3;
+  height: 100%;
+  min-height: 1000px;
+  border: 1px solid #D3D3D3;
+  background-color: #D3D3D3;
 }
 
 .sidenav {
-    width: 250px;
-    text-align: center;
-    padding: 20px;
-    background-color: #3F51B5;
+  width: 250px;
+  text-align: center;
+  padding: 20px;
+  background-color: #3F51B5;
 }
 
 .sidenav-content {
-    display: flex;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
 }
 
 input {
-    font-size: small;
-    margin: 0;
-    padding: 0 0 0 5px;
-    text-align: left;
-    vertical-align: middle;
+  font-size: small;
+  margin: 0;
+  padding: 0 0 0 5px;
+  text-align: left;
+  vertical-align: middle;
 }
+
+.notification-count {
+  position: absolute;
+  top: -1px;
+  right: 6px;
+  padding: 0.5px 8px;
+  border-radius: 50%;
+  background-color: #ff1a1a;
+  color: white;
+}
+
 /* keep */

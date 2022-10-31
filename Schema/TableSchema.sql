@@ -134,6 +134,23 @@ create table user_received_ratings (
 		on delete cascade
 );
 
+create table user_notifications (
+	s_no int not null auto_increment,
+	user_email varchar(128) not null,
+	notification_email varchar(128) not null,
+	notification_name varchar(128) not null,
+	notification_content varchar(128) not null,
+	notification_status varchar(128) not null,
+    date_time timestamp default current_timestamp,
+    
+	primary key (s_no),
+
+	constraint fk_notifications_user_email
+		foreign key(user_email)
+		references user_credentials(user_email)
+		on delete cascade
+);
+
 select comment_id, comment_name, comment_text from user_comments;
 
 select * from user_credentials;
@@ -145,18 +162,28 @@ select * from user_likes_ratings;
 select * from user_received_likes;
 select * from user_received_ratings;
 select * from user_comments;
+select * from user_notifications;
 
 DELETE FROM user_credentials where user_email = 'cheemin.wong1@outlook.com';
 DELETE FROM user_received_likes where user_email = 'aaronkwok@devbook.com' and liked_user = 'hughjackman@devbook.com';
 DELETE FROM user_received_ratings where user_email = 'ianfong@devbook.com' and rated_user = 'ianfong@devbook.com';
-update user_credentials set verified = true where user_email = 'matthewmurdock@devbook.com';
+update user_credentials set verified = true where user_email = 'williamshakespeare@devbook.com';
 update user_credentials set user_email = 'nikolatesla@outlook.com' where user_id = '40cf941f';
-update user_likes_ratings set user_likes = 2, user_ratings = 3.8 where user_email = 'aaronkwok@devbook.com';
+update user_likes_ratings set user_ratings = 0 where user_email = 'aaronkwok@devbook.com';
 update user_images set image_description = 'This was not my finest moment.' where user_email like 'loki%' and image_name = 'image01.jpg';
 update user_comments set comment_id = '7893c98a' where s_no = '2';
-select * from user_credentials where user_name like 'aaron%';
+update user_notifications set notification_status = 'NEW' where USER_EMAIL = 'hughjackman@devbook.com';
+select count(*) from user_credentials where user_name like 'aaron%';
 select * from user_credentials where user_id = '8845c97f';
 select * from user_received_likes where user_email like 'aaron%';
 select * from user_images where user_email like 'loki%';
--- 7893c98a 
 select user_email, liked_user from user_received_likes where user_email = 'aaronkwok@devbook.com';
+
+set time_zone = '+8:00';
+insert into user_notifications (user_email, notification_email, notification_name, notification_content, notification_status) values 
+	-- ('hughjackman@devbook.com','x','Patrick Jane','gave you a like!','NEW');
+	-- ('hughjackman@devbook.com','x','Patrick Jane','rated you!','NEW');
+	('hughjackman@devbook.com','x','Patrick Jane','left you a comment!','NEW');
+select * from user_notifications order by date_time asc;
+delete from user_notifications where user_email = 'hughjackman@devbook.com' order by date_time asc;
+select count(*) from user_notifications where user_email = 'aaronkwok@devbook.com' and notification_status = 'NEW'

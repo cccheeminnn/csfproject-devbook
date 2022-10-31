@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import vttp2022.batch1.csfproject.devbookbackend.models.DevbookUser;
-import vttp2022.batch1.csfproject.devbookbackend.models.JwtRequest;
+import vttp2022.batch1.csfproject.devbookbackend.models.jwt.JwtRequest;
 import vttp2022.batch1.csfproject.devbookbackend.services.DevbookUserService;
 import vttp2022.batch1.csfproject.devbookbackend.services.JwtUserDetailsService;
 import vttp2022.batch1.csfproject.devbookbackend.utils.JwtTokenUtils;

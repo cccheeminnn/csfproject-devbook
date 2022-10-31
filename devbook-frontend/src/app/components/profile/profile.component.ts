@@ -15,7 +15,13 @@ import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ProfileComponent implements OnInit {
 
+  // for small stuff
   loading!: boolean;
+  // for whole page
+  pageLoading!: boolean;
+
+  ttlNoOfImgToLoad: number = 0;
+  ttlNoOfImgLoaded: number = 0;
 
   formGrp!: FormGroup;
   textAreaInput = '';
@@ -40,6 +46,7 @@ export class ProfileComponent implements OnInit {
     private carouselConfig: NgbCarouselConfig) {
 
     this.loading = true;
+    this.pageLoading = true;
 
     this.backendSvc.currentUser.subscribe(x => this.currentUser = x);
     carouselConfig.interval = 4000;
@@ -52,6 +59,7 @@ export class ProfileComponent implements OnInit {
       {
         email: this.fb.control<string>(''),
         id: this.fb.control<string>(''),
+        comment_email: this.fb.control<string>(''),
         name: this.fb.control<string>(''),
         text: this.fb.control<string>('')
       }
@@ -64,7 +72,7 @@ export class ProfileComponent implements OnInit {
       this.user = result;
       this.userComments = this.user.comments;
       this.ratingValue = this.user.ratings;
-      this.loading = false;
+      this.pageLoading = false;
       // means theres a user logged in
       if (this.currentUser != null) {
         // check if currently logged in user liked/rated this user
@@ -73,6 +81,14 @@ export class ProfileComponent implements OnInit {
         if (this.currentUser.email == this.user.email) {
           this.sameUser = true;
         }
+      }
+      this.user.images.forEach(img => {
+        this.ttlNoOfImgToLoad += 1;
+      })
+      if(this.ttlNoOfImgToLoad == 0) {
+        console.log('0 images to load')
+        this.ttlNoOfImgToLoad += 1;
+        this.imgLoaded();
       }
     }).catch(error => {
       // console.log('>>>> retrieve user details error: ', error)
@@ -165,6 +181,9 @@ export class ProfileComponent implements OnInit {
         this.loading = false;
         this.previewSvc.snackbarMsg = 'YOU_CAN\'T_RATE_YOURSELF_SILLY';
         this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
+        this.backendSvc.retrieveUserDetails(this.userId).then(result => {
+          this.ratingValue = this.user.ratings;
+        })
       }
     }
   }
@@ -173,6 +192,7 @@ export class ProfileComponent implements OnInit {
     this.loading = true;
     this.formGrp.controls['email'].setValue(this.user.email);
     this.formGrp.controls['id'].setValue(this.currentUser!.id);
+    this.formGrp.controls['comment_email'].setValue(this.currentUser!.email);
     this.formGrp.controls['name'].setValue(this.currentUser!.name);
     this.formGrp.controls['text'].setValue(this.textAreaInput);
     const comment: DevbookUserComments = this.formGrp.value as DevbookUserComments;
@@ -201,6 +221,10 @@ export class ProfileComponent implements OnInit {
   }
 
   imgLoaded() {
-    this.loading = false;
+    this.ttlNoOfImgLoaded += 1;
+    if (this.ttlNoOfImgToLoad == this.ttlNoOfImgLoaded) {
+      this.loading = false;
+      this.pageLoading = false;
+    }
   }
 }

@@ -1,4 +1,4 @@
-package vttp2022.batch1.csfproject.devbookbackend.models.UpdateUser;
+package vttp2022.batch1.csfproject.devbookbackend.models.updateUser;
 
 import java.io.StringReader;
 

@@ -1,4 +1,4 @@
-package vttp2022.batch1.csfproject.devbookbackend.models;
+package vttp2022.batch1.csfproject.devbookbackend.models.specificUser;
 
 import java.io.StringReader;
 
@@ -10,6 +10,7 @@ public class UserComment {
 
     private String email;
     private String id;
+    private String comment_email;
     private String name;
     private String text;
 
@@ -27,6 +28,14 @@ public class UserComment {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getComment_email() {
+        return comment_email;
+    }
+
+    public void setComment_email(String comment_email) {
+        this.comment_email = comment_email;
     }
 
     public String getName() {
@@ -49,6 +58,7 @@ public class UserComment {
         return Json.createObjectBuilder()
             .add("email", email)
             .add("id", id)
+            .add("comment_email", comment_email)
             .add("name", name)
             .add("text", text)
             .build();
@@ -61,9 +71,11 @@ public class UserComment {
         UserComment comment = new UserComment();
         comment.setEmail(obj.getString("email"));
         comment.setId(obj.getString("id"));
+        comment.setComment_email(obj.getString("comment_email"));
         comment.setName(obj.getString("name"));
         comment.setText(obj.getString("text"));
 
         return comment;
     }
+
 }

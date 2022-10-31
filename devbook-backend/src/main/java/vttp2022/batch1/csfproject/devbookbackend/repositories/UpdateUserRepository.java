@@ -8,10 +8,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
-import vttp2022.batch1.csfproject.devbookbackend.models.UpdateUser.FirstPanel;
-import vttp2022.batch1.csfproject.devbookbackend.models.UpdateUser.FourthPanel;
-import vttp2022.batch1.csfproject.devbookbackend.models.UpdateUser.SecondPanel;
-import vttp2022.batch1.csfproject.devbookbackend.models.UpdateUser.ThirdPanel;
+import vttp2022.batch1.csfproject.devbookbackend.models.updateUser.FirstPanel;
+import vttp2022.batch1.csfproject.devbookbackend.models.updateUser.FourthPanel;
+import vttp2022.batch1.csfproject.devbookbackend.models.updateUser.SecondPanel;
+import vttp2022.batch1.csfproject.devbookbackend.models.updateUser.ThirdPanel;
 import vttp2022.batch1.csfproject.devbookbackend.services.DigitalOceanService;
 
 import static vttp2022.batch1.csfproject.devbookbackend.repositories.Queries.*;

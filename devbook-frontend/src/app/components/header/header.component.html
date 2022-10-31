@@ -10,9 +10,10 @@
 
       <span style="flex: 1 1 auto;"></span>
 
-      <button mat-icon-button #notificationsTrigger *ngIf="currentUser" (click)="openNotificationsPanel()"
-        [matMenuTriggerFor]="notificationsPanel">
+      <button mat-fab color="primary" #notificationsTrigger *ngIf="currentUser" (click)="openNotificationsPanel()"
+      [matMenuTriggerFor]="notificationsPanel">
         <mat-icon>notification_important</mat-icon>
+        <span *ngIf="newNotificationsCount > 0" class="notification-count">{{ newNotificationsCount }}</span>
       </button>
     </mat-toolbar>
   </div>
@@ -49,25 +50,10 @@
   </div>
 </div>
 <!-- for notification panel -->
-<!-- click > retrieve notification > populate (maybe 10 the most?) -->
+<!-- click > retrieve notification > populate -->
 <mat-menu #notificationsPanel="matMenu">
-  <cdk-virtual-scroll-viewport itemSize="3" class="notification-viewport">
-    <mat-selection-list #notifications [multiple]="false">
-      <mat-list-option (click)="notificationClicked()" [value]="'notification 1'">
-        Notification 1
-      </mat-list-option>
-      <mat-list-option (click)="notificationClicked()" [value]="'notification 2'">
-        Notification 2
-      </mat-list-option>
-      <mat-list-option (click)="notificationClicked()" [value]="'notification 3'">
-        Notification 3
-      </mat-list-option>
-      <mat-list-option (click)="notificationClicked()" [value]="'notification 4'">
-        Notification 4
-      </mat-list-option>
-      <mat-list-option (click)="notificationClicked()" [value]="'notification 5'">
-        Notification 5
-      </mat-list-option>
-    </mat-selection-list>
-  </cdk-virtual-scroll-viewport>
+      <button mat-menu-item *ngFor="let notification of userNotifications" (click)="notificationClicked()" [value]="'notification 1'">
+        {{ notification.name }} {{notification.content}}
+      </button>
+      <button mat-menu-item *ngIf="noNotifications" type="button">No notifications available.</button>
 </mat-menu>

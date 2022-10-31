@@ -45,6 +45,7 @@ export class LoginComponent implements OnInit {
       // console.log('>>>> login results: ', results)
       // this.router.navigate(['/user', results.id, 'profile'])
       this.loading = false;
+      this.backendSvc.getNewNotificationsCount(results.email);
       this.previewSvc.snackbarMsg = 'LOGIN_SUCCESSFUL';
       this.snackBar.openFromComponent(SnackbarComponent, {duration: 3000, verticalPosition: 'top'}); // 3000 is 3s
       this.router.navigate(['/'])
