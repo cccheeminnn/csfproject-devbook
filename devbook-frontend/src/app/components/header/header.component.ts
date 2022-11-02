@@ -105,6 +105,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.backendSvc.logout();
 
+    this.userNotifications = [];
+
     this.previewSvc.snackbarMsg = 'LOGOUT_SUCCESSFUL';
     this.snackbar.openFromComponent(SnackbarComponent, {duration:3000, verticalPosition: 'top'});
 

@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
     private backendSvc: BackendService,
     private snackBar: MatSnackBar,
     private previewSvc: PreviewService) { // to display login messages in popup
-
+      console.info('!!!LOGIN COMPONENT TS CONSTRUCTOR (NOT LAZY)!!!')
     }
 
   ngOnInit(): void {
