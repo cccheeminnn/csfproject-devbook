@@ -1,0 +1,5 @@
+<google-map height="50vh" width="50vw" [center]="center">
+  <map-marker
+    *ngFor="let marker of markers"
+    [position]="marker.getPosition()">xx</map-marker>
+</google-map>

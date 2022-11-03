@@ -88,7 +88,7 @@ public class DevbookRepository {
 
     // for pagination filtered users
     public Integer retrieveFilteredUserCount(String filter) {
-        SqlRowSet rs = template.queryForRowSet(SQL_RETRIEVE_COUNT_OF_FILTERED_USERS, (filter+"%"));
+        SqlRowSet rs = template.queryForRowSet(SQL_RETRIEVE_COUNT_OF_FILTERED_USERS, ("%"+filter+"%"));
         Integer ttlUserCount = 0;
         if (rs.next()) {
             ttlUserCount = rs.getInt("count(*)");
@@ -450,7 +450,7 @@ public class DevbookRepository {
         List<DevbookUser> userList = new LinkedList<>();
 
         // create no of users based on total, saving their email too
-        SqlRowSet rs = template.queryForRowSet(SQL_RETRIEVE_LIST_OF_FILTERED_USERS, (filter+"%"), limit, offset);
+        SqlRowSet rs = template.queryForRowSet(SQL_RETRIEVE_LIST_OF_FILTERED_USERS, ("%"+filter+"%"), limit, offset);
         while (rs.next()) {
             DevbookUser user = new DevbookUser();
             user.setId(rs.getString("user_id"));

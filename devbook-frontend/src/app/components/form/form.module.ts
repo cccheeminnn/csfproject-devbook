@@ -20,8 +20,4 @@ const routes: Routes = [
     FormsModule, ReactiveFormsModule
   ]
 })
-export class FormModule {
-  constructor() {
-    console.info('!!!FORM COMPONENT TS CONSTRUCTOR (LAZY)!!!')
-  }
-}
+export class FormModule { }

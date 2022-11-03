@@ -107,7 +107,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.userNotifications = [];
 
-    this.previewSvc.snackbarMsg = 'LOGOUT_SUCCESSFUL';
+    this.previewSvc.displayMessage('LOGOUT_SUCCESSFUL', 'greenyellow');
     this.snackbar.openFromComponent(SnackbarComponent, {duration:3000, verticalPosition: 'top'});
 
     this.router.navigate(['/login']);
@@ -117,7 +117,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (this.searchTerm == '') {
       this.router.navigate(['']);
     } else {
-      this.router.navigate(['/filter'], {queryParams: {filterby: this.searchTerm}});
+      this.router.navigate(['/filter'], {queryParams: {filterby: this.searchTerm}}).then(result => {
+        location.reload()
+      });
     }
     this.searchTerm = '';
   }

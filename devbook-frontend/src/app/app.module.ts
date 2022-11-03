@@ -18,6 +18,8 @@ import { SnackbarComponent } from './components/snackbar/snackbar.component';
 import { UpdateService } from './services/update.service';
 import { HomeComponent } from './components/main/home.component';
 import { AppRoutingModule } from './app-routing.module';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { GoogleComponent } from './components/google/google.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,7 @@ import { AppRoutingModule } from './app-routing.module';
     LoginComponent,
     ProfileComponent,
     SnackbarComponent,
+    GoogleComponent,
   ],
   imports: [
     BrowserModule,
@@ -37,7 +40,8 @@ import { AppRoutingModule } from './app-routing.module';
     MaterialModule,
     AppRoutingModule,
     NgxMaterialRatingModule,
-    HttpClientModule
+    HttpClientModule,
+    GoogleMapsModule
   ],
   providers: [
     PreviewService,

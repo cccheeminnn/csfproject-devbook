@@ -7,6 +7,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarComponent } from '../snackbar/snackbar.component';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
+import { GoogleComponent } from '../google/google.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-profile',
@@ -43,7 +45,8 @@ export class ProfileComponent implements OnInit {
     private previewSvc: PreviewService,
     private fb: FormBuilder,
     private snackbar: MatSnackBar,
-    private carouselConfig: NgbCarouselConfig) {
+    private carouselConfig: NgbCarouselConfig,
+    private dialog: MatDialog) {
 
     this.loading = true;
     this.pageLoading = true;
@@ -125,7 +128,7 @@ export class ProfileComponent implements OnInit {
         this.backendSvc.liked(payload).then(result => {
           // console.log('>>>>liked result', result)
           this.loading = false;
-          this.previewSvc.snackbarMsg = 'LIKED';
+          this.previewSvc.displayMessage('LIKED', 'greenyellow');
           this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
         }).catch(error => {
           this.loading = false;
@@ -144,7 +147,7 @@ export class ProfileComponent implements OnInit {
         this.backendSvc.liked(payload).then(result => {
           // console.log('>>>>liked result', result)
           this.loading = false;
-          this.previewSvc.snackbarMsg = 'UNLIKED';
+          this.previewSvc.displayMessage('UNLIKED', 'hotpink');
           this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
         }).catch(error => {
           this.loading = false;
@@ -171,7 +174,7 @@ export class ProfileComponent implements OnInit {
           // console.log('>>>>rated result', result)
           this.ratingValue = result.data
           this.loading = false;
-          this.previewSvc.snackbarMsg = 'RATED';
+          this.previewSvc.displayMessage('RATED', 'greenyellow');
           this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
         }).catch(error => {
           this.loading = false;
@@ -179,7 +182,7 @@ export class ProfileComponent implements OnInit {
         })
       } else {
         this.loading = false;
-        this.previewSvc.snackbarMsg = 'YOU_CAN\'T_RATE_YOURSELF_SILLY';
+        this.previewSvc.displayMessage('YOU_CAN\'T_RATE_YOURSELF_SILLY', 'hotpink');
         this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
         this.backendSvc.retrieveUserDetails(this.userId).then(result => {
           this.ratingValue = this.user.ratings;
@@ -202,7 +205,7 @@ export class ProfileComponent implements OnInit {
 
     this.backendSvc.insertComment(comment).then(result => {
       this.loading = false;
-      this.previewSvc.snackbarMsg = 'COMMENT_ADDED';
+      this.previewSvc.displayMessage('COMMENT_ADDED', 'greenyellow');
       this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
     }).catch(error => {
       this.loading = false;
@@ -225,6 +228,16 @@ export class ProfileComponent implements OnInit {
     if (this.ttlNoOfImgToLoad == this.ttlNoOfImgLoaded) {
       this.loading = false;
       this.pageLoading = false;
+    }
+  }
+
+  openMaps(coy: string) {
+    if (coy.length == 0) {
+      console.log('coy return', coy)
+      return;
+    } else {
+      this.previewSvc.searchLocation = this.user.currentCompany;
+      const previewRef = this.dialog.open(GoogleComponent);
     }
   }
 }

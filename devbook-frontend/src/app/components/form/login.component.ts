@@ -27,7 +27,6 @@ export class LoginComponent implements OnInit {
     private backendSvc: BackendService,
     private snackBar: MatSnackBar,
     private previewSvc: PreviewService) { // to display login messages in popup
-      console.info('!!!LOGIN COMPONENT TS CONSTRUCTOR (NOT LAZY)!!!')
     }
 
   ngOnInit(): void {
@@ -46,13 +45,13 @@ export class LoginComponent implements OnInit {
       // this.router.navigate(['/user', results.id, 'profile'])
       this.loading = false;
       this.backendSvc.getNewNotificationsCount(results.email);
-      this.previewSvc.snackbarMsg = 'LOGIN_SUCCESSFUL';
+      this.previewSvc.displayMessage('LOGIN_SUCCESSFUL', 'greenyellow');
       this.snackBar.openFromComponent(SnackbarComponent, {duration: 3000, verticalPosition: 'top'}); // 3000 is 3s
       this.router.navigate(['/'])
     }).catch(error => {
       // console.error('>>>> login error: ', error)
       this.loading = false;
-      this.previewSvc.snackbarMsg = error.error;
+      this.previewSvc.displayMessage('INVALID_CREDENTIALS', 'hotpink');
       this.snackBar.openFromComponent(SnackbarComponent, {duration: 3000, verticalPosition: 'top'}); // 3000 is 3s
     })
   }

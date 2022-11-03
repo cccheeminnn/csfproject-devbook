@@ -141,7 +141,7 @@ export class FormComponent implements OnInit, AfterViewInit {
     this.backendSvc.register(formData).then(result => {
       // console.log('>>>> postRegister response: ', result)
       this.loading = false;
-      this.previewSvc.snackbarMsg = 'REGISTER_SUCCESSFUL';
+      this.previewSvc.displayMessage('REGISTRATION_SUCCESSFUL', 'greenyellow')
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' }); // 3000 is 3s
       this.router.navigate(['/login'])
     }).catch(error => {

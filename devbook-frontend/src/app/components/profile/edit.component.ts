@@ -81,7 +81,7 @@ export class EditComponent implements OnInit {
         this.loading = false;
       }).catch(error => {
         this.loading = false;
-        this.previewSvc.snackbarMsg = 'ERROR_OCCURRED, REFRESH_&_TRY_AGAIN';
+        this.previewSvc.displayMessage('ERROR_OCCURRED, REFRESH_&_TRY_AGAIN', 'hotpink');
         this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' }); // 3000 is 3s
       })
     }
@@ -225,12 +225,12 @@ export class EditComponent implements OnInit {
     }
     this.updateSvc.deleteImage(this.userId, (img + '.jpg')).then(result => {
       this.loading = false;
-      this.previewSvc.snackbarMsg = 'DELETE_SUCCESSFUL';
+      this.previewSvc.displayMessage('DELETE_SUCCESSFUL', 'greenyellow');
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' }); // 3000 is 3s
     }).catch(error => { // chances are jwt expired
       this.loading = false;
       this.backendSvc.logout();
-      this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
+      this.previewSvc.displayMessage('PLEASE_LOGIN_AGAIN', 'hotpink');
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
       this.router.navigate(['/login'])
     });
@@ -252,12 +252,12 @@ export class EditComponent implements OnInit {
 
     this.updateSvc.updateFirstPanel(formData).then(result => {
       this.loading = false;
-      this.previewSvc.snackbarMsg = 'CHANGES_SAVED';
+      this.previewSvc.displayMessage('CHANGES_SAVED', 'greenyellow');
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
     }).catch(error => { // chances are jwt expired
       this.loading = false;
       this.backendSvc.logout();
-      this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
+      this.previewSvc.displayMessage('PLEASE_LOGIN_AGAIN', 'hotpink');
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
       this.router.navigate(['/login'])
     });
@@ -268,12 +268,12 @@ export class EditComponent implements OnInit {
     const secondPanelFG = this.secondPanelFormGrp.value as SecondPanelData
     this.updateSvc.updateSecondPanel(secondPanelFG).then(result => {
       this.loading = false;
-      this.previewSvc.snackbarMsg = 'CHANGES_SAVED';
+      this.previewSvc.displayMessage('CHANGES_SAVED', 'greenyellow');
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
     }).catch(error => { // chances are jwt expired
       this.loading = false;
       this.backendSvc.logout();
-      this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
+      this.previewSvc.displayMessage('PLEASE_LOGIN_AGAIN', 'hotpink');
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
       this.router.navigate(['/login'])
     });
@@ -285,12 +285,12 @@ export class EditComponent implements OnInit {
     // console.log(updatedSkillsArray);
     this.updateSvc.updateThirdPanel(updatedSkillsArray).then(result => {
       this.loading = false;
-      this.previewSvc.snackbarMsg = 'CHANGES_SAVED';
+      this.previewSvc.displayMessage('CHANGES_SAVED', 'greenyellow');
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
     }).catch(error => { // chances are jwt expired
       this.loading = false;
       this.backendSvc.logout();
-      this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
+      this.previewSvc.displayMessage('PLEASE_LOGIN_AGAIN', 'hotpink');
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
       this.router.navigate(['/login'])
     });
@@ -302,12 +302,12 @@ export class EditComponent implements OnInit {
     // console.log(updatedWebsitesArray);
     this.updateSvc.updateFourthPanel(updatedWebsitesArray).then(result => {
       this.loading = false;
-      this.previewSvc.snackbarMsg = 'CHANGES_SAVED';
+      this.previewSvc.displayMessage('CHANGES_SAVED', 'greenyellow');
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
     }).catch(error => { // chances are jwt expired
       this.loading = false;
       this.backendSvc.logout();
-      this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
+      this.previewSvc.displayMessage('PLEASE_LOGIN_AGAIN', 'hotpink');
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
       this.router.navigate(['/login'])
     });
@@ -338,12 +338,12 @@ export class EditComponent implements OnInit {
     // console.log(this.fifthPanelFormGrp.value)
     this.updateSvc.updateFifthPanel(formData).then(result => {
       this.loading = false;
-      this.previewSvc.snackbarMsg = 'CHANGES_SAVED';
+      this.previewSvc.displayMessage('CHANGES_SAVED', 'greenyellow');
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
     }).catch(error => { // chances are jwt expired
       this.loading = false;
       this.backendSvc.logout();
-      this.previewSvc.snackbarMsg = 'PLEASE_LOGIN_AGAIN';
+      this.previewSvc.displayMessage('PLEASE_LOGIN_AGAIN', 'hotpink');
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
       this.router.navigate(['/login'])
     });

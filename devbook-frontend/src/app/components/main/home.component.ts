@@ -121,7 +121,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     }).catch(error => {
       console.error('>>>> an error occurred while retrieving total filtered user count', error);
       this.loading = false;
-      this.previewSvc.snackbarMsg = 'NO_USERS_FOUND';
+      this.previewSvc.displayMessage('NO_USERS_FOUND', 'hotpink');
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' }); // 3000 is 3s
     })
 
