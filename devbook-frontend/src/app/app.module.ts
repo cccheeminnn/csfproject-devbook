@@ -13,7 +13,6 @@ import { PreviewService } from './services/preview.service';
 import { BackendService } from './services/backend.service';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './components/form/login.component';
-import { ProfileComponent } from './components/profile/profile.component';
 import { SnackbarComponent } from './components/snackbar/snackbar.component';
 import { UpdateService } from './services/update.service';
 import { HomeComponent } from './components/main/home.component';
@@ -28,7 +27,6 @@ import { GoogleComponent } from './components/google/google.component';
     HomeComponent,
     PreviewComponent,
     LoginComponent,
-    ProfileComponent,
     SnackbarComponent,
     GoogleComponent,
   ],

@@ -64,10 +64,12 @@
         </tr>
         <tr>
           <td colspan="2" class="title">
-            {{ user.currentJob }}<button mat-icon-button style="color:#3F51B5; vertical-align: middle;" type="button"
-              [disabled]="!(user.currentCompany.length > 0)">
-              <mat-icon (click)="openMaps(user.currentCompany)"> place</mat-icon>
-            </button> </td>
+            {{ user.currentJob }}
+            <button mat-icon-button class="thumbs-up-icon" style="vertical-align: middle;" type="button"
+              [disabled]="user.currentCompany == ''">
+              <mat-icon (click)="openMaps(user.currentCompany)">place</mat-icon>
+            </button>
+          </td>
         </tr>
         <tr>
           <td style="width: 40%;" align="right">

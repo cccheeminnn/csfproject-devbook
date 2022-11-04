@@ -30,9 +30,14 @@
         <button mat-raised-button color="accent" type="button" *ngIf="!currentUser" [routerLink]="['/register']"
           (click)="sidenavDrawer.toggle()" style="margin: 1% 0% 1% 1%;">Register</button>
         <button mat-raised-button color="accent" type="button" *ngIf="currentUser"
-        (click)="goToProfile()" style="margin: 1% 0% 1% 1%;">Profile</button>
-        <button mat-raised-button color="accent" type="button" *ngIf="currentUser" (click)="logout()"
-          style="margin: 1% 0% 1% 1%;">Logout</button>
+          (click)="goToProfile()" style="margin: 1% 0% 1% 1%;">Profile</button>
+        <button mat-raised-button color="accent" type="button" *ngIf="currentUser"
+          (click)="logout()" style="margin: 1% 0% 1% 1%;">Logout</button>
+        <div>
+          <button mat-raised-button color="accent" type="button" [routerLink]="['catalogue']" (click)="sidenavDrawer.toggle()"
+            style="margin: 1% 0% 1% 1%;">Catalogue</button>
+        </div>
+
       </mat-drawer>
       <!-- content project main body -->
       <div *ngIf="loading" class="loading-spinner">

@@ -160,6 +160,7 @@ public class DevbookUser {
                 .add("name", name)
                 .add("bio", bio)
                 .add("currentJob", currentJob)
+                .add("currentCompany", currentCompany)
                 .add("images", images)
                 .build();
     }

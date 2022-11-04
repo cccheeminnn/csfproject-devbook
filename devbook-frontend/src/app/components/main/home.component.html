@@ -81,7 +81,7 @@
     </div>
     <!-- bottom page pagination -->
     <div style="float: right;">
-      <mat-paginator #paginator [length]="ttlUserCount" [pageSize]="6" [pageSizeOptions]="pageSizeOptions"
+      <mat-paginator #paginator [pageSize]="6" [pageSizeOptions]="pageSizeOptions"
         aria-label="Select page" (page)="onPageEvent($event)">
       </mat-paginator>
     </div>
