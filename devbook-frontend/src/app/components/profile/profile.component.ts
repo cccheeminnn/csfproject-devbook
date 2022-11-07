@@ -1,21 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DevbookUserComments, DevbookUser, CurrentUserLiked, CurrentUserRated } from '../../models/models';
 import { BackendService } from '../../services/backend.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PreviewService } from '../../services/preview.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarComponent } from '../snackbar/snackbar.component';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 import { GoogleComponent } from '../google/google.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
+import { SharedService } from '../../services/shared.service';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
+
+  currentUserSub$!: Subscription;
 
   // for small stuff
   loading!: boolean;
@@ -35,14 +38,14 @@ export class ProfileComponent implements OnInit {
   ratingValue!: string;
 
   user!: DevbookUser;
-  userId: string = this.activatedRoute.snapshot.params['id'];
+  userId!: string;
   userComments!: DevbookUserComments[];
 
   constructor(
     private router: Router,
     private backendSvc: BackendService,
     private activatedRoute: ActivatedRoute,
-    private previewSvc: PreviewService,
+    private sharedSvc: SharedService,
     private fb: FormBuilder,
     private snackbar: MatSnackBar,
     private carouselConfig: NgbCarouselConfig,
@@ -51,11 +54,17 @@ export class ProfileComponent implements OnInit {
     this.loading = true;
     this.pageLoading = true;
 
-    this.backendSvc.currentUser.subscribe(x => this.currentUser = x);
+    this.currentUserSub$ = this.backendSvc.currentUser.subscribe(x => this.currentUser = x);
+
     carouselConfig.interval = 4000;
   }
 
+  ngOnDestroy(): void {
+    this.currentUserSub$.unsubscribe();
+  }
+
   ngOnInit(): void {
+    this.userId = this.activatedRoute.snapshot.params['id'];
     this.retrieveUserDetails(this.userId);
 
     this.formGrp = this.fb.group(
@@ -81,7 +90,7 @@ export class ProfileComponent implements OnInit {
         // check if currently logged in user liked/rated this user
         this.checkLikedOrRated();
         // check if currently logged in user is the same as profile user
-        if (this.currentUser.email == this.user.email) {
+        if (this.currentUser.id == this.user.id) {
           this.sameUser = true;
         }
       }
@@ -89,12 +98,12 @@ export class ProfileComponent implements OnInit {
         this.ttlNoOfImgToLoad += 1;
       })
       if(this.ttlNoOfImgToLoad == 0) {
-        console.log('0 images to load')
         this.ttlNoOfImgToLoad += 1;
         this.imgLoaded();
       }
+      this.loading = false;
     }).catch(error => {
-      // console.log('>>>> retrieve user details error: ', error)
+      console.log('>>>> retrieve user details error: ', error)
     })
   }
 
@@ -128,7 +137,7 @@ export class ProfileComponent implements OnInit {
         this.backendSvc.liked(payload).then(result => {
           // console.log('>>>>liked result', result)
           this.loading = false;
-          this.previewSvc.displayMessage('LIKED', 'greenyellow');
+          this.sharedSvc.displayMessage('LIKED', 'greenyellow');
           this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
         }).catch(error => {
           this.loading = false;
@@ -147,7 +156,7 @@ export class ProfileComponent implements OnInit {
         this.backendSvc.liked(payload).then(result => {
           // console.log('>>>>liked result', result)
           this.loading = false;
-          this.previewSvc.displayMessage('UNLIKED', 'hotpink');
+          this.sharedSvc.displayMessage('UNLIKED', 'hotpink');
           this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
         }).catch(error => {
           this.loading = false;
@@ -174,7 +183,7 @@ export class ProfileComponent implements OnInit {
           // console.log('>>>>rated result', result)
           this.ratingValue = result.data
           this.loading = false;
-          this.previewSvc.displayMessage('RATED', 'greenyellow');
+          this.sharedSvc.displayMessage('RATED', 'greenyellow');
           this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
         }).catch(error => {
           this.loading = false;
@@ -182,7 +191,7 @@ export class ProfileComponent implements OnInit {
         })
       } else {
         this.loading = false;
-        this.previewSvc.displayMessage('YOU_CAN\'T_RATE_YOURSELF_SILLY', 'hotpink');
+        this.sharedSvc.displayMessage('YOU_CAN\'T_RATE_YOURSELF_SILLY', 'hotpink');
         this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
         this.backendSvc.retrieveUserDetails(this.userId).then(result => {
           this.ratingValue = this.user.ratings;
@@ -205,7 +214,7 @@ export class ProfileComponent implements OnInit {
 
     this.backendSvc.insertComment(comment).then(result => {
       this.loading = false;
-      this.previewSvc.displayMessage('COMMENT_ADDED', 'greenyellow');
+      this.sharedSvc.displayMessage('COMMENT_ADDED', 'greenyellow');
       this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
     }).catch(error => {
       this.loading = false;
@@ -233,10 +242,9 @@ export class ProfileComponent implements OnInit {
 
   openMaps(coy: string) {
     if (coy.length == 0) {
-      console.log('coy return', coy)
       return;
     } else {
-      this.previewSvc.searchLocation = this.user.currentCompany;
+      this.sharedSvc.searchLocation = this.user.currentCompany;
       const previewRef = this.dialog.open(GoogleComponent);
     }
   }

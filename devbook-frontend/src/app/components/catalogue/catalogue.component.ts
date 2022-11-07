@@ -41,7 +41,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit {
       this.backendSvc.retrieveAllUsers(this.totalCount, 0).then(results => {
         this.dataSource.data = results
         this.loading = false;
-        console.log('skills length ', results[0].skills.length)
+        // console.log('skills length ', results[0].skills.length)
       });
     })
   }

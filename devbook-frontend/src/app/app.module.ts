@@ -19,6 +19,8 @@ import { HomeComponent } from './components/main/home.component';
 import { AppRoutingModule } from './app-routing.module';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { GoogleComponent } from './components/google/google.component';
+import { SharedService } from './services/shared.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
@@ -44,7 +46,9 @@ import { GoogleComponent } from './components/google/google.component';
   providers: [
     PreviewService,
     BackendService,
-    UpdateService],
+    UpdateService,
+    SharedService,
+    CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarComponent } from '../snackbar/snackbar.component';
-import { PreviewService } from '../../services/preview.service';
+import { SharedService } from '../../services/shared.service';
 
 @Component({
   selector: 'app-header',
@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private backendSvc: BackendService,
-    private previewSvc: PreviewService,
+    private sharedSvc: SharedService,
     private snackbar: MatSnackBar) {
     this.currentUser$ = backendSvc.currentUser.subscribe(x => this.currentUser = x);
     this.notificationsCount$ = backendSvc.notificationsCountObs.subscribe(x => this.newNotificationsCount = x);
@@ -87,7 +87,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   notificationClicked() {
     // go to profile page
-    this.router.navigate(['/user', this.currentUser!.id, 'profile']);
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.router.navigate(['/user', this.currentUser!.id, 'profile']).then(navigate => {
+      document.documentElement.scrollTop = 0;
+    });
   }
 
   openSidenav() {
@@ -102,35 +105,39 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout() {
     this.sidenavDrawer.toggle();
+    this.backendSvc.logout().then(result => {
+      this.userNotifications = [];
 
-    this.backendSvc.logout();
+      this.sharedSvc.displayMessage('LOGOUT_SUCCESSFUL', 'greenyellow');
+      this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
 
-    this.userNotifications = [];
+      this.router.navigate(['/login']);
+    }).catch(error => {
+      this.sharedSvc.displayMessage('LOGOUT_UNSUCCESSFUL', 'hotpink');
+      this.snackbar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' });
+    });
 
-    this.previewSvc.displayMessage('LOGOUT_SUCCESSFUL', 'greenyellow');
-    this.snackbar.openFromComponent(SnackbarComponent, {duration:3000, verticalPosition: 'top'});
 
-    this.router.navigate(['/login']);
   }
 
   searchUser() {
     if (this.searchTerm == '') {
       this.router.navigate(['']);
     } else {
-      this.router.navigate(['/filter'], {queryParams: {filterby: this.searchTerm}}).then(result => {
-        location.reload()
-      });
+      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+      this.router.navigate(['/filter'], { queryParams: { filterby: this.searchTerm } }).then(result => {
+        // this.sharedSvc.searchUser(this.searchTerm); // emit subject
+        this.searchTerm = '';
+      })
     }
-    this.searchTerm = '';
   }
 
   goToProfile() {
-    this.loading = true;
     this.sidenavDrawer.toggle(false).then(result => {
-      this.loading = false
-      this.router.navigate(['/user', this.currentUser!.id, 'profile']).then(result => {
-        location.reload();
-      });
-    });
+      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+      this.router.navigate(['/user', this.currentUser!.id, 'profile']).then(navigate => {
+        document.documentElement.scrollTop = 0;
+      })
+    })
   }
 }

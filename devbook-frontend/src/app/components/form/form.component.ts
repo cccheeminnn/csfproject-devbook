@@ -9,6 +9,7 @@ import { DevbookUser } from '../../models/models';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarComponent } from '../snackbar/snackbar.component';
+import { SharedService } from '../../services/shared.service';
 
 @Component({
   selector: 'app-form',
@@ -43,6 +44,7 @@ export class FormComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private dialog: MatDialog, // for Preview
     private previewSvc: PreviewService,
+    private sharedSvc: SharedService,
     private backendSvc: BackendService) {
 
     this.loading = true;
@@ -103,9 +105,9 @@ export class FormComponent implements OnInit, AfterViewInit {
     this.previewSvc.formGrp = this.formGrp;
     const previewRef = this.dialog.open(PreviewComponent);
 
-    previewRef.afterClosed().subscribe(result => {
+    // previewRef.afterClosed().subscribe(result => {
       // console.log('>>>> preview closed: ', result);
-    })
+    // })
   }
 
   onSubmit() {
@@ -141,7 +143,7 @@ export class FormComponent implements OnInit, AfterViewInit {
     this.backendSvc.register(formData).then(result => {
       // console.log('>>>> postRegister response: ', result)
       this.loading = false;
-      this.previewSvc.displayMessage('REGISTRATION_SUCCESSFUL', 'greenyellow')
+      this.sharedSvc.displayMessage('REGISTRATION_SUCCESSFUL', 'greenyellow')
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' }); // 3000 is 3s
       this.router.navigate(['/login'])
     }).catch(error => {

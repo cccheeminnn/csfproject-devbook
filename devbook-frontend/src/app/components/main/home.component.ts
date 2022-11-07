@@ -6,8 +6,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BackendService } from 'src/app/services/backend.service';
-import { PreviewService } from 'src/app/services/preview.service';
 import { SnackbarComponent } from '../snackbar/snackbar.component';
+import { SharedService } from '../../services/shared.service';
 
 @Component({
   selector: 'app-home',
@@ -16,7 +16,7 @@ import { SnackbarComponent } from '../snackbar/snackbar.component';
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
-  sub$!: Subscription;
+  paramsFilterBySub$!: Subscription;
 
   alphabet: string[] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
   loading!: boolean;
@@ -26,6 +26,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ttlNoOfImgLoaded: number = 0;
 
   filterBy!: string;
+  filterByAlpStr!: string;
   limit: number = 6;
   offset: number = 0;
   pageSizeOptions = [1, 6, 10, 14];
@@ -39,27 +40,31 @@ export class HomeComponent implements OnInit, OnDestroy {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private backendSvc: BackendService,
-    private previewSvc: PreviewService) {
+    private sharedSvc: SharedService) {
 
     this.loading = true;
 
     carouselConfig.interval = 0
     carouselConfig.showNavigationIndicators = false;
 
-    this.sub$ = this.activatedRoute.queryParams.subscribe(params => {
+    this.paramsFilterBySub$ = this.activatedRoute.queryParams.subscribe(params => {
       this.filterBy = params['filterby'];
+      this.filterByAlpStr = params['filterbyalp'];
       // console.log('>>>subscribe',params['filterby']);
     })
+
   }
 
   ngOnDestroy(): void {
-    this.sub$.unsubscribe();
+    this.paramsFilterBySub$.unsubscribe();
   }
 
   ngOnInit(): void {
     // console.log('filterBy value:', this.filterBy)
     if (this.filterBy != undefined) {
-      this.filterByAlp(this.filterBy);
+      this.filterBySearch(this.filterBy)
+    } else if (this.filterByAlpStr != undefined) {
+      this.filterByAlp(this.filterByAlpStr);
     } else {
       this.retrieveDisplayInfoFromBackend();
     }
@@ -78,7 +83,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     // user press next/previous page
     this.offset = (event.pageSize * event.pageIndex);
     if (this.filterBy != undefined) {
-      this.filterByAlp(this.filterBy)
+      this.filterBySearch(this.filterBy)
+    } else if (this.filterByAlpStr != undefined) {
+      this.filterByAlp(this.filterByAlpStr);
     } else {
       this.retrieveDisplayInfoFromBackend();
     }
@@ -111,21 +118,49 @@ export class HomeComponent implements OnInit, OnDestroy {
     })
   }
 
+  filterBySearch(term: string) {
+    this.loading = true;
+    this.ttlNoOfImgToLoad = 0;
+    this.ttlNoOfImgLoaded = 0;
+
+    this.backendSvc.retrieveTotalFilteredUserCount(term).then(result => {
+      this.ttlUserCount = result;
+    }).catch(error => {
+      console.error('>>>> an error occurred while retrieving total filtered user count', error);
+      this.loading = false;
+      this.sharedSvc.displayMessage('NO_USERS_FOUND', 'hotpink');
+      this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' }); // 3000 is 3s
+    })
+
+    this.backendSvc.retrieveFilteredUsers(this.limit, this.offset, term).then(results => {
+      this.devbookUsers = results;
+      results.forEach(user => {
+        this.ttlNoOfImgToLoad += user.images.length
+        // console.log('>>>>ttlNoOfCarouselImg', this.ttlNoOfImgToLoad)
+      })
+      if (this.ttlNoOfImgToLoad == 0) {
+        this.ttlNoOfImgToLoad += 1;
+      }
+    }).catch(error => {
+      console.error('>>>> an error has occurred while retrieving filtered users from backend', error);
+    })
+  }
+
   filterByAlp(alp: string) {
     this.loading = true;
     this.ttlNoOfImgToLoad = 0;
     this.ttlNoOfImgLoaded = 0;
 
-    this.backendSvc.retrieveTotalFilteredUserCount(alp).then(result => {
+    this.backendSvc.retrieveTotalFilteredAlpUserCount(alp).then(result => {
       this.ttlUserCount = result;
     }).catch(error => {
       console.error('>>>> an error occurred while retrieving total filtered user count', error);
       this.loading = false;
-      this.previewSvc.displayMessage('NO_USERS_FOUND', 'hotpink');
+      this.sharedSvc.displayMessage('NO_USERS_FOUND', 'hotpink');
       this.snackBar.openFromComponent(SnackbarComponent, { duration: 3000, verticalPosition: 'top' }); // 3000 is 3s
     })
 
-    this.backendSvc.retrieveFilteredUsers(this.limit, this.offset, alp).then(results => {
+    this.backendSvc.retrieveFilteredAlpUsers(this.limit, this.offset, alp).then(results => {
       this.devbookUsers = results;
       results.forEach(user => {
         this.ttlNoOfImgToLoad += user.images.length
@@ -149,8 +184,16 @@ export class HomeComponent implements OnInit, OnDestroy {
     // console.log('loading?> ', this.loading)
   }
 
-  redirectToFilter(alp: string) {
-    this.router.navigate(['/filter'], { queryParams: { filterby: alp } });
+  onFilterByAlp(alp: string) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.router.navigate(['/filter'], { queryParams: { filterbyalp: alp } });
     this.filterByAlp(alp);
+  }
+
+  avatarClicked(id: string) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.router.navigate(['/user', id, 'profile']).then(navigate => {
+      document.documentElement.scrollTop = 0
+    })
   }
 }

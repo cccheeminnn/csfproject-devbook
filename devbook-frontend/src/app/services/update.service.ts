@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { firstValueFrom } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { SecondPanelData, DevbookUserSkills, DevbookUserWebsites, DevbookUserImages } from '../models/models';
+import { SecondPanelData, DevbookUserSkills, DevbookUserWebsites } from '../models/models';
 
 @Injectable()
 export class UpdateService {

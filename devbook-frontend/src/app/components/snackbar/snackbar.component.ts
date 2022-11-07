@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PreviewService } from '../../services/preview.service';
+import { SharedService } from '../../services/shared.service';
 
 @Component({
   selector: 'app-snackbar',
@@ -26,10 +26,10 @@ export class SnackbarComponent implements OnInit {
 
 
   constructor(
-    private previewSvc: PreviewService,
+    private sharedSvc: SharedService,
   ) {
-    this.message = previewSvc.snackbarMsg;
-    this.fontColor = previewSvc.fontColor;
+    this.message = sharedSvc.snackbarMsg;
+    this.fontColor = sharedSvc.fontColor;
   }
 
   ngOnInit(): void {

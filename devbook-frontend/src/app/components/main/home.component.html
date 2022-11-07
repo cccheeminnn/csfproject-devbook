@@ -20,7 +20,7 @@
             </td>
             <td *ngFor="let alp of alphabet"
               style="margin-right: 3px; text-decoration: underline; color: blue; cursor: pointer; display: inline-block; font-size: x-small;"
-              (click)="redirectToFilter(alp)">{{ alp | uppercase }}</td>
+              (click)="onFilterByAlp(alp)">{{ alp | uppercase }}</td>
           </tr>
         </tbody>
       </table>
@@ -35,7 +35,7 @@
 
     <mat-card *ngFor="let user of devbookUsers">
       <mat-card-header>
-        <div mat-card-avatar [routerLink]="['/user', user.id, 'profile']" class="avatar-img"
+        <div mat-card-avatar (click)="avatarClicked(user.id)" class="avatar-img"
         style="background-image:url('https://bigbook.sgp1.digitaloceanspaces.com/users/{{ user.id }}/profilephoto.jpg')">
         </div>
         <mat-card-title>{{ user.name }}</mat-card-title>
@@ -82,7 +82,7 @@
     <!-- bottom page pagination -->
     <div style="float: right;">
       <mat-paginator #paginator [pageSize]="6" [pageSizeOptions]="pageSizeOptions"
-        aria-label="Select page" (page)="onPageEvent($event)">
+        [length]="ttlUserCount" aria-label="Select page" (page)="onPageEvent($event)">
       </mat-paginator>
     </div>
 

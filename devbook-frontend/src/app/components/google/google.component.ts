@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PreviewService } from '../../services/preview.service';
+import { SharedService } from '../../services/shared.service';
 
 @Component({
   selector: 'app-google',
@@ -14,15 +15,15 @@ export class GoogleComponent implements OnInit, OnDestroy {
   markerOption!: google.maps.MarkerOptions;
 
   constructor(
-    private previewSvc: PreviewService
+    private sharedSvc: SharedService
   ) { }
   ngOnDestroy(): void {
     // console.log('google comp destroyed')
-    this.previewSvc.searchLocation = '';
+    this.sharedSvc.searchLocation = '';
   }
 
   ngOnInit(): void {
-    this.searchLocation = this.previewSvc.searchLocation;
+    this.searchLocation = this.sharedSvc.searchLocation;
 
     this.markers = new Array;
     const geocoder = new google.maps.Geocoder();

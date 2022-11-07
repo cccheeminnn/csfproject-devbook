@@ -4,8 +4,9 @@ import { LoginFormDetails } from '../../models/models';
 import { BackendService } from '../../services/backend.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PreviewService } from '../../services/preview.service';
 import { SnackbarComponent } from '../snackbar/snackbar.component';
+import { SharedService } from '../../services/shared.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -24,9 +25,10 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private _location: Location,
     private backendSvc: BackendService,
     private snackBar: MatSnackBar,
-    private previewSvc: PreviewService) { // to display login messages in popup
+    private sharedSvc: SharedService) { // to display login messages in popup
     }
 
   ngOnInit(): void {
@@ -42,16 +44,16 @@ export class LoginComponent implements OnInit {
     const formValue = this.formGrp.value as LoginFormDetails
     this.backendSvc.login(formValue).then(results => {
       // console.log('>>>> login results: ', results)
-      // this.router.navigate(['/user', results.id, 'profile'])
       this.loading = false;
       this.backendSvc.getNewNotificationsCount(results.email);
-      this.previewSvc.displayMessage('LOGIN_SUCCESSFUL', 'greenyellow');
+      this.sharedSvc.displayMessage('LOGIN_SUCCESSFUL', 'greenyellow');
       this.snackBar.openFromComponent(SnackbarComponent, {duration: 3000, verticalPosition: 'top'}); // 3000 is 3s
-      this.router.navigate(['/'])
+      this._location.back();
+      // this.router.navigate(['/'])
     }).catch(error => {
       // console.error('>>>> login error: ', error)
       this.loading = false;
-      this.previewSvc.displayMessage('INVALID_CREDENTIALS', 'hotpink');
+      this.sharedSvc.displayMessage('INVALID_CREDENTIALS', 'hotpink');
       this.snackBar.openFromComponent(SnackbarComponent, {duration: 3000, verticalPosition: 'top'}); // 3000 is 3s
     })
   }

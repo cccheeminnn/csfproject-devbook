@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { firstValueFrom, map, Observable, BehaviorSubject, ReplaySubject } from 'rxjs';
 import { DevbookUser, CurrentUserLiked, CurrentUserRated, Response } from '../models/models';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable()
 export class BackendService {
@@ -14,7 +15,8 @@ export class BackendService {
   public notificationsCountObs: Observable<number>;
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private cookieSvc: CookieService
   ) {
     this.currentUserSubject = new BehaviorSubject<DevbookUser | null>(
       JSON.parse(localStorage.getItem('currentUser')!));
@@ -37,10 +39,16 @@ export class BackendService {
     )
   }
 
-  logout() {
-    // remove user from local storage and set current user to null
-    localStorage.removeItem('currentUser');
-    this.currentUserSubject.next(null);
+  logout():Promise<Response> {
+    // remove cookie using backend
+    return firstValueFrom(
+      this.http.get<Response>('/api/logout').pipe(resp => {
+        // remove user from local storage and set current user to null
+        localStorage.removeItem('currentUser');
+        this.currentUserSubject.next(null);
+        return resp;
+      })
+    )
   }
 
   register(reg: FormData): Promise<string> {
@@ -99,6 +107,23 @@ export class BackendService {
 
     return firstValueFrom(
       this.http.get<number>('/api/usercount/filtered', { params })
+    )
+  }
+
+  retrieveFilteredAlpUsers(limit: number, offset: number, alp: string): Promise<DevbookUser[]>
+  {
+    const params: HttpParams = new HttpParams().set('limit', limit).set('offset', offset).set('filter', alp);
+
+    return firstValueFrom(
+      this.http.get<DevbookUser[]>('/api/retrievefilteredresults/alp', { params })
+    )
+  }
+
+  retrieveTotalFilteredAlpUserCount(alp: string) {
+    const params = new HttpParams().set('filter', alp);
+
+    return firstValueFrom(
+      this.http.get<number>('/api/usercount/filtered/alp', { params })
     )
   }
 
