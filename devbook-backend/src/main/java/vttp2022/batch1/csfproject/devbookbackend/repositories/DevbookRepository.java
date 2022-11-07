@@ -438,7 +438,9 @@ public class DevbookRepository {
         populateUserImages(userList);
         // update user occupation
         populateUserOccupation(userList);
-        // education, skills, websites, comments not needed for homepage
+        // update user skills
+        populateUserSkills(userList);
+        // education, websites, comments not needed for homepage
 
         return Optional.of(userList);
     }
@@ -462,7 +464,9 @@ public class DevbookRepository {
         populateUserImages(userList);
         // update user occupation
         populateUserOccupation(userList);
-        // education, skills, websites, comments not needed for homepage
+        // update user skills
+        populateUserSkills(userList);
+        // education, websites, comments not needed for homepage
 
         return Optional.of(userList);
     }

@@ -161,6 +161,7 @@ public class DevbookUser {
                 .add("bio", bio)
                 .add("currentJob", currentJob)
                 .add("currentCompany", currentCompany)
+                .add("skills", skills)
                 .add("images", images)
                 .build();
     }

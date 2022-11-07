@@ -45,8 +45,25 @@
           <td mat-cell *matCellDef="let user"> {{user.currentCompany}} </td>
         </ng-container>
 
+        <!-- Skills Column -->
+        <!-- <ng-container matColumnDef="skill">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Skills </th>
+          <td mat-cell *matCellDef="let user">
+            <span *ngFor="let skill of user.skills; let idx = index">{{skill.name}}<span *ngIf="idx+1 < user.skills.length">, </span></span>
+          </td>
+        </ng-container> -->
+
+        <!-- Skills Column -->
+        <ng-container matColumnDef="skill">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Skills </th>
+          <td mat-cell *matCellDef="let user"> {{user.skillsName}}
+            <!-- <span *ngFor="let skill of user.skills; let idx = index">{{skill.name}}<span *ngIf="idx+1 < user.skills.length">, </span></span> -->
+            <!-- <span>{{skill.name}}<span *ngIf="idx+1 < user.skills.length">, </span></span> -->
+          </td>
+        </ng-container>
+
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr mat-row *matRowDef="let user; columns: displayedColumns;"></tr>
 
         <!-- Row shown when there is no matching data. -->
         <tr class="mat-row" *matNoDataRow>

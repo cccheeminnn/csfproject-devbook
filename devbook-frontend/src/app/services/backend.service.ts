@@ -40,7 +40,7 @@ export class BackendService {
   logout() {
     // remove user from local storage and set current user to null
     localStorage.removeItem('currentUser');
-    this.currentUserSubject.next(null); 
+    this.currentUserSubject.next(null);
   }
 
   register(reg: FormData): Promise<string> {
@@ -63,7 +63,18 @@ export class BackendService {
     const params: HttpParams = new HttpParams().set('limit', limit).set('offset', offset);
 
     return firstValueFrom(
-      this.http.get<DevbookUser[]>('/api/retrieveall', { params })
+      this.http.get<DevbookUser[]>('/api/retrieveall', { params }).pipe(map(userArr => {
+        for (let user of userArr) {
+          user.skillsName = '';
+          for (let i = 0; i < user.skills.length; i++) {
+            user.skillsName += user.skills[i].name
+            if (i+1 < user.skills.length) {
+              user.skillsName += ', ';
+            }
+          }
+        }
+        return userArr;
+      }))
     )
   }
 

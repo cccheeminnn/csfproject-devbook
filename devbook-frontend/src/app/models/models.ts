@@ -18,7 +18,8 @@ export interface DevbookUser {
       skills: DevbookUserSkills[],
       websites: DevbookUserWebsites[],
       images: DevbookUserImages[],
-      comments: DevbookUserComments[]
+      comments: DevbookUserComments[],
+      skillsName?: string // only used for catalogue page
 }
 
 export interface DevbookUserWebsites {

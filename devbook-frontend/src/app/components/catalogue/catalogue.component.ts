@@ -20,7 +20,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit {
 
   loading: boolean = true;
 
-  displayedColumns: string[] = ['name', 'currentJob', 'currentCompany']
+  displayedColumns: string[] = ['name', 'currentJob', 'currentCompany', 'skill']
   devbookUsers: DevbookUser[] = [];
   dataSource: MatTableDataSource<DevbookUser>
   totalCount: number = 0;
@@ -41,6 +41,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit {
       this.backendSvc.retrieveAllUsers(this.totalCount, 0).then(results => {
         this.dataSource.data = results
         this.loading = false;
+        console.log('skills length ', results[0].skills.length)
       });
     })
   }
