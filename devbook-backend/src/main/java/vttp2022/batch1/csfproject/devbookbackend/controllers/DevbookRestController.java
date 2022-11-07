@@ -5,6 +5,10 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -48,6 +52,35 @@ public class DevbookRestController {
     @GetMapping(path = "/helloworld")
     public ResponseEntity<String> getHelloWorld() {
         return ResponseEntity.ok("hello world");
+    }
+
+    @GetMapping(path = "/logout")
+    public ResponseEntity<String> getLogout(HttpServletRequest httpReq, HttpServletResponse httpResp) {
+
+        Response resp = new Response();
+
+        // Cookie[] reqCookie = httpReq.getCookies();
+        // if (reqCookie != null) {
+        //     for (Cookie c : reqCookie) {
+        //         if (c.getName().equals("token")) {
+        //         }
+        //     }
+        // } else {
+        //     resp.setCode(HttpStatus.BAD_REQUEST.value());
+        //     resp.setMessage("Logout unsuccessful.");
+        // }
+        Cookie cookie = new Cookie("token", null);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setMaxAge(0);
+
+        httpResp.addCookie(cookie); // add cookie to response
+
+        resp.setCode(HttpStatus.OK.value());
+        resp.setMessage("Successfully logout.");
+
+        return ResponseEntity.status(resp.getCode()).body(Response.toJson(resp).toString());
     }
 
     @GetMapping(path = "/quote")
@@ -108,7 +141,7 @@ public class DevbookRestController {
     }
     // GetMappings to retrieve ALL users ---END---
 
-    // GetMappings to retrieve FILTERED users ---START---
+    // GetMappings to retrieve FILTERED SEARCHED users ---START---
     @GetMapping(path = "/retrievefilteredresults")
     public ResponseEntity<String> getFilteredUsers(
             @RequestParam String limit, @RequestParam String offset, @RequestParam String filter) {
@@ -142,6 +175,41 @@ public class DevbookRestController {
         }
     }
     // GetMappings to retrieve FILTERED users ---END---
+
+    // GetMappings to retrieve FILTERED ALPHABETICAL users ---START---
+    @GetMapping(path = "/retrievefilteredresults/alp")
+    public ResponseEntity<String> getFilteredAlpUsers(
+            @RequestParam String limit, @RequestParam String offset, @RequestParam String filter) {
+        Optional<List<DevbookUser>> userListOpt = userSvc.retrieveFilteredAlpUsers(Integer.parseInt(limit),
+                Integer.parseInt(offset), filter);
+        Response resp = new Response();
+        if (userListOpt.isEmpty()) {
+            resp.setCode(HttpStatus.BAD_REQUEST.value());
+            resp.setMessage("Failed to retrieve filtered users list by alphabet");
+            return ResponseEntity.status(resp.getCode()).body(Response.toJson(resp).toString());
+        } else {
+            List<DevbookUser> userList = userListOpt.get();
+            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+            for (DevbookUser user : userList) {
+                arrayBuilder.add(user.toJsonForHomepage());
+            }
+            return ResponseEntity.ok(arrayBuilder.build().toString());
+        }
+    }
+
+    @GetMapping(path = "/usercount/filtered/alp")
+    public ResponseEntity<String> getFilteredAlpUserCount(@RequestParam String filter) {
+        Integer ttlUserCount = userSvc.retrieveFilteredAlpUserCount(filter);
+        Response resp = new Response();
+        if (ttlUserCount > 0) {
+            return ResponseEntity.ok().body(ttlUserCount.toString());
+        } else {
+            resp.setCode(HttpStatus.BAD_REQUEST.value());
+            resp.setMessage("Failed to retrieve total user count filtered by alphabet.");
+            return ResponseEntity.status(resp.getCode()).body(Response.toJson(resp).toString());
+        }
+    }
+    // GetMappings to retrieve FILTERED ALPHABETICAL users ---END---
 
     // for details page
     @GetMapping(path = "/retrieveuserdetails")

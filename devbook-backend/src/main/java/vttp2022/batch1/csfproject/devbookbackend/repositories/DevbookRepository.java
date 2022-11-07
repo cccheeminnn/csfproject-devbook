@@ -96,6 +96,15 @@ public class DevbookRepository {
         return ttlUserCount;
     }
 
+    public Integer retrieveFilteredAlpUserCount(String alp) {
+        SqlRowSet rs = template.queryForRowSet(SQL_RETRIEVE_COUNT_OF_FILTERED_USERS, (alp+"%"));
+        Integer ttlUserCount = 0;
+        if (rs.next()) {
+            ttlUserCount = rs.getInt("count(*)");
+        }
+        return ttlUserCount;
+    }
+
     // for individual user details page
     public Optional<DevbookUser> retrieveUserDetailsId(String id)
     {
@@ -453,6 +462,32 @@ public class DevbookRepository {
 
         // create no of users based on total, saving their email too
         SqlRowSet rs = template.queryForRowSet(SQL_RETRIEVE_LIST_OF_FILTERED_USERS, ("%"+filter+"%"), limit, offset);
+        while (rs.next()) {
+            DevbookUser user = new DevbookUser();
+            user.setId(rs.getString("user_id"));
+            user.setName(rs.getString("user_name"));
+            user.setEmail(rs.getString("user_email"));
+            userList.add(user);
+        }
+        // update user images
+        populateUserImages(userList);
+        // update user occupation
+        populateUserOccupation(userList);
+        // update user skills
+        populateUserSkills(userList);
+        // education, websites, comments not needed for homepage
+
+        return Optional.of(userList);
+    }
+
+    // retrieve from MySQL FILTERED ALPHABET users for home page
+    public Optional<List<DevbookUser>> retrieveFilteredAlpUsers(Integer limit, Integer offset, String alp)
+    {
+        // create a list
+        List<DevbookUser> userList = new LinkedList<>();
+
+        // create no of users based on total, saving their email too
+        SqlRowSet rs = template.queryForRowSet(SQL_RETRIEVE_LIST_OF_FILTERED_USERS, (alp+"%"), limit, offset);
         while (rs.next()) {
             DevbookUser user = new DevbookUser();
             user.setId(rs.getString("user_id"));

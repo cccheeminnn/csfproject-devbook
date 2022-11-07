@@ -132,8 +132,16 @@ public class DevbookUserService {
         return devbookRepo.retrieveFilteredUsers(limit, offset, filter);
     }
 
+    public Optional<List<DevbookUser>> retrieveFilteredAlpUsers(Integer limit, Integer offset, String alp) {
+        return devbookRepo.retrieveFilteredAlpUsers(limit, offset, alp);
+    }
+
     public Integer retrieveFilteredUserCount(String filter) {
         return devbookRepo.retrieveFilteredUserCount(filter);
+    }
+
+    public Integer retrieveFilteredAlpUserCount(String alp) {
+        return devbookRepo.retrieveFilteredAlpUserCount(alp);
     }
 
     public Optional<DevbookUser> retrieveUserDetailsId(String id) {

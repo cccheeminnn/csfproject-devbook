@@ -54,8 +54,10 @@ public class SecurityConfigurer {
                 "/api/retrieveall",
                 "/api/usercount",
                 "/api/usercount/filtered",
+                "/api/usercount/filtered/alp",
                 "/api/retrieveuserdetails",
-                "/api/retrievefilteredresults")
+                "/api/retrievefilteredresults",
+                "/api/retrievefilteredresults/alp")
             .permitAll()
             // all other requests requires authentication
             .anyRequest().authenticated()

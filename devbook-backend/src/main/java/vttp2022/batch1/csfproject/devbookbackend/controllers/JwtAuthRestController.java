@@ -54,6 +54,7 @@ public class JwtAuthRestController {
         final String token = jwtTokenUtils.generateToken(userDetails);
 
         Cookie cookie = new Cookie("token", token);
+        cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setMaxAge(60*60*5); // 60*60*5 = 5 hours, same expiry as jwt

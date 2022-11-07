@@ -172,6 +172,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
+ngx-cookie-service
+MIT
+
 ngx-material-rating
 MIT
 https://github.com/fvilers/ngx-material-rating.git
