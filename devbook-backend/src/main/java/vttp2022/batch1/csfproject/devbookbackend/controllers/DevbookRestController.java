@@ -1,6 +1,7 @@
 package vttp2022.batch1.csfproject.devbookbackend.controllers;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +43,8 @@ import vttp2022.batch1.csfproject.devbookbackend.services.EmailService;
 @RequestMapping(path = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DevbookRestController {
 
+    private final static String HOST_LOGIN_VERIFIED = "https://devbookapp.herokuapp.com/#/login/verified";
+
     @Autowired
     private DevbookUserService userSvc;
 
@@ -59,26 +62,26 @@ public class DevbookRestController {
 
         Response resp = new Response();
 
-        // Cookie[] reqCookie = httpReq.getCookies();
-        // if (reqCookie != null) {
-        //     for (Cookie c : reqCookie) {
-        //         if (c.getName().equals("token")) {
-        //         }
-        //     }
-        // } else {
-        //     resp.setCode(HttpStatus.BAD_REQUEST.value());
-        //     resp.setMessage("Logout unsuccessful.");
-        // }
-        Cookie cookie = new Cookie("token", null);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setMaxAge(0);
+        Cookie[] reqCookie = httpReq.getCookies();
+        if (reqCookie != null) {
+            for (Cookie c : reqCookie) {
+                if (c.getName().equals("token")) {
+                    Cookie cookie = new Cookie("token", null);
+                    cookie.setPath("/");
+                    cookie.setHttpOnly(true);
+                    cookie.setSecure(true);
+                    cookie.setMaxAge(0);
 
-        httpResp.addCookie(cookie); // add cookie to response
+                    httpResp.addCookie(cookie); // add cookie to response
 
-        resp.setCode(HttpStatus.OK.value());
-        resp.setMessage("Successfully logout.");
+                    resp.setCode(HttpStatus.OK.value());
+                    resp.setMessage("Successfully logout.");
+                }
+            }
+        } else {
+            resp.setCode(HttpStatus.BAD_REQUEST.value());
+            resp.setMessage("Logout unsuccessful, no cookies found.");
+        }
 
         return ResponseEntity.status(resp.getCode()).body(Response.toJson(resp).toString());
     }
@@ -228,7 +231,7 @@ public class DevbookRestController {
 
     // user verify email for new registers
     @GetMapping(path = "/verify/{userId}")
-    public ResponseEntity<String> getVerify(@PathVariable(value = "userId") String userId) {
+    public ResponseEntity<String> getVerify(@PathVariable(value = "userId") String userId, HttpServletResponse httpResp) {
         System.out.println("pathvariable userid " + userId);
         boolean verified = userSvc.verifyUser(userId);
 
@@ -239,6 +242,11 @@ public class DevbookRestController {
         } else {
             resp.setCode(HttpStatus.BAD_REQUEST.value());
             resp.setMessage("Email verification failed.");
+        }
+
+        try {
+            httpResp.sendRedirect(HOST_LOGIN_VERIFIED);
+        } catch (IOException ioe) {
         }
         return ResponseEntity.ok().body(Response.toJson(resp).toString());
     }
@@ -267,7 +275,7 @@ public class DevbookRestController {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            } else {
+            } else { // runtimeexception thrown
                 resp.setMessage("Something went wrong while trying to create %s user.".formatted(register.getEmail()));
                 resp.setCode(HttpStatus.EXPECTATION_FAILED.value());
             }
@@ -287,7 +295,7 @@ public class DevbookRestController {
             resp.setCode(HttpStatus.OK.value());
             resp.setData(comment.toJson().toString());
             return ResponseEntity.status(resp.getCode()).body(Response.toJson(resp).toString());
-        } else {
+        } else { // runtimeexception thrown
             resp.setMessage("Comment failed to be added.");
             resp.setCode(HttpStatus.BAD_REQUEST.value());
             return ResponseEntity.status(resp.getCode()).body(Response.toJson(resp).toString());
@@ -303,8 +311,7 @@ public class DevbookRestController {
         return ResponseEntity.ok().body(ratedUser);
     }
 
-    // ratings given, tallied ratings are calculated at front end, backend just
-    // updates
+    // ratings given, repo calculates new rating, passes back to service
     // since only logged in can check, no need add to permitAll()
     @PostMapping(path = "/rated", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> postRated(@RequestBody String payload) {
@@ -319,7 +326,7 @@ public class DevbookRestController {
             resp.setCode(HttpStatus.OK.value());
             resp.setMessage("User ratings updated.");
             resp.setData(String.valueOf(ratingsUpdated));
-        } else {
+        } else { // runtimeexception thrown
             resp.setCode(HttpStatus.BAD_REQUEST.value());
             resp.setMessage("Failed to update user ratings.");
         }
@@ -353,14 +360,13 @@ public class DevbookRestController {
         if (likesUpdated) {
             resp.setCode(HttpStatus.OK.value());
             resp.setMessage("User like count updated.");
-        } else {
+        } else { // runtimeexception thrown
             resp.setCode(HttpStatus.BAD_REQUEST.value());
             resp.setMessage("Failed to update user like count.");
         }
 
         return ResponseEntity.status(resp.getCode()).body(Response.toJson(resp).toString());
     }
-
 
     // for notifications
     @GetMapping(path = "/countofnewnotifications")
@@ -387,8 +393,7 @@ public class DevbookRestController {
     }
 
     @GetMapping(path = "/notifications")
-    public ResponseEntity<String> getNotifications(@RequestParam String userEmail) 
-    {
+    public ResponseEntity<String> getNotifications(@RequestParam String userEmail) {
         System.out.println("/api/notifications " + userEmail);
         Response resp = new Response();
 

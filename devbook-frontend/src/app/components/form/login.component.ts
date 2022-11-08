@@ -32,6 +32,10 @@ export class LoginComponent implements OnInit {
     }
 
   ngOnInit(): void {
+    if (this.router.url.includes("verified")) {
+      this.sharedSvc.displayMessage('EMAIL_VERIFIED', 'greenyellow');
+      this.snackBar.openFromComponent(SnackbarComponent, {duration: 3000, verticalPosition: 'top'}); // 3000 is 3s
+    }
     this.formGrp = this.fb.group({
       username: this.fb.control<string>('', [ Validators.required, Validators.email ]),
       password: this.fb.control<string>('', [ Validators.required ])

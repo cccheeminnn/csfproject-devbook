@@ -167,7 +167,7 @@ select * from user_notifications;
 DELETE FROM user_credentials where user_email = 'cheemin.wong1@outlook.com';
 DELETE FROM user_received_likes where user_email = 'aaronkwok@devbook.com' and liked_user = 'hughjackman@devbook.com';
 DELETE FROM user_received_ratings where user_email = 'ianfong@devbook.com' and rated_user = 'ianfong@devbook.com';
-update user_credentials set verified = true where user_email = 'williamshakespeare@devbook.com';
+update user_credentials set verified = false where user_email = 'williamshakespeare@devbook.com';
 update user_credentials set user_email = 'nikolatesla@outlook.com' where user_id = '40cf941f';
 update user_likes_ratings set user_ratings = 0 where user_email = 'aaronkwok@devbook.com';
 update user_images set image_description = 'This was not my finest moment.' where user_email like 'loki%' and image_name = 'image01.jpg';

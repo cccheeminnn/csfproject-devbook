@@ -25,7 +25,14 @@ public class DevbookUserService {
     @Transactional
     public boolean insertNewUser(Register newUserReg)
     {
-        return devbookRepo.insertNewUser(newUserReg);
+        boolean inserted = devbookRepo.insertNewUser(newUserReg);
+
+        if (inserted) {
+            return inserted;
+        } else {
+            RuntimeException rte = new RuntimeException("RuntimeException ocurred while trying to insert new user.");
+            throw rte;
+        }
     }
 
     public String generateVerificationLink(String userEmail) {
@@ -40,7 +47,8 @@ public class DevbookUserService {
         return devbookRepo.verifyUser(userId);
     }
 
-    public boolean insertComment(UserComment comment) 
+    @Transactional
+    public boolean insertComment(UserComment comment)
     {
         boolean commentInserted = devbookRepo.insertComment(comment);
 
@@ -51,13 +59,16 @@ public class DevbookUserService {
 
         boolean notiUpdated = devbookRepo.insertNewNotification(comment.getEmail(), comment.getComment_email(), "commented on your page!");
 
-        if (commentInserted && notiUpdated)
+        if (commentInserted && notiUpdated) {
             return true;
-        return false;
+        } else {
+            RuntimeException rte = new RuntimeException("RuntimeException ocurred while trying to insert a comment.");
+            throw rte;
+        }
     }
 
     @Transactional
-    public boolean insertNewLikes(
+    public boolean insertNewLikes (
         String emailOfUserGivenALiked, Integer userUpdatedLikes,
         String emailOfUserGivingALike)
     {
@@ -70,9 +81,12 @@ public class DevbookUserService {
 
         boolean notiUpdated = devbookRepo.insertNewNotification(emailOfUserGivenALiked, emailOfUserGivingALike, "gave you a like!");
 
-        if (likeUpdated && notiUpdated)
+        if (likeUpdated && notiUpdated) {
             return true;
-        return false;
+        } else {
+            RuntimeException rte = new RuntimeException("RuntimeException ocurred while trying to update likes.");
+            throw rte;
+        }
     }
 
     public boolean checkIfCurrentUserGaveALike(String userEmail, String currentUserEmail) {
@@ -98,9 +112,12 @@ public class DevbookUserService {
 
         boolean notiUpdated = devbookRepo.insertNewNotification(emailOfUserGivenARating, emailOfUserGivingARating, "rated you!");
 
-        if (updatedRating > 0f && notiUpdated)
+        if (updatedRating > 0f && notiUpdated) {
             return updatedRating;
-        return 0f;
+        } else {
+            RuntimeException rte = new RuntimeException("RuntimeException ocurred while trying to update ratings.");
+            throw rte;
+        }
     }
 
     public boolean checkIfCurrentUserGaveARating(String userEmail, String currentUserEmail) {
