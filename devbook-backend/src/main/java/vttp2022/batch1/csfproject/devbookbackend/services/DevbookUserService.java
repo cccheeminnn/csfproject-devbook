@@ -17,7 +17,7 @@ import vttp2022.batch1.csfproject.devbookbackend.repositories.DevbookRepository;
 @Service
 public class DevbookUserService {
 
-    String host = "https://devbookapp.herokuapp.com/api/verify/";
+    String host = "https://talentbookapp.herokuapp.com/api/verify/";
 
     @Autowired
     private DevbookRepository devbookRepo;

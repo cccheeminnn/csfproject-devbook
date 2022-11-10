@@ -43,7 +43,7 @@ import vttp2022.batch1.csfproject.devbookbackend.services.EmailService;
 @RequestMapping(path = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DevbookRestController {
 
-    private final static String HOST_LOGIN_VERIFIED = "https://devbookapp.herokuapp.com/#/login/verified";
+    private final static String HOST_LOGIN_VERIFIED = "https://talentbookapp.herokuapp.com/#/login/verified";
 
     @Autowired
     private DevbookUserService userSvc;
