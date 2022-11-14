@@ -52,8 +52,7 @@ export class LoginComponent implements OnInit {
       this.backendSvc.getNewNotificationsCount(results.email);
       this.sharedSvc.displayMessage('LOGIN_SUCCESSFUL', 'greenyellow');
       this.snackBar.openFromComponent(SnackbarComponent, {duration: 3000, verticalPosition: 'top'}); // 3000 is 3s
-      this._location.back();
-      // this.router.navigate(['/'])
+      this.router.navigate(['/'])
     }).catch(error => {
       // console.error('>>>> login error: ', error)
       this.loading = false;
