@@ -31,6 +31,7 @@ import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 import vttp2022.batch1.csfproject.devbookbackend.models.DevbookUser;
 import vttp2022.batch1.csfproject.devbookbackend.models.Register;
+import vttp2022.batch1.csfproject.devbookbackend.models.RegisterEmployer;
 import vttp2022.batch1.csfproject.devbookbackend.models.Response;
 import vttp2022.batch1.csfproject.devbookbackend.models.specificUser.UserComment;
 import vttp2022.batch1.csfproject.devbookbackend.models.specificUser.UserLikes;
@@ -277,6 +278,38 @@ public class DevbookRestController {
                 }
             } else { // runtimeexception thrown
                 resp.setMessage("Something went wrong while trying to create %s user.".formatted(register.getEmail()));
+                resp.setCode(HttpStatus.EXPECTATION_FAILED.value());
+            }
+        }
+
+        return ResponseEntity.status(resp.getCode()).body(Response.toJson(resp).toString());
+    }
+
+    @PostMapping(path = "/register/employer", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> postRegisterEmployer(@ModelAttribute RegisterEmployer register) {
+        Response resp = new Response();
+
+        boolean employerExist = userSvc.checkUserExist(register.getEmail());
+        // if user exist we throw an error back to the request
+        if (employerExist) {
+            resp.setMessage("User %s already exist.".formatted(register.getEmail()));
+            resp.setCode(HttpStatus.BAD_REQUEST.value());
+        } else {
+            boolean employerCreated = userSvc.insertNewEmployer(register);
+
+            // user successfully created
+            if (employerCreated) {
+                resp.setMessage("Employer %s successfully created.".formatted(register.getEmail()));
+                resp.setCode(HttpStatus.CREATED.value());
+
+                try {
+                    String link = userSvc.generateVerificationLink(register.getEmail());
+                    emailSvc.sendVerificationEmail(register.getEmail(), link);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else { // runtimeexception thrown
+                resp.setMessage("Something went wrong while trying to create %s employer.".formatted(register.getEmail()));
                 resp.setCode(HttpStatus.EXPECTATION_FAILED.value());
             }
         }

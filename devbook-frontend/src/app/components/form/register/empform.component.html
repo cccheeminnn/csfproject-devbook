@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="border-margin-parent">
+    <div *ngIf="loading" class="loading-spinner">
+      <mat-progress-spinner style="margin-left: auto; margin-right: auto;" diameter="60" color="primary"
+        [mode]="'indeterminate'">
+      </mat-progress-spinner>
+    </div>
+
+    <form [formGroup]="formGrp" (submit)="onSubmit()" enctype="multipart/form-data">
+
+      <mat-accordion style="justify-content: space-between; align-items: center;" multi>
+        <!-- First Panel, Account Login Details -->
+        <mat-expansion-panel>
+          <!-- First Panel Headers -->
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Account
+            </mat-panel-title>
+            <mat-panel-description style="justify-content: space-between; align-items: center;">
+              Login Information
+              <mat-icon>account_circle</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <!-- First Panel Form Fields -->
+          <mat-divider></mat-divider>
+          <div style="text-align: center;">
+            <mat-form-field style="display: block;" appearance="fill">
+              <mat-label>Name</mat-label>
+              <input matInput required formControlName="name">
+            </mat-form-field>
+            <mat-error style="text-align: left;" *ngIf="emailError">Email already exist!</mat-error>
+            <mat-form-field style="display: block;" appearance="fill">
+              <mat-label>Email</mat-label>
+              <input matInput type="email" placeholder="fred@example.com" required formControlName="email" #email>
+            </mat-form-field>
+            <mat-form-field style="display: block;" appearance="fill">
+              <mat-label>Password</mat-label>
+              <input matInput [type]="hide ? 'password' : 'text'" required formControlName="password">
+              <button mat-icon-button matSuffix (click)="hide = !hide">
+                <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+            </mat-form-field>
+            <!-- Profile Picture -->
+            <mat-error *ngIf="errorProfilePhoto">Image filetype only and filesize below 1.05mb!</mat-error>
+            <div class="input-group mb-3">
+              <label class="input-group-text" for="inputProfilePhoto">Profile Photo</label>
+              <input #inputProfilePhoto type="file" accept="image/*" class="form-control" id="inputProfilePhoto"
+                (change)="readFileType($event)">
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <div style="float: right; display: flex; margin-top: 5px;">
+        <button mat-button type="submit"
+          [disabled]="!(inputProfilePhoto.value.length > 1) || formGrp.invalid">
+          Submit</button>
+      </div>
+    </form>
+  </div>
+</body>
+
+</html>

@@ -50,6 +50,7 @@ public class SecurityConfigurer {
                 "/authenticate",
                 "/api/quote",
                 "/api/register",
+                "/api/register/employer",
                 "/api/verify/{userId}",
                 "/api/retrieveall",
                 "/api/usercount",

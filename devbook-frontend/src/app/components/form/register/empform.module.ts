@@ -1,17 +1,17 @@
-import { FormComponent } from './form.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
-import { MaterialModule } from '../../material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MaterialModule } from 'src/app/material.module';
+import { EmpformComponent } from './empform.component';
 
 const routes: Routes = [
-  { path: '', component: FormComponent }
+  { path: '', component: EmpformComponent }
 ];
 
 @NgModule({
   declarations: [
-    FormComponent
+    EmpformComponent
   ],
   imports: [
     CommonModule,
@@ -20,4 +20,4 @@ const routes: Routes = [
     FormsModule, ReactiveFormsModule
   ]
 })
-export class FormModule { }
+export class EmpformModule { }

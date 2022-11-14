@@ -21,6 +21,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { GoogleComponent } from './components/google/google.component';
 import { SharedService } from './services/shared.service';
 import { CookieService } from 'ngx-cookie-service';
+import { RegisterComponent } from './components/form/register/register.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { CookieService } from 'ngx-cookie-service';
     LoginComponent,
     SnackbarComponent,
     GoogleComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,

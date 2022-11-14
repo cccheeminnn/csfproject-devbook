@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="border-margin-parent">
+    <table style="margin-top: 15px; margin-left: auto; margin-right: auto; text-align: center;">
+      <tbody>
+        <tr>
+          <td>
+            <mat-icon color="primary">account_circle</mat-icon>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Looking to put yourself on TalentBook?
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <button mat-raised-button color="primary" type="button" [routerLink]="['/register', 'user']">
+              Join us here!</button>
+          </td>
+        </tr>
+        <mat-divider style="margin: 15px 5px 15px 5px;"></mat-divider>
+        <tr>
+          <td>
+            <mat-icon color="primary">work</mat-icon>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Potential employer?
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <button mat-raised-button color="primary" type="button" [routerLink]="['/register', 'employer']">Register here!</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+
+</html>

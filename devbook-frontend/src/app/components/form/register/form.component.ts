@@ -2,14 +2,14 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angula
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatAccordion } from '@angular/material/expansion';
-import { PreviewComponent } from './preview.component';
-import { PreviewService } from '../../services/preview.service';
 import { BackendService } from 'src/app/services/backend.service';
-import { DevbookUser } from '../../models/models';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SnackbarComponent } from '../snackbar/snackbar.component';
-import { SharedService } from '../../services/shared.service';
+import { DevbookUser } from 'src/app/models/models';
+import { PreviewService } from 'src/app/services/preview.service';
+import { SharedService } from 'src/app/services/shared.service';
+import { PreviewComponent } from '../preview.component';
+import { SnackbarComponent } from '../../snackbar/snackbar.component';
 
 @Component({
   selector: 'app-form',
@@ -20,6 +20,9 @@ export class FormComponent implements OnInit, AfterViewInit {
 
   currentUser!: DevbookUser | null;
   loading!: boolean;
+
+  // for demo
+  demo:boolean = false;
 
   // for Expand/Collaspe all
   @ViewChild(MatAccordion)
@@ -55,6 +58,7 @@ export class FormComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+
     this.skillsArray = this.fb.array([], [Validators.required, Validators.minLength(1)]);
     this.websitesArray = this.fb.array([], [Validators.required, Validators.minLength(1)]);
 
@@ -77,6 +81,34 @@ export class FormComponent implements OnInit, AfterViewInit {
       file03: [null], // inserted during input (change) event
       file03Description: this.fb.control<string>('')
     })
+
+    if (this.router.url.includes('demo')) {
+      // prefill form with dummy data
+      this.demo = true;
+      this.prefillFormForDemo();
+    }
+  }
+
+  prefillFormForDemo() {
+    this.formGrp.controls['name'].setValue('Dummy Name')
+    this.formGrp.controls['email'].setValue('dummy@talentbook.com')
+    this.formGrp.controls['password'].setValue('dummypassword')
+    this.formGrp.controls['bio'].setValue('Hi, I\'m a dummy. I have dummy skills and these are my dummy websites.')
+    this.formGrp.controls['currentJob'].setValue('Dummy Job')
+    this.formGrp.controls['currentCompany'].setValue('Dummy Company')
+    this.formGrp.controls['previousCompany'].setValue('Dummy Prev Company')
+    this.formGrp.controls['education'].setValue('Dummy School')
+    const skill1 = this.fb.group({
+      name: this.fb.control<string>('Dum Skill'),
+      rating: this.fb.control<number>(5)
+    })
+    this.skillsArray.push(skill1);
+    const website1 = this.fb.group({
+      name: this.fb.control<string>('Dum Web'),
+      url: this.fb.control<string>('www.dummy.com')
+    })
+    this.websitesArray.push(website1);
+    this.formGrp.controls['file01Description'].setValue('Dummy description!')
   }
 
   pushSkillsArray() {

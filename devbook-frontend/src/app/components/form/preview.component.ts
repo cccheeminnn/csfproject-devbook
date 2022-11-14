@@ -27,7 +27,7 @@ export class PreviewComponent implements OnInit {
   constructor(
     private previewSvc: PreviewService,
     carouselConfig: NgbCarouselConfig) {
-    carouselConfig.interval = 0
+    carouselConfig.interval = 4000
     carouselConfig.showNavigationIndicators = false;
   }
 

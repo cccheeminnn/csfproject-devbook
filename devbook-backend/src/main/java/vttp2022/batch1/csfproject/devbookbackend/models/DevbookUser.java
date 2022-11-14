@@ -23,6 +23,7 @@ public class DevbookUser {
     private JsonArray websites;
     private JsonArray images;
     private JsonArray comments;
+    private boolean employer;
 
     public String getId() {
         return id;
@@ -143,6 +144,15 @@ public class DevbookUser {
     public void setComments(JsonArray comments) {
         this.comments = comments;
     }
+
+    public Boolean getEmployer() {
+        return employer;
+    }
+
+    public void setEmployer(Boolean employer) {
+        this.employer = employer;
+    }
+
 
     // for jwt authentication
     public static DevbookUser createJwtUserFromRowSet(SqlRowSet rs) {

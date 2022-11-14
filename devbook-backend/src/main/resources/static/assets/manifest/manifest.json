@@ -1,12 +1,11 @@
 {
     "theme_color": "#3f51b5",
-    "background_color": "#3f51b5",
+    "background_color": "#3F51B5",
     "display": "browser",
     "scope": "/",
     "start_url": "/",
-    "name": "Devbook",
-    "short_name": "Devbook",
-    "description": "Website that brings all professionals together.",
+    "name": "Talentbook",
+    "short_name": "Talentbook",
     "icons": [
         {
             "src": "/assets/manifest/icon-192x192.png",
@@ -28,5 +27,6 @@
             "sizes": "512x512",
             "type": "image/png"
         }
-    ]
+    ],
+    "description": "Website that brings all professionals together."
 }

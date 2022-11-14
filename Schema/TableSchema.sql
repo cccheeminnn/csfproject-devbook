@@ -3,10 +3,11 @@
 -- drop table user_skills;
 -- drop table user_websites;
 -- drop table user_credentials;
+-- drop table user_employer_credentials;
 -- drop table user_likes_ratings;
 -- drop table comments;
 -- drop table user_received_likes;
-drop table user_received_ratings;
+-- drop table user_received_ratings;
 
 -- truncate table ;
 
@@ -19,6 +20,8 @@ create table user_credentials (
     
     primary key (user_email)
 );
+
+alter table user_credentials add column employer boolean default false after verified;
 
 create table user_images (
 	s_no int not null auto_increment,
@@ -164,9 +167,10 @@ select * from user_received_ratings;
 select * from user_comments;
 select * from user_notifications;
 
-DELETE FROM user_credentials where user_email = 'cheemin.wong1@outlook.com';
+DELETE FROM user_credentials where user_email = 'employer1@talentbook.com';
 DELETE FROM user_received_likes where user_email = 'aaronkwok@devbook.com' and liked_user = 'hughjackman@devbook.com';
 DELETE FROM user_received_ratings where user_email = 'ianfong@devbook.com' and rated_user = 'ianfong@devbook.com';
+DELETE FROM user_comments where user_email = 'aaronkwok@devbook.com';
 update user_credentials set verified = false where user_email = 'williamshakespeare@devbook.com';
 update user_credentials set user_email = 'nikolatesla@outlook.com' where user_id = '40cf941f';
 update user_likes_ratings set user_ratings = 0 where user_email = 'aaronkwok@devbook.com';

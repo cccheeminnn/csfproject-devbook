@@ -3,26 +3,26 @@ package vttp2022.batch1.csfproject.devbookbackend.repositories;
 public class Queries {
 
     // user_credentials queries
-    public final static String SQL_RETRIEVE_USER_DETAILS_ID = "select user_id, user_name, user_email from user_credentials where user_id = ?";
-    public final static String SQL_RETRIEVE_USER_DETAILS_EMAIL = "select user_id, user_name, user_email from user_credentials where user_email = ?";
+    public final static String SQL_RETRIEVE_USER_DETAILS_ID = "select user_id, user_name, user_email, employer from user_credentials where user_id = ?";
+    public final static String SQL_RETRIEVE_USER_DETAILS_EMAIL = "select user_id, user_name, user_email, employer from user_credentials where user_email = ?";
 
     public final static String SQL_RETRIEVE_USER_NAME = "select user_name from user_credentials where user_email = ?";
 
     public final static String SQL_VERIFY_USER_EMAIL = "update user_credentials set verified = true where user_id = ?";
 
     // retrieve ALL users
-    public final static String SQL_RETRIEVE_LIST_OF_USERS = "select user_id, user_name, user_email from user_credentials limit ? offset ?";
-    public final static String SQL_RETRIEVE_COUNT_OF_USERS = "select count(*) from user_credentials";
+    public final static String SQL_RETRIEVE_LIST_OF_USERS = "select user_id, user_name, user_email from user_credentials where employer = false limit ? offset ? ";
+    public final static String SQL_RETRIEVE_COUNT_OF_USERS = "select count(*) from user_credentials where employer = false";
 
     // retrieve FILTERED users
-    public final static String SQL_RETRIEVE_LIST_OF_FILTERED_USERS = "select user_id, user_name, user_email from user_credentials where user_name like ? limit ? offset ?";
-    public final static String SQL_RETRIEVE_COUNT_OF_FILTERED_USERS = "select count(*) from user_credentials where user_name like ?";
+    public final static String SQL_RETRIEVE_LIST_OF_FILTERED_USERS = "select user_id, user_name, user_email from user_credentials where user_name like ? and employer = false limit ? offset ?";
+    public final static String SQL_RETRIEVE_COUNT_OF_FILTERED_USERS = "select count(*) from user_credentials where user_name like ? and employer = false";
 
     public final static String SQL_CHECK_USER_EXIST = "select * from user_credentials where user_email = ?";
 
     public final static String SQL_CHECK_USER_LOGINS = "select * from user_credentials where user_email = ? and user_password = ?";
 
-    public final static String SQL_INSERT_NEW_USER_CREDENTIALS = "insert into user_credentials values (?,?,?,?,?)"; // id, name, pw, email, verified
+    public final static String SQL_INSERT_NEW_USER_CREDENTIALS = "insert into user_credentials values (?,?,?,?,?,?)"; // id, name, pw, email, verified, employer
 
     // user_images queries
     public final static String SQL_RETRIEVE_USER_IMAGES = "select * from user_images where user_email = ?";

@@ -20,6 +20,7 @@ import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 import vttp2022.batch1.csfproject.devbookbackend.models.DevbookUser;
 import vttp2022.batch1.csfproject.devbookbackend.models.Register;
+import vttp2022.batch1.csfproject.devbookbackend.models.RegisterEmployer;
 import vttp2022.batch1.csfproject.devbookbackend.models.specificUser.UserComment;
 import vttp2022.batch1.csfproject.devbookbackend.models.specificUser.UserNotification;
 import vttp2022.batch1.csfproject.devbookbackend.models.specificUser.UserRatings;
@@ -140,6 +141,7 @@ public class DevbookRepository {
             user.setId(rs.getString("user_id"));
             user.setName(rs.getString("user_name"));
             user.setEmail(rs.getString("user_email"));
+            user.setEmployer(rs.getBoolean("employer"));
             userList.add(user);
         }
 
@@ -284,6 +286,7 @@ public class DevbookRepository {
             newUserReg.getName(),
             bCryptPasswordEncoder.encode(newUserReg.getPassword()),
             newUserReg.getEmail(),
+            0,
             0
         );
 
@@ -364,6 +367,35 @@ public class DevbookRepository {
 
         if (credentials == 1)
             return true;
+        return false;
+    }
+
+    // for creating a new employer
+    public boolean insertNewEmployer(RegisterEmployer newEmployerReg)
+    {
+        String userId = UUID.randomUUID().toString().substring(0, 8);
+
+        // user_credentials table
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        int credentials = template.update(SQL_INSERT_NEW_USER_CREDENTIALS,
+            userId,
+            newEmployerReg.getName(),
+            bCryptPasswordEncoder.encode(newEmployerReg.getPassword()),
+            newEmployerReg.getEmail(),
+            0,
+            1
+        );
+
+        // user_images table
+        // profile photo is a required field
+        if (newEmployerReg.getProfilePhoto().getSize() > 0) {
+            // so no need update sql just fetch url from digitalocean
+            doSvc.saveImageToDOSpaces(userId, newEmployerReg.getProfilePhoto(), "profilephoto.jpg");
+        }
+
+        if (credentials == 1)
+            return true;
+        
         return false;
     }
 

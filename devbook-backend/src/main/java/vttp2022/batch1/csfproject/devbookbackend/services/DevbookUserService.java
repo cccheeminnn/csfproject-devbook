@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import vttp2022.batch1.csfproject.devbookbackend.models.DevbookUser;
 import vttp2022.batch1.csfproject.devbookbackend.models.Register;
+import vttp2022.batch1.csfproject.devbookbackend.models.RegisterEmployer;
 import vttp2022.batch1.csfproject.devbookbackend.models.specificUser.UserComment;
 import vttp2022.batch1.csfproject.devbookbackend.models.specificUser.UserNotification;
 import vttp2022.batch1.csfproject.devbookbackend.models.specificUser.UserRatings;
@@ -31,6 +32,18 @@ public class DevbookUserService {
             return inserted;
         } else {
             RuntimeException rte = new RuntimeException("RuntimeException ocurred while trying to insert new user.");
+            throw rte;
+        }
+    }
+
+    public boolean insertNewEmployer(RegisterEmployer newEmployerReg) {
+
+        boolean inserted = devbookRepo.insertNewEmployer(newEmployerReg);
+
+        if (inserted) {
+            return inserted;
+        } else {
+            RuntimeException rte = new RuntimeException("RuntimeException ocurred while trying to insert new employer.");
             throw rte;
         }
     }

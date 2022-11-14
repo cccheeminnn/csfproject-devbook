@@ -57,6 +57,12 @@ export class BackendService {
     );
   }
 
+  registerEmp(reg: FormData): Promise<string> {
+    return firstValueFrom(
+      this.http.post<string>('/api/register/employer', reg)
+    )
+  }
+
   insertComment(comment: DevbookUserComments): Promise<Response> {
     const headers = new HttpHeaders()
       .set('Accept', 'application/json')
@@ -206,4 +212,5 @@ export class BackendService {
       this.http.get<Response>('/api/notifications', { params })
     )
   }
+
 }
