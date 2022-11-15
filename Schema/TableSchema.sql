@@ -177,6 +177,7 @@ update user_likes_ratings set user_ratings = 0 where user_email = 'aaronkwok@dev
 update user_images set image_description = 'This was not my finest moment.' where user_email like 'loki%' and image_name = 'image01.jpg';
 update user_comments set comment_id = '7893c98a' where s_no = '2';
 update user_notifications set notification_status = 'NEW' where USER_EMAIL = 'hughjackman@devbook.com';
+update user_occupation set current_company = 'Visa Worldwide Pte Ltd' where USER_EMAIL = 'jjc.saravananmunusamy@gmail.com';
 select count(*) from user_credentials where user_name like 'aaron%';
 select * from user_credentials where user_id = '8845c97f';
 select * from user_received_likes where user_email like 'aaron%';
@@ -188,6 +189,7 @@ insert into user_notifications (user_email, notification_email, notification_nam
 	-- ('hughjackman@devbook.com','x','Patrick Jane','gave you a like!','NEW');
 	-- ('hughjackman@devbook.com','x','Patrick Jane','rated you!','NEW');
 	('hughjackman@devbook.com','x','Patrick Jane','left you a comment!','NEW');
+insert into user_images values (62, 'jjc.saravananmunusamy@gmail.com', 'image02.jpg', '');
 select * from user_notifications order by date_time asc;
 delete from user_notifications where user_email = 'hughjackman@devbook.com' order by date_time asc limit 1;
 select count(*) from user_notifications where user_email = 'aaronkwok@devbook.com' and notification_status = 'NEW'
